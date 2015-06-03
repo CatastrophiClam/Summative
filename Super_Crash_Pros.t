@@ -15,8 +15,7 @@ View.Set("graphics:max;max,position:center;center")
 %represents a character in the game
 class Character
 
-    export x,y,h,w,dmg,charType,scale  %exported variables
-    export update    %exported procedures
+    export var x,var y,var h,var w,var dmg,var charType,var scale, update  %exported variables
     
     var charType : int  %which character does this class represent?
     var dmg : int %how much damage is on the character? (damage determines how much the character flies)
@@ -34,14 +33,14 @@ class Character
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
-    proc convertX(x_ , screenX: real): int
-        result screenX + round((x_-screenX)/scale)
+    function convertX(x_ , screenX: real): int
+        result round(screenX + (x_-screenX)/scale)
     end convertX
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
-    proc convertY(y_ , screenY: real): int
-        result screenY + round((y_-screenY)/scale)
+    function convertY(y_ , screenY: real): int
+        result round(screenY + (y_-screenY)/scale)
     end convertY
     
     proc update()
@@ -63,7 +62,11 @@ end Character
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
+var chars : array char of boolean
+
 var worldLength, worldHeight : int  %actual width and height of world
+worldLength := 3840
+worldHeight := 2160
 
 %---------------------------------SCREEN STUFF----------------------------------%
 
@@ -72,17 +75,27 @@ var screenX, screenY : int %location of BOTTOM LEFT of screen IN THE WORLD
 
 %------------------BACKGROUND------------------%
 var backgroundPicOriginal : int
-%backgroundPicOriginal := Pic.FileNew("")
-%backgroundPicOriginal := 
+backgroundPicOriginal := Pic.FileNew("Background.jpg")
 
 var backgroundPic := backgroundPicOriginal
 
 %---------------------------------PLAYER STUFF----------------------------------%
 var player1, player2 : pointer to Character
+new Character, player1
+new Character, player2
+^(player1).x := 300
+^(player1).y := 300
+^(player1).h := 2
+^(player1).w := 2
+^(player2).x := 600
+^(player2).y := 300
+^(player2).h := 2
+^(player2).w := 2
+
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
-%                                                    VARIABLES                                                              %
+%                                                  END VARIABLES                                                            %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
@@ -93,13 +106,16 @@ var player1, player2 : pointer to Character
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
-procedure updateBackground (scale : real)
+procedure updateBackground ()
+    var scale : real
     scale := screenScale
-    backgroundPic := Pic.Scale(backgroundPicOriginal, round(worldLength*scale), round(worldHeight * scale))
-end resizeBackground
+    backgroundPic := Pic.Scale(backgroundPicOriginal, round(worldLength/scale), round(worldHeight / scale))
+end updateBackground
 
 procedure drawBackground
-    Pic.Draw(backgroundPic, 0-screenX/scale, 0-screenY/scale, picMerge)
+    Pic.Draw(backgroundPic, round(0-screenX/screenScale), round(0-screenY/screenScale), picMerge)
+    %put round(0-screenX/screenScale)
+    %put round(0-screenY/screenScale)
 end drawBackground
 
 %updates size and position of screen
@@ -188,8 +204,15 @@ procedure updateScreen
     end if
     
     %update screen scale
-    screenScale := max( (rightMost-leftMost)/maxx, (topMost-bottomMost)/maxy) )
-    
+    screenScale := min( maxx/(rightMost-leftMost), maxy/(topMost-bottomMost) )
+    if screenScale > 3 then
+        screenScale := 3
+    end if
+    put maxx
+    put maxy
+    put rightMost-leftMost
+    put topMost-bottomMost
+    put screenScale
 end updateScreen
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -220,7 +243,38 @@ end updateScreen
 %---------------------------------------------------------------------------------------------------------------------------%
 
 loop
-
+    Input.KeyDown(chars)
+    if (chars('w')) then
+        ^(player1).y += 2
+    end if
+    if (chars('s')) then
+        ^(player1).y -= 2
+    end if
+    if (chars('a')) then
+        ^(player1).x -= 2
+    end if
+    if (chars('d')) then
+        ^(player1).x += 2
+    end if
+    if (chars(KEY_UP_ARROW)) then
+        ^(player2).y += 2
+    end if
+    if (chars(KEY_DOWN_ARROW)) then
+        ^(player2).y -= 2
+    end if
+    if (chars(KEY_LEFT_ARROW)) then
+        ^(player2).x -= 2
+    end if
+    if (chars(KEY_RIGHT_ARROW)) then
+        ^(player2).x += 2
+    end if
+    updateScreen
+    updateBackground
+    %drawBackground
+    Draw.FillOval(round(^(player1).x),round(^(player1).y),5,5,black)
+    Draw.FillOval(round(^(player2).x),round(^(player2).y),5,5,black)
+    Pic.Draw(backgroundPic, 0,0,picMerge)
+    delay(5)
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
