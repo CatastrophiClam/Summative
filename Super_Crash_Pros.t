@@ -71,9 +71,11 @@ var screenScale : real %ratio of screen pixel to world pixel - one screen pixel 
 var screenX, screenY : int %location of BOTTOM LEFT of screen IN THE WORLD
 
 %------------------BACKGROUND------------------%
-var backgroundPic : int
-%backgroundPic := Pic.FileNew("")
-%backgroundPic := 
+var backgroundPicOriginal : int
+%backgroundPicOriginal := Pic.FileNew("")
+%backgroundPicOriginal := 
+
+var backgroundPic := backgroundPicOriginal
 
 %---------------------------------PLAYER STUFF----------------------------------%
 var player1, player2 : pointer to Character
@@ -91,8 +93,12 @@ var player1, player2 : pointer to Character
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
+procedure updateBackground (scale : real)
+    backgroundPic := Pic.Scale(backgroundPicOriginal, round(worldLength*scale), round(worldHeight * scale))
+end resizeBackground
+
 %updates size and position of screen
-function updateScreen
+procedure updateScreen
     var leftMost, rightMost, topMost, bottomMost : int %screen should encompass these points with a 60 px margin
     
     %find leftMost and rightMost
