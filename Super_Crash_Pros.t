@@ -94,8 +94,13 @@ var player1, player2 : pointer to Character
 %---------------------------------------------------------------------------------------------------------------------------%
 
 procedure updateBackground (scale : real)
+    scale := screenScale
     backgroundPic := Pic.Scale(backgroundPicOriginal, round(worldLength*scale), round(worldHeight * scale))
 end resizeBackground
+
+procedure drawBackground
+    Pic.Draw(backgroundPic, 0-screenX/scale, 0-screenY/scale, picMerge)
+end drawBackground
 
 %updates size and position of screen
 procedure updateScreen
