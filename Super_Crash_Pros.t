@@ -65,12 +65,13 @@ end Character
 var chars : array char of boolean
 
 var worldLength, worldHeight : int  %actual width and height of world
-worldLength := 3840
-worldHeight := 2160
+worldLength := 1920%3840
+worldHeight := 1080%2160
 
 %---------------------------------SCREEN STUFF----------------------------------%
 
 var screenScale : real %ratio of screen pixel to world pixel - one screen pixel = how many world pixels?
+var pastScale : real := 0 %don't update size of screen if scale is the same
 var screenX, screenY : int %location of BOTTOM LEFT of screen IN THE WORLD
 
 %------------------BACKGROUND------------------%
@@ -106,17 +107,17 @@ new Character, player2
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
-procedure updateBackground ()
+%updates size of background and draws it
+procedure updateBackground 
     var scale : real
     scale := screenScale
-    backgroundPic := Pic.Scale(backgroundPicOriginal, round(worldLength/scale), round(worldHeight / scale))
-end updateBackground
-
-procedure drawBackground
+    if scale not = pastScale then
+        %Pic.Free(backgroundPic)
+        backgroundPic := Pic.Scale(backgroundPicOriginal, round(worldLength/scale), round(worldHeight / scale))
+        pastScale := scale
+    end if
     Pic.Draw(backgroundPic, round(0-screenX/screenScale), round(0-screenY/screenScale), picMerge)
-    %put round(0-screenX/screenScale)
-    %put round(0-screenY/screenScale)
-end drawBackground
+end updateBackground
 
 %updates size and position of screen
 procedure updateScreen
@@ -134,7 +135,7 @@ procedure updateScreen
         
         %This means that player 2 is to the right of player 1
         if ^(player2).x + ^(player2).w/2 < worldLength then
-            %player 1's x is leftmost
+            %player 2's x is rightmost
             rightMost := round(^(player2).x + ^(player2).w/2)
         else
             rightMost := worldLength
@@ -192,27 +193,28 @@ procedure updateScreen
         end if
     end if
     
+    %update screen scale
+    screenScale := max( (rightMost-leftMost)/maxx, (topMost-bottomMost)/maxy )
+    if screenScale < 1 then
+        screenScale := 1
+    end if
+    
     %update screenX and screenY
-    screenX := leftMost - 50
+    screenX := round((rightMost+leftMost)/2-maxx*screenScale/2)
     if screenX < 0 then 
         screenX := 0
     end if
     
-    screenY := bottomMost - 50
+    screenY := round((bottomMost+topMost)/2-maxy*screenScale/2)
     if screenY < 0 then
         screenY := 0
     end if
     
-    %update screen scale
-    screenScale := min( maxx/(rightMost-leftMost), maxy/(topMost-bottomMost) )
-    if screenScale > 3 then
-        screenScale := 3
-    end if
-    put maxx
-    put maxy
-    put rightMost-leftMost
-    put topMost-bottomMost
-    put screenScale
+    %put maxx
+    %put maxy
+    %put rightMost-leftMost
+    %put topMost-bottomMost
+    %put screenScale
 end updateScreen
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -245,36 +247,35 @@ end updateScreen
 loop
     Input.KeyDown(chars)
     if (chars('w')) then
-        ^(player1).y += 2
+        ^(player1).y += 4
     end if
     if (chars('s')) then
-        ^(player1).y -= 2
+        ^(player1).y -= 4
     end if
     if (chars('a')) then
-        ^(player1).x -= 2
+        ^(player1).x -= 4
     end if
     if (chars('d')) then
-        ^(player1).x += 2
+        ^(player1).x += 4
     end if
     if (chars(KEY_UP_ARROW)) then
-        ^(player2).y += 2
+        ^(player2).y += 4
     end if
     if (chars(KEY_DOWN_ARROW)) then
-        ^(player2).y -= 2
+        ^(player2).y -= 4
     end if
     if (chars(KEY_LEFT_ARROW)) then
-        ^(player2).x -= 2
+        ^(player2).x -= 4
     end if
     if (chars(KEY_RIGHT_ARROW)) then
-        ^(player2).x += 2
+        ^(player2).x += 4
     end if
     updateScreen
     updateBackground
-    %drawBackground
     Draw.FillOval(round(^(player1).x),round(^(player1).y),5,5,black)
     Draw.FillOval(round(^(player2).x),round(^(player2).y),5,5,black)
-    Pic.Draw(backgroundPic, 0,0,picMerge)
-    delay(5)
+    %Pic.Draw(backgroundPic, 0,0,picMerge)
+    %delay(5)
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
