@@ -34,17 +34,18 @@ class Character
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertX(x_ , screenX: real): int
-        result round(screenX + (x_-screenX)/scale)
+        result round(screenX + (x_-screenX)*scale)
     end convertX
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertY(y_ , screenY: real): int
-        result round(screenY + (y_-screenY)/scale)
+        result round(screenY + (y_-screenY)*scale)
     end convertY
     
-    proc update()
-        
+    proc update(screenX, screenY: int)
+        x := convertX(x,screenX)
+        y := convertY(y,screenY)
     end update
     
 end Character
@@ -199,15 +200,25 @@ procedure updateScreen
         screenScale := 1
     end if
     
+    %update character scales
+    ^(player1).scale := screenScale
+    ^(player2).scale := screenScale
+    
     %update screenX and screenY
     screenX := round((rightMost+leftMost)/2-maxx*screenScale/2)
     if screenX < 0 then 
         screenX := 0
     end if
+    if screenX > worldLength-rightMost+leftMost then
+        screenX := worldLength - rightMost + leftMost
+    end if
     
     screenY := round((bottomMost+topMost)/2-maxy*screenScale/2)
     if screenY < 0 then
         screenY := 0
+    end if
+    if screenY > worldHeight - topMost + bottomMost then
+        screenY := worldHeight - topMost + bottomMost
     end if
     
     %put maxx
@@ -272,6 +283,8 @@ loop
     end if
     updateScreen
     updateBackground
+    %^(player1).update(screenX,screenY)
+    %^(player2).update(screenX,screenY)
     Draw.FillOval(round(^(player1).x),round(^(player1).y),5,5,black)
     Draw.FillOval(round(^(player2).x),round(^(player2).y),5,5,black)
     %Pic.Draw(backgroundPic, 0,0,picMerge)
