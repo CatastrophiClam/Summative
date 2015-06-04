@@ -34,13 +34,13 @@ class Character
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertX(x_ , screenX: real): int
-        result round(screenX + (x_-screenX)*scale)
+        result round(screenX + (x_-screenX)/scale)
     end convertX
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertY(y_ , screenY: real): int
-        result round(screenY + (y_-screenY)*scale)
+        result round(screenY + (y_-screenY)/scale)
     end convertY
     
     proc update(screenX, screenY: int)
@@ -283,12 +283,14 @@ loop
     end if
     updateScreen
     updateBackground
-    %^(player1).update(screenX,screenY)
-    %^(player2).update(screenX,screenY)
-    Draw.FillOval(round(^(player1).x),round(^(player1).y),5,5,black)
-    Draw.FillOval(round(^(player2).x),round(^(player2).y),5,5,black)
+    ^(player1).update(screenX,screenY)
+    ^(player2).update(screenX,screenY)
+    Draw.FillOval(round((^(player1).x-screenX)/screenScale),round((^(player1).y-screenY)/screenScale),5,5,black)
+    Draw.FillOval(round((^(player2).x-screenX)/screenScale),round((^(player2).y-screenY)/screenScale),5,5,black)
+    Draw.FillOval(round(^(player1).x),round(^(player1).y),5,5,red)
+    Draw.FillOval(round(^(player2).x),round(^(player2).y),5,5,red)
     %Pic.Draw(backgroundPic, 0,0,picMerge)
-    %delay(5)
+    delay(5)
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
