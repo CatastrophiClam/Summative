@@ -21,7 +21,6 @@ class Character
     var dmg : int %how much damage is on the character? (damage determines how much the character flies)
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
-    var scale : real %ratio of screen pixel to world pixel - one screen pixel = how many world pixels?
     
     %Character movement stuff
     var xDir := 0  %-1 indicates to the left, 0 indicates stopped, 1 indicates to the right
@@ -34,13 +33,13 @@ class Character
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertX(x_ , screenX: real): int
-        result round(screenX + (x_-screenX)/scale)
+        result round(x_-screenX)
     end convertX
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertY(y_ , screenY: real): int
-        result round(screenY + (y_-screenY)/scale)
+        result round(y_-screenY)
     end convertY
     
     proc update(screenX, screenY: int)
@@ -65,21 +64,36 @@ end Character
 
 var chars : array char of boolean
 
+%---------------------------------WORLD STUFF-----------------------------------%
+
 var worldLength, worldHeight : int  %actual width and height of world
 worldLength := 1920%3840
 worldHeight := 1080%2160
 
+%platform
+var platY := 717
+var platX1 := 465
+var platX2 := 1418
+
 %---------------------------------SCREEN STUFF----------------------------------%
 
-var screenScale : real %ratio of screen pixel to world pixel - one screen pixel = how many world pixels?
+var screenScale : real := 1%ratio of screen pixel to world pixel - one screen pixel = how many world pixels?
 var pastScale : real := 0 %don't update size of screen if scale is the same
+var zoomedOutScale : real := max(worldLength/maxx,worldHeight/maxy)  %scale when we're zoomed out
 var screenX, screenY : int %location of BOTTOM LEFT of screen IN THE WORLD
 
 %------------------BACKGROUND------------------%
+
+%original picture of bacground
 var backgroundPicOriginal : int
 backgroundPicOriginal := Pic.FileNew("Background.jpg")
 
-var backgroundPic := backgroundPicOriginal
+%zoomed in and zoomed out pictures
+var backgroundZoomedIn := backgroundPicOriginal%Pic.Scale(backgroundPicOriginal,
+var backgroundZoomedOut := Pic.Scale(backgroundPicOriginal,round(worldLength/zoomedOutScale),round(worldHeight/zoomedOutScale))
+var chosenBackground := backgroundZoomedIn
+
+var zoomedIn := true  %are we zoomed in?
 
 %---------------------------------PLAYER STUFF----------------------------------%
 var player1, player2 : pointer to Character
@@ -112,12 +126,20 @@ new Character, player2
 procedure updateBackground 
     var scale : real
     scale := screenScale
-    if scale not = pastScale then
+    %if scale not = pastScale then
         %Pic.Free(backgroundPic)
-        backgroundPic := Pic.Scale(backgroundPicOriginal, round(worldLength/scale), round(worldHeight / scale))
-        pastScale := scale
+    %    backgroundPic := Pic.Scale(backgroundPicOriginal, round(worldLength/scale), round(worldHeight / scale))
+    %    pastScale := scale
+    %end if
+    %Pic.Draw(backgroundPic, round(0-screenX/screenScale), round(0-screenY/screenScale), picMerge)
+    %we're zoomed in
+    if scale = 1 then
+        chosenBackground := backgroundZoomedIn
+    else
+    %we're zoomed out
+        chosenBackground := backgroundZoomedOut
     end if
-    Pic.Draw(backgroundPic, round(0-screenX/screenScale), round(0-screenY/screenScale), picMerge)
+    Pic.Draw(chosenBackground, round(0-screenX/screenScale), round(0-screenY/screenScale), picMerge)
 end updateBackground
 
 %updates size and position of screen
@@ -195,8 +217,14 @@ procedure updateScreen
     end if
     
     %update screen scale
-    screenScale := max( (rightMost-leftMost)/maxx, (topMost-bottomMost)/maxy )
-    if screenScale < 1 then
+    %screenScale := max( (rightMost-leftMost)/maxx, (topMost-bottomMost)/maxy )
+    %if screenScale < 1 then
+    %    screenScale := 1
+    %end if
+    
+    if (rightMost-leftMost)*screenScale > maxx or (topMost-bottomMost)*screenScale > maxy then
+        screenScale := zoomedOutScale
+    else
         screenScale := 1
     end if
     
@@ -290,7 +318,7 @@ loop
     Draw.FillOval(round(^(player1).x),round(^(player1).y),5,5,red)
     Draw.FillOval(round(^(player2).x),round(^(player2).y),5,5,red)
     %Pic.Draw(backgroundPic, 0,0,picMerge)
-    delay(5)
+    %delay(5)
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
