@@ -15,7 +15,7 @@ View.Set("graphics:max;max,position:center;center")
 %represents a character in the game
 class Character
 
-    export var x,var y,var h,var w,var dmg,var charType,var scale, update  %exported variables
+    export var x,var y,var h,var w,var dmg,var charType, update  %exported variables
     
     var charType : int  %which character does this class represent?
     var dmg : int %how much damage is on the character? (damage determines how much the character flies)
@@ -42,7 +42,7 @@ class Character
         result round(y_-screenY)
     end convertY
     
-    proc update(screenX, screenY: int)
+    proc update(screenX, screenY: int)%, instructions : string)
         x := convertX(x,screenX)
         y := convertY(y,screenY)
     end update
@@ -77,7 +77,6 @@ var platX2 := 1418
 
 %---------------------------------SCREEN STUFF----------------------------------%
 
-var screenScale : real := 1%ratio of screen pixel to world pixel - one screen pixel = how many world pixels?
 var pastScale : real := 0 %don't update size of screen if scale is the same
 var zoomedOutScale : real := max(worldLength/maxx,worldHeight/maxy)  %scale when we're zoomed out
 var screenX, screenY : int %location of BOTTOM LEFT of screen IN THE WORLD
@@ -85,26 +84,21 @@ var screenX, screenY : int %location of BOTTOM LEFT of screen IN THE WORLD
 %------------------BACKGROUND------------------%
 
 %original picture of bacground
-var backgroundPicOriginal : int
-backgroundPicOriginal := Pic.FileNew("Background.jpg")
-
-%zoomed in and zoomed out pictures
-var backgroundZoomedIn := backgroundPicOriginal%Pic.Scale(backgroundPicOriginal,
-var backgroundZoomedOut := Pic.Scale(backgroundPicOriginal,round(worldLength/zoomedOutScale),round(worldHeight/zoomedOutScale))
-var chosenBackground := backgroundZoomedIn
-
-var zoomedIn := true  %are we zoomed in?
+var backgroundPic : int
+backgroundPic := Pic.FileNew("Background.jpg")
+var backgroundSprite : int
+backgroundSprite := Sprite.New(backgroundPic)
 
 %---------------------------------PLAYER STUFF----------------------------------%
 var player1, player2 : pointer to Character
 new Character, player1
 new Character, player2
-^(player1).x := 300
-^(player1).y := 300
+^(player1).x := 565
+^(player1).y := 365
 ^(player1).h := 2
 ^(player1).w := 2
-^(player2).x := 600
-^(player2).y := 300
+^(player2).x := 1318
+^(player2).y := 365
 ^(player2).h := 2
 ^(player2).w := 2
 
@@ -123,23 +117,10 @@ new Character, player2
 %---------------------------------------------------------------------------------------------------------------------------%
 
 %updates size of background and draws it
-procedure updateBackground 
-    var scale : real
-    scale := screenScale
-    %if scale not = pastScale then
-        %Pic.Free(backgroundPic)
-    %    backgroundPic := Pic.Scale(backgroundPicOriginal, round(worldLength/scale), round(worldHeight / scale))
-    %    pastScale := scale
-    %end if
-    %Pic.Draw(backgroundPic, round(0-screenX/screenScale), round(0-screenY/screenScale), picMerge)
-    %we're zoomed in
-    if scale = 1 then
-        chosenBackground := backgroundZoomedIn
-    else
-    %we're zoomed out
-        chosenBackground := backgroundZoomedOut
-    end if
-    Pic.Draw(chosenBackground, round(0-screenX/screenScale), round(0-screenY/screenScale), picMerge)
+procedure updateBackground
+    
+    Sprite.Animate(backgroundSprite, backgroundPic, round(0-screenX), round(0-screenY), false)
+    Sprite.Show(backgroundSprite)
 end updateBackground
 
 %updates size and position of screen
@@ -216,44 +197,29 @@ procedure updateScreen
         end if
     end if
     
-    %update screen scale
-    %screenScale := max( (rightMost-leftMost)/maxx, (topMost-bottomMost)/maxy )
-    %if screenScale < 1 then
-    %    screenScale := 1
-    %end if
-    
-    if (rightMost-leftMost)*screenScale > maxx or (topMost-bottomMost)*screenScale > maxy then
-        screenScale := zoomedOutScale
-    else
-        screenScale := 1
-    end if
-    
-    %update character scales
-    ^(player1).scale := screenScale
-    ^(player2).scale := screenScale
     
     %update screenX and screenY
-    screenX := round((rightMost+leftMost)/2-maxx*screenScale/2)
+    screenX := round((rightMost+leftMost)/2-maxx/2)
     if screenX < 0 then 
         screenX := 0
     end if
-    if screenX > worldLength-rightMost+leftMost then
-        screenX := worldLength - rightMost + leftMost
+    if screenX > worldLength-maxx then
+        screenX := worldLength - maxx
     end if
     
-    screenY := round((bottomMost+topMost)/2-maxy*screenScale/2)
+    screenY := round((bottomMost+topMost)/2-maxy/2)
     if screenY < 0 then
         screenY := 0
     end if
-    if screenY > worldHeight - topMost + bottomMost then
-        screenY := worldHeight - topMost + bottomMost
+    if screenY > worldHeight - maxy then
+        screenY := worldHeight - maxy
     end if
     
     %put maxx
     %put maxy
     %put rightMost-leftMost
     %put topMost-bottomMost
-    %put screenScale
+    %put screenX
 end updateScreen
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -285,6 +251,7 @@ end updateScreen
 
 loop
     Input.KeyDown(chars)
+    updateScreen
     if (chars('w')) then
         ^(player1).y += 4
     end if
@@ -309,16 +276,13 @@ loop
     if (chars(KEY_RIGHT_ARROW)) then
         ^(player2).x += 4
     end if
-    updateScreen
+    
     updateBackground
-    ^(player1).update(screenX,screenY)
-    ^(player2).update(screenX,screenY)
-    Draw.FillOval(round((^(player1).x-screenX)/screenScale),round((^(player1).y-screenY)/screenScale),5,5,black)
-    Draw.FillOval(round((^(player2).x-screenX)/screenScale),round((^(player2).y-screenY)/screenScale),5,5,black)
-    Draw.FillOval(round(^(player1).x),round(^(player1).y),5,5,red)
-    Draw.FillOval(round(^(player2).x),round(^(player2).y),5,5,red)
-    %Pic.Draw(backgroundPic, 0,0,picMerge)
-    %delay(5)
+    %^(player1).update(screenX,screenY)
+    %^(player2).update(screenX,screenY)
+    Draw.FillOval(round((^(player1).x-screenX)),round((^(player1).y-screenY)),5,5,black)
+    Draw.FillOval(round((^(player2).x-screenX)),round((^(player2).y-screenY)),5,5,black)
+    delay(5)
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%

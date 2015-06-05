@@ -1,0 +1,1 @@
+View.Set("graphics:max;max,position:center;center")
