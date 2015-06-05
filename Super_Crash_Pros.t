@@ -17,10 +17,18 @@ class Character
 
     export var x,var y,var h,var w,var dmg,var charType, update  %exported variables
     
+    %Character attributes
     var charType : int  %which character does this class represent?
     var dmg : int %how much damage is on the character? (damage determines how much the character flies)
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
+    
+    var jumpSpeed :int := 9
+    var fallSpeed : int := 1
+    var moveSpeed : int := 5
+    
+    %Character abilities
+    
     
     %Character movement stuff
     var xDir := 0  %-1 indicates to the left, 0 indicates stopped, 1 indicates to the right
@@ -48,6 +56,37 @@ class Character
     end update
     
 end Character
+
+%Display thingy at bottom of screen with character lives and damage
+class CharacterStatusDisplay
+
+    export var numLives, var damage, display
+    
+    %stats
+    var numLives : int
+    var damage : int := 0
+    
+    %picture stuff
+    %bascically, in order for the display to be drawn over the background, it has to be a sprite
+    %to make the picture for the sprite, we draw everything that is needed outside of the display, and
+    %we take a picture of that and put it into the sprite
+    var picSprite : int
+    var offScreenX := 0
+    var offScreenY := -600
+    
+    proc _init(lives:int)
+        numLives := lives
+    end _init
+    
+    proc updatePic()
+    
+    end updatePic
+    
+    proc display()
+    
+    end display
+    
+end CharacterStatusDisplay
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
