@@ -12,8 +12,46 @@ View.Set("graphics:max;max,position:center;center")
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
+%Display thingy at bottom of screen with character lives and damage
+class PlayerStatusDisplay
+
+    import Pic, Sprite
+
+    export var numLives, var damage, display
+    
+    %stats
+    var numLives : int
+    var damage : int := 0
+    
+    %picture stuff
+    %bascically, in order for the display to be drawn over the background, it has to be a sprite
+    %to make the picture for the sprite, we draw everything that is needed outside of the display, and
+    %we take a picture of that and put it into the sprite
+    var picSprite : int
+    var spritePic : int
+    var offScreenX := 0
+    var offScreenY := -600
+    spritePic := Pic.New(offScreenX,offScreenY,offScreenX+150,offScreenY+250)
+    picSprite := Sprite.New(spritePic)
+    
+    proc _init(lives:int)
+        numLives := lives
+    end _init
+    
+    proc updatePic()
+    
+    end updatePic
+    
+    proc display()
+    
+    end display
+    
+end PlayerStatusDisplay
+
 %represents a character in the game
 class Character
+
+    import PlayerStatusDisplay
 
     export var x,var y,var h,var w,var dmg,var charType, update  %exported variables
     
@@ -22,6 +60,8 @@ class Character
     var dmg : int %how much damage is on the character? (damage determines how much the character flies)
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
+    
+    var pSD : pointer to PlayerStatusDisplay
     
     var jumpSpeed :int := 9
     var fallSpeed : int := 1
@@ -50,43 +90,44 @@ class Character
         result round(y_-screenY)
     end convertY
     
+    proc upO
+    
+    end upO
+    
+    proc downO
+    
+    end downO
+    
+    proc rightO
+    
+    end rightO
+    
+    proc leftO
+    
+    end leftO
+    
+    proc upP
+    
+    end upP
+    
+    proc downP
+    
+    end downP
+    
+    proc rightP
+    
+    end rightP
+    
+    proc leftP
+    
+    end leftP
+    
     proc update(screenX, screenY: int)%, instructions : string)
         x := convertX(x,screenX)
         y := convertY(y,screenY)
     end update
     
 end Character
-
-%Display thingy at bottom of screen with character lives and damage
-class CharacterStatusDisplay
-
-    export var numLives, var damage, display
-    
-    %stats
-    var numLives : int
-    var damage : int := 0
-    
-    %picture stuff
-    %bascically, in order for the display to be drawn over the background, it has to be a sprite
-    %to make the picture for the sprite, we draw everything that is needed outside of the display, and
-    %we take a picture of that and put it into the sprite
-    var picSprite : int
-    var offScreenX := 0
-    var offScreenY := -600
-    
-    proc _init(lives:int)
-        numLives := lives
-    end _init
-    
-    proc updatePic()
-    
-    end updatePic
-    
-    proc display()
-    
-    end display
-    
-end CharacterStatusDisplay
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -116,8 +157,6 @@ var platX2 := 1418
 
 %---------------------------------SCREEN STUFF----------------------------------%
 
-var pastScale : real := 0 %don't update size of screen if scale is the same
-var zoomedOutScale : real := max(worldLength/maxx,worldHeight/maxy)  %scale when we're zoomed out
 var screenX, screenY : int %location of BOTTOM LEFT of screen IN THE WORLD
 
 %------------------BACKGROUND------------------%
@@ -140,6 +179,12 @@ new Character, player2
 ^(player2).y := 365
 ^(player2).h := 2
 ^(player2).w := 2
+
+%--------------------PLAYER STATUS DISPLAYS------------------------%
+var pSD1, pSD2 : pointer to PlayerStatusDisplay
+new PlayerStatusDisplay,pSD1
+new PlayerStatusDisplay,pSD2
+
 
 
 %---------------------------------------------------------------------------------------------------------------------------%
