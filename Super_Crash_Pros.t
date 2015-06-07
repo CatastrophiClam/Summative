@@ -6,6 +6,19 @@ View.Set("graphics:max;max,position:center;center")
 % 1). IMPORTANT: 0,0 IS THE BOTTOM LEFT POINT OF THE WORLD
 % 2). Any coordinates that are "IN THE WORLD" must be converted to on-screen coordinates before being displayed
 
+const FILLER_VARIABLE := 2 %if you see this, it means theres some value we haven't decided on yet and we need it declared for the program to run
+
+%---------------------------------WORLD STUFF-----------------------------------%
+
+var worldLength, worldHeight : int  %actual width and height of world
+worldLength := 1920%3840
+worldHeight := 1080%2160
+
+%platform
+var platY := 717
+var platX1 := 465
+var platX2 := 1418
+
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                                     CLASSES                                                               %
@@ -48,6 +61,8 @@ class PlayerStatusDisplay
     
 end PlayerStatusDisplay
 
+%NOTE HERE'S HOW CHARACTER MOVEMENT WORKS: character has a destination: this is the point his center is moving towards. moving the character with
+%the keyboard changes the destination, and he moves towards it with his movement speed
 %represents a character in the game
 class Character
 
@@ -58,15 +73,19 @@ class Character
     %Character attributes
     var charType : int  %which character does this class represent?
     var lives : int := 5 %how many lives does this character have?
-    var dmg : int %how much damage has the character taken? (damage determines how much the character flies)
+    var damage : int %how much damage has the character taken? (damage determines how much the character flies)
     var hitDamage : int %how much damage does this character deal?
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
     var dir : int %the way the character is facing - 0 indicates left, 1 indicates right
+    var kbDistance : int := 700 %base distance character gets knocked back
+    var knockedBack : false %is player traveling because he got knocked back?
     
     var jumpSpeed :int := 9
     var fallSpeed : int := 1
     var moveSpeed : int := 5
+    
+    var isHit : false %did the character get hit?
     
     %different skills deal different amounts of damage
     var upOD, downOD, sideOD, upPD, downPD, sidePD : int
@@ -84,6 +103,10 @@ class Character
     %Character movement stuff
     var xDir := 0  %-1 indicates to the left, 0 indicates stopped, 1 indicates to the right
     var yDir := 0  %-1 indicates down, " , 1 indicates up
+    
+    var xDestination,yDestination : int %coordinates of where character is moving towards
+    var bounceX, bounceY : int %coords of where character will bounce (if character is hit towards ground)
+    var bounces : false %does the character bounce?
     
     %Character picture stuff
     var bodyPic, bodyFPic: int
@@ -110,65 +133,80 @@ class Character
         result round(y_-screenY)
     end convertY
     
-    %abilities
+    %ABILITIES
     proc upO
-        numFrames :=  1
+        numFrames :=  FILLER_VARIABLE
         if not doingAbility then
             hitDamage := upOD
         end if
     end upO
     
     proc downO
-        numFrames :=  1
+        numFrames :=  FILLER_VARIABLE
         if not doingAbility then
             hitDamage := downOD
         end if
     end downO
     
     proc rightO
-        numFrames :=  1
+        numFrames :=  FILLER_VARIABLE
         if not doingAbility then
             hitDamage := sideOD
         end if
     end rightO
     
     proc leftO
-        numFrames :=  1
+        numFrames :=  FILLER_VARIABLE
         if not doingAbility then
             hitDamage := sideOD
         end if
     end leftO
     
     proc upP
-        numFrames :=  1
+        numFrames :=  FILLER_VARIABLE
         if not doingAbility then
             hitDamage := upPD
         end if
     end upP
     
     proc downP
-        numFrames :=  1
+        numFrames :=  FILLER_VARIABLE
         if not doingAbility then
             hitDamage := downPD
         end if
     end downP
     
     proc rightP
-        numFrames :=  1
+        numFrames :=  FILLER_VARIABLE
         if not doingAbility then
             hitDamage := sidePD
         end if
     end rightP
     
     proc leftP
-        numFrames :=  1
+        numFrames :=  FILLER_VARIABLE1
         if not doingAbility then
             hitDamage := sidePD
         end if
     end leftP
     
-    proc knockBack(pX,pY:int) %pX and pY are the x and y coords of where character was hit
+    proc knockBack(cX,cY,pX,pY:int) %cX,cY is center of other player, pX, pY is where character was hit
+        var kbD : real := kbDistance*damage/100  %distance character gets knocked back
+        %calculate new destination
+        %ABRUPT CHANGE OF DIRECTION VERSION
+        xDestination := x+(pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+        yDestination := y+(pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+        %KEEPS MOMENTUM VERSION
+        %xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+        %yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
         
+        %check if character bounces
+        if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
+            %character bounces
+            bounces := true
+            bounceX := xDestination
+            bounceY := playY + (platY - yDestination)
+        end if
     end knockBack
     
     proc update(screenX, screenY: int)%, instructions : string)
@@ -207,17 +245,6 @@ end Character
 %---------------------------------------------------------------------------------------------------------------------------%
 
 var chars : array char of boolean
-
-%---------------------------------WORLD STUFF-----------------------------------%
-
-var worldLength, worldHeight : int  %actual width and height of world
-worldLength := 1920%3840
-worldHeight := 1080%2160
-
-%platform
-var platY := 717
-var platX1 := 465
-var platX2 := 1418
 
 %---------------------------------SCREEN STUFF----------------------------------%
 
