@@ -17,7 +17,7 @@ class PlayerStatusDisplay
 
     import Pic, Sprite
 
-    export var numLives, var damage, display
+    export var numLives, var damage, display, _init
     
     %stats
     var numLives : int
@@ -59,7 +59,7 @@ class Character
     var charType : int  %which character does this class represent?
     var lives : int := 5 %how many lives does this character have?
     var dmg : int %how much damage has the character taken? (damage determines how much the character flies)
-    var hitDmg : int %how much damage does this character deal?
+    var hitDamage : int %how much damage does this character deal?
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
     var dir : int %the way the character is facing - 0 indicates left, 1 indicates right
@@ -73,13 +73,13 @@ class Character
     
     %status display stuff
     var pSD : pointer to PlayerStatusDisplay
-    ^(pSD)._init(lives)
+    %^(pSD)._init(lives)
     
     %Character abilities stuff
     var doingAbility : boolean %is character currently performing an ability?
-    numFrames : int %number of frames an ability lasts for
-    abilXIncr : int %how much does the character move horizontally each frame during the ability?
-    abilYIncr : int %same for vertically
+    var numFrames : int %number of frames an ability lasts for
+    var abilXIncr : int %how much does the character move horizontally each frame during the ability?
+    var abilYIncr : int %same for vertically
     
     %Character movement stuff
     var xDir := 0  %-1 indicates to the left, 0 indicates stopped, 1 indicates to the right
@@ -89,14 +89,14 @@ class Character
     var bodyPic, bodyFPic: int
     
     %initialize damages
-    proc initDamage(uO,dO,sO,uP,dP,sP)
+    proc initDamage(uO,dO,sO,uP,dP,sP:int)
         upOD := uO
         downOD := dO
         sideOD := sO
         upPD := uP
         downPD := dP
         sidePD := sP
-    end proc
+    end initDamage
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
@@ -112,60 +112,64 @@ class Character
     
     %abilities
     proc upO
-        numFrames :=  
+        numFrames :=  1
         if not doingAbility then
             hitDamage := upOD
         end if
     end upO
     
     proc downO
-        numFrames :=  
+        numFrames :=  1
         if not doingAbility then
             hitDamage := downOD
         end if
     end downO
     
     proc rightO
-        numFrames :=  
+        numFrames :=  1
         if not doingAbility then
             hitDamage := sideOD
         end if
     end rightO
     
     proc leftO
-        numFrames :=  
+        numFrames :=  1
         if not doingAbility then
             hitDamage := sideOD
         end if
     end leftO
     
     proc upP
-        numFrames :=  
+        numFrames :=  1
         if not doingAbility then
             hitDamage := upPD
         end if
     end upP
     
     proc downP
-        numFrames :=  
+        numFrames :=  1
         if not doingAbility then
             hitDamage := downPD
         end if
     end downP
     
     proc rightP
-        numFrames :=  
+        numFrames :=  1
         if not doingAbility then
             hitDamage := sidePD
         end if
     end rightP
     
     proc leftP
-        numFrames :=  
+        numFrames :=  1
         if not doingAbility then
             hitDamage := sidePD
         end if
     end leftP
+    
+    proc knockBack(pX,pY:int) %pX and pY are the x and y coords of where character was hit
+        
+    end knockBack
     
     proc update(screenX, screenY: int)%, instructions : string)
         %if we're performing an ability
