@@ -57,18 +57,29 @@ class Character
     
     %Character attributes
     var charType : int  %which character does this class represent?
-    var dmg : int %how much damage is on the character? (damage determines how much the character flies)
+    var lives : int := 5 %how many lives does this character have?
+    var dmg : int %how much damage has the character taken? (damage determines how much the character flies)
+    var hitDmg : int %how much damage does this character deal?
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
-    
-    var pSD : pointer to PlayerStatusDisplay
+    var dir : int %the way the character is facing - 0 indicates left, 1 indicates right
     
     var jumpSpeed :int := 9
     var fallSpeed : int := 1
     var moveSpeed : int := 5
     
-    %Character abilities
+    %different skills deal different amounts of damage
+    var upOD, downOD, sideOD, upPD, downPD, sidePD : int
     
+    %status display stuff
+    var pSD : pointer to PlayerStatusDisplay
+    ^(pSD)._init(lives)
+    
+    %Character abilities stuff
+    var doingAbility : boolean %is character currently performing an ability?
+    numFrames : int %number of frames an ability lasts for
+    abilXIncr : int %how much does the character move horizontally each frame during the ability?
+    abilYIncr : int %same for vertically
     
     %Character movement stuff
     var xDir := 0  %-1 indicates to the left, 0 indicates stopped, 1 indicates to the right
@@ -77,6 +88,15 @@ class Character
     %Character picture stuff
     var bodyPic, bodyFPic: int
     
+    %initialize damages
+    proc initDamage(uO,dO,sO,uP,dP,sP)
+        upOD := uO
+        downOD := dO
+        sideOD := sO
+        upPD := uP
+        downPD := dP
+        sidePD := sP
+    end proc
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
@@ -90,41 +110,81 @@ class Character
         result round(y_-screenY)
     end convertY
     
+    %abilities
     proc upO
-    
+        numFrames :=  
+        if not doingAbility then
+            hitDamage := upOD
+        end if
     end upO
     
     proc downO
-    
+        numFrames :=  
+        if not doingAbility then
+            hitDamage := downOD
+        end if
     end downO
     
     proc rightO
-    
+        numFrames :=  
+        if not doingAbility then
+            hitDamage := sideOD
+        end if
     end rightO
     
     proc leftO
-    
+        numFrames :=  
+        if not doingAbility then
+            hitDamage := sideOD
+        end if
     end leftO
     
     proc upP
-    
+        numFrames :=  
+        if not doingAbility then
+            hitDamage := upPD
+        end if
     end upP
     
     proc downP
-    
+        numFrames :=  
+        if not doingAbility then
+            hitDamage := downPD
+        end if
     end downP
     
     proc rightP
-    
+        numFrames :=  
+        if not doingAbility then
+            hitDamage := sidePD
+        end if
     end rightP
     
     proc leftP
-    
+        numFrames :=  
+        if not doingAbility then
+            hitDamage := sidePD
+        end if
     end leftP
     
     proc update(screenX, screenY: int)%, instructions : string)
+        %if we're performing an ability
+        if doingAbility then
+            %do the ability
+            x += abilXIncr
+            y += abilYIncr
+            %update number of frames done
+            numFrames -= 1
+            %did the ability end yet?
+            if numFrames = 0 then
+                %if yes then revert everything
+                doingAbility := false
+            end if
+        end if
         x := convertX(x,screenX)
         y := convertY(y,screenY)
+        %display status display
+        ^(pSD).display
     end update
     
 end Character
