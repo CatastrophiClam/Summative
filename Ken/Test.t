@@ -167,6 +167,57 @@ loop
             delay (50)
         end for
             
+    elsif KeyHeldDown ("e") then
+        
+        if characterState = "L" then
+            
+            for i : 1 .. 5
+                Sprite.Animate(sprite, kenRoundhouseL(i), characterX, characterY, false)
+                delay (50)
+            end for
+                
+        elsif characterState = "R" then
+            
+            for i : 1 .. 5
+                Sprite.Animate(sprite, kenRoundhouseR(i), characterX, characterY, false)
+                delay (50)
+            end for
+        end if
+        
+    elsif KeyHeldDown ("z") then
+        
+        if characterState = "L" then
+            
+            for i : 1 .. 5
+                Sprite.Animate(sprite, kenKickL(i), characterX, characterY, false)
+                delay (50)
+            end for
+                
+        elsif characterState = "R" then
+            
+            for i : 1 .. 5
+                Sprite.Animate(sprite, kenKickR(i), characterX, characterY, false)
+                delay (50)
+            end for
+        end if
+        
+    elsif KeyHeldDown ("a") then
+        
+        if characterState = "L" then
+            
+            for i : 1 .. 3
+                Sprite.Animate(sprite, kenPunchL(i), characterX, characterY, false)
+                delay (50)
+            end for
+                
+        elsif characterState = "R" then
+            
+            for i : 1 .. 3
+                Sprite.Animate(sprite, kenPunchR(i), characterX, characterY, false)
+                delay (50)
+            end for
+        end if
+        
     else
         if characterState = "L" then
             
