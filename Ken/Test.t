@@ -14,7 +14,7 @@ function KeyPushedDown (c : char) : boolean
 end KeyPushedDown
 
 function KeyReleased (c : char) : boolean
-    result not chars (c)
+    result not chars (c) and charsLast(c)
 end KeyReleased
 
 function KeyHeldDown (c : char) : boolean
@@ -56,9 +56,11 @@ Input.KeyDown (charsLast)
 Input.KeyDown (chars)
 
 loop
+    %update last chars
     charsLast := chars
     Input.KeyDown (chars)
     
+    %IF CHARACTER IS JUMPING UP
     if chars (KEY_UP_ARROW) then 
         characterY += 70
         if characterState = "L" then
@@ -95,6 +97,7 @@ loop
         
     end if
     
+    %IF CHARACTER KNEELS
     if KeyPushedDown (KEY_DOWN_ARROW) then
         
         if characterState = "L" then
