@@ -52,7 +52,7 @@ end for
 var kenTatsumakiR, kenTatsumakiL : array 1 .. 13 of int
 for i : 1 .. 13
 
-
+end for
     
 
 
