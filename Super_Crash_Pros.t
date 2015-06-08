@@ -66,9 +66,9 @@ end PlayerStatusDisplay
 %represents a character in the game
 class Character
 
-    import PlayerStatusDisplay
+    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE
 
-    export var x,var y,var h,var w,var dmg,var charType, update  %exported variables
+    export var x,var y,var h,var w,var damage,var charType, update  %exported variables
     
     %Character attributes
     var charType : int  %which character does this class represent?
@@ -79,13 +79,13 @@ class Character
     var h, w : int %current height and width of character
     var dir : int %the way the character is facing - 0 indicates left, 1 indicates right
     var kbDistance : int := 700 %base distance character gets knocked back
-    var knockedBack : false %is player traveling because he got knocked back?
+    var knockedBack := false %is player traveling because he got knocked back?
     
     var jumpSpeed :int := 9
     var fallSpeed : int := 1
     var moveSpeed : int := 5
     
-    var isHit : false %did the character get hit?
+    var isHit := false %did the character get hit?
     
     %different skills deal different amounts of damage
     var upOD, downOD, sideOD, upPD, downPD, sidePD : int
@@ -106,7 +106,7 @@ class Character
     
     var xDestination,yDestination : int %coordinates of where character is moving towards
     var bounceX, bounceY : int %coords of where character will bounce (if character is hit towards ground)
-    var bounces : false %does the character bounce?
+    var bounces := false %does the character bounce?
     
     %Character picture stuff
     var bodyPic, bodyFPic: int
@@ -184,7 +184,7 @@ class Character
     end rightP
     
     proc leftP
-        numFrames :=  FILLER_VARIABLE1
+        numFrames :=  FILLER_VARIABLE
         if not doingAbility then
             hitDamage := sidePD
         end if
@@ -194,8 +194,8 @@ class Character
         var kbD : real := kbDistance*damage/100  %distance character gets knocked back
         %calculate new destination
         %ABRUPT CHANGE OF DIRECTION VERSION
-        xDestination := x+(pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-        yDestination := y+(pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+        xDestination := round(x+(pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2))
+        yDestination := round(y+(pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2))
         %KEEPS MOMENTUM VERSION
         %xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
         %yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
@@ -205,7 +205,7 @@ class Character
             %character bounces
             bounces := true
             bounceX := xDestination
-            bounceY := playY + (platY - yDestination)
+            bounceY := platY + (platY - yDestination)
         end if
     end knockBack
     
