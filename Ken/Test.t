@@ -23,18 +23,18 @@ end KeyHeldDown
 
 %Create arrays of frames for animations
 
-% Move
-var kenMoveR, kenMoveL : array 1 .. 5 of int 
-for i : 1 .. 5
-    kenMoveL (i) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
-    kenMoveR (i) := Pic.Mirror (kenMoveL (i))
-end for
-    
 % Idle
 var kenIdleR, kenIdleL : array 1 .. 4 of int
 for i : 1 .. 4
     kenIdleL (i) := Pic.FileNew ("idle" + intstr(i) + ".jpeg")
     kenIdleR (i) := Pic.Mirror (kenIdleL (i))
+end for
+
+% Move
+var kenMoveR, kenMoveL : array 1 .. 5 of int 
+for i : 1 .. 5
+    kenMoveL (i) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    kenMoveR (i) := Pic.Mirror (kenMoveL (i))
 end for
     
 % Kneel
@@ -47,17 +47,48 @@ for i : 1 .. 7
     kenJumpL (i) := Pic.FileNew ("jump" + intstr(i) + ".jpeg")
     kenJumpR (i) := Pic.Mirror (kenJumpL (i))
 end for
-    
+
+% Roundhouse
+var kenRoundhouseR, kenRoundhouseL : array 1 .. 5 of int
+for i : 1 .. 5
+    kenRoundhouseL (i) := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
+    kenRoundhouseR (i) := Pic.Mirror (kenRoundhouseL (i))
+end for
+
+%Punch
+var kenPunchR, kenPunchL : array 1 .. 3 of int
+for i : 1 .. 3
+    kenPunchL (i) := Pic.FileNew ("punch" + intstr(i) + ".jpeg")
+    kenPunchR (i) := Pic.Mirror (kenPunchL (i))
+end for
+
+% Kick
+var kenKickR, kenKickL : array 1 .. 5 of int
+for i : 1 .. 5
+    kenKickL (i) := Pic.FileNew ("kick" + intstr(i) + ".jpeg")
+    kenKickR (i) := Pic.Mirror (kenKickL (i))
+end for
+
 % Tatsumaki
 var kenTatsumakiR, kenTatsumakiL : array 1 .. 13 of int
 for i : 1 .. 13
-    kenTatsumakiR (i) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
-    kenTatsumakiL (i) := Pic.Mirror (kenTatsumakiR)
+    kenTatsumakiL (i) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
+    kenTatsumakiR (i) := Pic.Mirror (kenTatsumakiL (i))
 end for
     
+% Hadoken
+var kenHadokenR, kenHadokenL : array 1 .. 4 of int
+for i : 1 .. 4
+    kenHadokenL (i) := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
+    kenHadokenR (i) := Pic.Mirror (kenHadokenL (i))
+end for
 
-
-
+% Shoryuken
+var kenShoryukenR, kenShoryukenL : array 1 .. 7 of int
+for i : 1 .. 7
+    kenShoryukenL (i) := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
+    kenShoryukenR (i) := Pic.Mirror (kenShoryukenL (i))
+end for
 
 %Initialize
 
@@ -169,14 +200,14 @@ loop
                 
             Sprite.Free (idleL)
             
-            elsif characterState = "R" then
+        elsif characterState = "R" then
             
             var idleR := Sprite.New (kenIdleR (1))
             Sprite.SetPosition (idleR, characterX, characterY, false)
             Sprite.Show (idleR)
             for i : 1 .. 4
-            Sprite.Animate (idleR, kenIdleR (i), characterX, characterY, false)
-            delay (80)
+                Sprite.Animate (idleR, kenIdleR (i), characterX, characterY, false)
+                delay (80)
             end for
                 
             Sprite.Free (idleR)
