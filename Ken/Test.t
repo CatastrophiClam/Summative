@@ -165,8 +165,7 @@ loop
         
     else
         if characterState = "L" then
-            %var idleL := Sprite.New (kenIdleL (1))
-            %Sprite.SetPosition (idleL, characterX, characterY, false)
+
             Sprite.Animate(sprite,kenIdleL(1),characterX, characterY, false)
             %Sprite.Show (idleL)
             
@@ -176,13 +175,9 @@ loop
                 delay (80)
                 
             end for
-                
-            %Sprite.Free (idleL)
             
             elsif characterState = "R" then
             
-            %var idleR := Sprite.New (kenIdleR (1))
-            %Sprite.SetPosition (idleR, characterX, characterY, false)
             Sprite.Animate(sprite,kenIdleR(1), characterX, characterY, false)
             %Sprite.Show (idleR)
             for i : 1 .. 4
