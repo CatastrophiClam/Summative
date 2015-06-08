@@ -47,6 +47,12 @@ for i : 1 .. 7
     kenJumpL (i) := Pic.FileNew ("jump" + intstr(i) + ".jpeg")
     kenJumpR (i) := Pic.Mirror (kenJumpL (i))
 end for
+
+% Tatsumaki
+var kenTatsumakiR, kenTatsumakiL : array 1 .. 13 of int
+for i : 1 .. 13
+
+
     
 
 
@@ -60,120 +66,120 @@ loop
     Input.KeyDown (chars)
     
     if chars (KEY_UP_ARROW) then 
-        characterY += 70
-        if characterState = "L" then
-            
-            var jumpL := Sprite.New (kenJumpL (1))
-            Sprite.SetPosition (jumpL, characterX, characterY, false)
-            Sprite.Show (jumpL)
-            
-            for i : 1 .. 7
-                Sprite.Animate (jumpL, kenJumpL (i), characterX, characterY, false)
-                delay (80)
-                characterY -= 10
-            end for
-                
-            Sprite.Free (jumpL)
-            
-        elsif characterState = "R" then
-            
-            var jumpR := Sprite.New (kenJumpR (1))
-            Sprite.SetPosition (jumpR, characterX, characterY, false)
-            Sprite.Show (jumpR)
-            
-            for i : 1 .. 7
-                Sprite.Animate (jumpR, kenJumpR (i), characterX, characterY, false)
-                delay (80)
-                characterY -= 10
-            end for
-                
-            Sprite.Free (jumpR)
-            
-        end if
-        
-        
-        
+	characterY += 70
+	if characterState = "L" then
+	    
+	    var jumpL := Sprite.New (kenJumpL (1))
+	    Sprite.SetPosition (jumpL, characterX, characterY, false)
+	    Sprite.Show (jumpL)
+	    
+	    for i : 1 .. 7
+		Sprite.Animate (jumpL, kenJumpL (i), characterX, characterY, false)
+		delay (80)
+		characterY -= 10
+	    end for
+		
+	    Sprite.Free (jumpL)
+	    
+	elsif characterState = "R" then
+	    
+	    var jumpR := Sprite.New (kenJumpR (1))
+	    Sprite.SetPosition (jumpR, characterX, characterY, false)
+	    Sprite.Show (jumpR)
+	    
+	    for i : 1 .. 7
+		Sprite.Animate (jumpR, kenJumpR (i), characterX, characterY, false)
+		delay (80)
+		characterY -= 10
+	    end for
+		
+	    Sprite.Free (jumpR)
+	    
+	end if
+	
+	
+	
     end if
     
     if KeyPushedDown (KEY_DOWN_ARROW) then
-        
-        if characterState = "L" then
-            
-            var kneelL := Sprite.New (kenKneelL)
-            Sprite.SetPosition (kneelL, characterX, characterY, false)
-            Sprite.Show (kneelL)
-            delay (50)
-            Sprite.Free (kneelL)
-            
-        elsif characterState = "R" then
-            
-            var kneelR := Sprite.New (kenKneelR)
-            Sprite.SetPosition (kneelR, characterX, characterY, false)
-            Sprite.Show (kneelR)
-            delay (50)
-            Sprite.Free (kneelR)
-            
-        end if
-        
+	
+	if characterState = "L" then
+	    
+	    var kneelL := Sprite.New (kenKneelL)
+	    Sprite.SetPosition (kneelL, characterX, characterY, false)
+	    Sprite.Show (kneelL)
+	    delay (50)
+	    Sprite.Free (kneelL)
+	    
+	elsif characterState = "R" then
+	    
+	    var kneelR := Sprite.New (kenKneelR)
+	    Sprite.SetPosition (kneelR, characterX, characterY, false)
+	    Sprite.Show (kneelR)
+	    delay (50)
+	    Sprite.Free (kneelR)
+	    
+	end if
+	
     end if
     
     if KeyHeldDown (KEY_LEFT_ARROW) then     
-        characterX -= moveSpeed
-        characterState := "L"
-        var moveL := Sprite.New (kenMoveL (1))
-        Sprite.SetPosition (moveL, characterX, characterY, false)
-        Sprite.Show (moveL)
-        
-        for i : 1 .. 5
-            Sprite.Animate (moveL, kenMoveL (i), characterX, characterY, false)
-            delay (50)
-        end for
-            
-        Sprite.Free (moveL)
-        
+	characterX -= moveSpeed
+	characterState := "L"
+	var moveL := Sprite.New (kenMoveL (1))
+	Sprite.SetPosition (moveL, characterX, characterY, false)
+	Sprite.Show (moveL)
+	
+	for i : 1 .. 5
+	    Sprite.Animate (moveL, kenMoveL (i), characterX, characterY, false)
+	    delay (50)
+	end for
+	    
+	Sprite.Free (moveL)
+	
     elsif KeyHeldDown (KEY_RIGHT_ARROW) then 
-        characterX += moveSpeed
-        characterState := "R"
-        var moveR := Sprite.New (kenMoveR (1))
-        Sprite.SetPosition (moveR, characterX, characterY, false)
-        Sprite.Show (moveR)
-        
-        for i : 1 .. 5
-            Sprite.Animate (moveR, kenMoveR (i), characterX, characterY, false)
-            delay (50)
-        end for
-            
-        Sprite.Free (moveR)
-        
+	characterX += moveSpeed
+	characterState := "R"
+	var moveR := Sprite.New (kenMoveR (1))
+	Sprite.SetPosition (moveR, characterX, characterY, false)
+	Sprite.Show (moveR)
+	
+	for i : 1 .. 5
+	    Sprite.Animate (moveR, kenMoveR (i), characterX, characterY, false)
+	    delay (50)
+	end for
+	    
+	Sprite.Free (moveR)
+	
     else
-        if characterState = "L" then
-            var idleL := Sprite.New (kenIdleL (1))
-            Sprite.SetPosition (idleL, characterX, characterY, false)
-            Sprite.Show (idleL)
-            
-            for i : 1 .. 4 
-                
-                Sprite.Animate (idleL, kenIdleL (i), characterX, characterY, false)
-                delay (80)
-                
-            end for
-                
-            Sprite.Free (idleL)
-            
-        elsif characterState = "R" then
-            
-            var idleR := Sprite.New (kenIdleR (1))
-            Sprite.SetPosition (idleR, characterX, characterY, false)
-            Sprite.Show (idleR)
-            for i : 1 .. 4
-                Sprite.Animate (idleR, kenIdleR (i), characterX, characterY, false)
-                delay (80)
-            end for
-                
-            Sprite.Free (idleR)
-        end if
-        
-        
+	if characterState = "L" then
+	    var idleL := Sprite.New (kenIdleL (1))
+	    Sprite.SetPosition (idleL, characterX, characterY, false)
+	    Sprite.Show (idleL)
+	    
+	    for i : 1 .. 4 
+		
+		Sprite.Animate (idleL, kenIdleL (i), characterX, characterY, false)
+		delay (80)
+		
+	    end for
+		
+	    Sprite.Free (idleL)
+	    
+	elsif characterState = "R" then
+	    
+	    var idleR := Sprite.New (kenIdleR (1))
+	    Sprite.SetPosition (idleR, characterX, characterY, false)
+	    Sprite.Show (idleR)
+	    for i : 1 .. 4
+		Sprite.Animate (idleR, kenIdleR (i), characterX, characterY, false)
+		delay (80)
+	    end for
+		
+	    Sprite.Free (idleR)
+	end if
+	
+	
     end if
     
 end loop 
