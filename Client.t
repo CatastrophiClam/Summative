@@ -22,11 +22,11 @@ var platX2 := 1418
 %character type
 type Character:
     record
-        x:int
-        y:int
-        h:int
-        w:int
-        pic:int
+	x:int
+	y:int
+	h:int
+	w:int
+	pic:int
     end record
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -58,7 +58,7 @@ class PlayerStatusDisplay
     picSprite := Sprite.New(spritePic)
     
     proc _init(lives:int)
-        numLives := lives
+	numLives := lives
     end _init
     
     proc updatePic()
@@ -176,90 +176,90 @@ procedure updateScreen
     
     %find leftMost and rightMost
     if selfPlayer.x < otherPlayer.x then
-        %if player 1 is to the left of player 2 and inside the world boundaries
-        if selfPlayer.x - selfPlayer.w/2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round(selfPlayer.x-selfPlayer.w/2)
-        else
-            leftMost := 0
-        end if
-        
-        %This means that player 2 is to the right of player 1
-        if otherPlayer.x + otherPlayer.w/2 < worldLength then
-            %player 2's x is rightmost
-            rightMost := round(otherPlayer.x + otherPlayer.w/2)
-        else
-            rightMost := worldLength
-        end if
+	%if player 1 is to the left of player 2 and inside the world boundaries
+	if selfPlayer.x - selfPlayer.w/2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round(selfPlayer.x-selfPlayer.w/2)
+	else
+	    leftMost := 0
+	end if
+	
+	%This means that player 2 is to the right of player 1
+	if otherPlayer.x + otherPlayer.w/2 < worldLength then
+	    %player 2's x is rightmost
+	    rightMost := round(otherPlayer.x + otherPlayer.w/2)
+	else
+	    rightMost := worldLength
+	end if
     else
-        %player 2 is to the left of player 1
-        if otherPlayer.x - otherPlayer.w/2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round(otherPlayer.x-otherPlayer.w/2)
-        else
-            leftMost := 0
-        end if
-        
-        %This means that player 1 is to the right of player 2
-        if selfPlayer.x + selfPlayer.w/2 < worldLength then
-            %player 1's x is leftmost
-            rightMost := round(selfPlayer.x + selfPlayer.w/2)
-        else
-            rightMost := worldLength
-        end if
+	%player 2 is to the left of player 1
+	if otherPlayer.x - otherPlayer.w/2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round(otherPlayer.x-otherPlayer.w/2)
+	else
+	    leftMost := 0
+	end if
+	
+	%This means that player 1 is to the right of player 2
+	if selfPlayer.x + selfPlayer.w/2 < worldLength then
+	    %player 1's x is leftmost
+	    rightMost := round(selfPlayer.x + selfPlayer.w/2)
+	else
+	    rightMost := worldLength
+	end if
     end if
     
     %find topmost and bottomMost
     if selfPlayer.y < otherPlayer.y then
-        %if player 1 is under player 2 and inside the world boundaries
-        if selfPlayer.y - selfPlayer.h/2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round(selfPlayer.y-selfPlayer.h/2)
-        else
-            bottomMost := 0
-        end if
-        
-        %This means that player 2 above player 1
-        if otherPlayer.y + otherPlayer.h/2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round(otherPlayer.y + otherPlayer.h/2)
-        else
-            topMost := worldHeight
-        end if
+	%if player 1 is under player 2 and inside the world boundaries
+	if selfPlayer.y - selfPlayer.h/2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round(selfPlayer.y-selfPlayer.h/2)
+	else
+	    bottomMost := 0
+	end if
+	
+	%This means that player 2 above player 1
+	if otherPlayer.y + otherPlayer.h/2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round(otherPlayer.y + otherPlayer.h/2)
+	else
+	    topMost := worldHeight
+	end if
     else
-        %if player 2 is under player 1 and inside the world boundaries
-        if otherPlayer.y - otherPlayer.h/2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round(otherPlayer.y-otherPlayer.h/2)
-        else
-            bottomMost := 0
-        end if
-        
-        %This means that player 1 above player 2
-        if selfPlayer.y + selfPlayer.h/2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round(selfPlayer.y + selfPlayer.h/2)
-        else
-            topMost := worldHeight
-        end if
+	%if player 2 is under player 1 and inside the world boundaries
+	if otherPlayer.y - otherPlayer.h/2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round(otherPlayer.y-otherPlayer.h/2)
+	else
+	    bottomMost := 0
+	end if
+	
+	%This means that player 1 above player 2
+	if selfPlayer.y + selfPlayer.h/2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round(selfPlayer.y + selfPlayer.h/2)
+	else
+	    topMost := worldHeight
+	end if
     end if
     
     
     %update screenX and screenY
     screenX := round((rightMost+leftMost)/2-maxx/2)
     if screenX < 0 then 
-        screenX := 0
+	screenX := 0
     end if
     if screenX > worldLength-maxx then
-        screenX := worldLength - maxx
+	screenX := worldLength - maxx
     end if
     
     screenY := round((bottomMost+topMost)/2-maxy/2)
     if screenY < 0 then
-        screenY := 0
+	screenY := 0
     end if
     if screenY > worldHeight - maxy then
-        screenY := worldHeight - maxy
+	screenY := worldHeight - maxy
     end if
     
     %put maxx
@@ -274,11 +274,11 @@ function split(str:string, regex:string):array 1..4 of string
     var pastSpace := 0
     var count := 0
     for i:1..length(str)
-        if str(i) = " " then
-            count += 1
-            a(count) := str(pastSpace+1..i-1)
-            pastSpace := i
-        end if
+	if str(i) = " " then
+	    count += 1
+	    a(count) := str(pastSpace+1..i-1)
+	    pastSpace := i
+	end if
     end for
     result a
 end split
@@ -326,32 +326,39 @@ end KeyHeldDown
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions, positions:string
 var toDoArray : array 1..4 of string
+
+%Initialize
+
+Input.KeyDown (charsLast)
+Input.KeyDown (chars)
+
 loop
     instructions := ""
+    charsLast := chars
     Input.KeyDown(chars)
     updateScreen
     
     if (KeyPushedDown(KEY_UP_ARROW)) then
-        instructions += "2"
+	instructions += "1"
     elsif (KeyPushedDown(KEY_DOWN_ARROW)) then
-        instructions += "1"
+	instructions += "-1"
     else
-        instructions += "0"
+	instructions += "0"
     end if
     if (KeyPushedDown(KEY_LEFT_ARROW)) then
-        instructions += "1"
+	instructions += "-1"
     elsif (KeyPushedDown(KEY_RIGHT_ARROW)) then
-        instructions += "2"
+	instructions += "1"
     else
-        instructions += "0"
+	instructions += "0"
     end if
     put:netStream,instructions
     
     loop
-        if Net.LineAvailable(netStream) then
-            get:netStream, positions:*
-            toDoArray := split(positions," ")
-        end if
+	if Net.LineAvailable(netStream) then
+	    get:netStream, positions:*
+	    toDoArray := split(positions," ")
+	end if
     end loop
     
     updateBackground
