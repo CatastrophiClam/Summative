@@ -18,7 +18,7 @@ const FILLER_VARIABLE := 2 %if you see this, it means theres some value we haven
 %--------------------------------------------------------%
 
 var port1 := 5600
-var port2 := 5601
+var port2 := 5605
 
 var stream1, stream2:int
 
@@ -81,7 +81,7 @@ class PlayerStatusDisplay
     picSprite := Sprite.New(spritePic)
     
     proc _init(lives:int)
-        numLives := lives
+	numLives := lives
     end _init
     
     proc updatePic()
@@ -146,120 +146,120 @@ class Character
     
     %initialize damages
     proc initDamage(uO,dO,sO,uP,dP,sP:int)
-        upOD := uO
-        downOD := dO
-        sideOD := sO
-        upPD := uP
-        downPD := dP
-        sidePD := sP
+	upOD := uO
+	downOD := dO
+	sideOD := sO
+	upPD := uP
+	downPD := dP
+	sidePD := sP
     end initDamage
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertX(x_ , screenX: real): int
-        result round(x_-screenX)
+	result round(x_-screenX)
     end convertX
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertY(y_ , screenY: real): int
-        result round(y_-screenY)
+	result round(y_-screenY)
     end convertY
     
     %ABILITIES
     proc upO
-        numFrames :=  FILLER_VARIABLE
-        if not doingAbility then
-            hitDamage := upOD
-        end if
+	numFrames :=  FILLER_VARIABLE
+	if not doingAbility then
+	    hitDamage := upOD
+	end if
     end upO
     
     proc downO
-        numFrames :=  FILLER_VARIABLE
-        if not doingAbility then
-            hitDamage := downOD
-        end if
+	numFrames :=  FILLER_VARIABLE
+	if not doingAbility then
+	    hitDamage := downOD
+	end if
     end downO
     
     proc rightO
-        numFrames :=  FILLER_VARIABLE
-        if not doingAbility then
-            hitDamage := sideOD
-        end if
+	numFrames :=  FILLER_VARIABLE
+	if not doingAbility then
+	    hitDamage := sideOD
+	end if
     end rightO
     
     proc leftO
-        numFrames :=  FILLER_VARIABLE
-        if not doingAbility then
-            hitDamage := sideOD
-        end if
+	numFrames :=  FILLER_VARIABLE
+	if not doingAbility then
+	    hitDamage := sideOD
+	end if
     end leftO
     
     proc upP
-        numFrames :=  FILLER_VARIABLE
-        if not doingAbility then
-            hitDamage := upPD
-        end if
+	numFrames :=  FILLER_VARIABLE
+	if not doingAbility then
+	    hitDamage := upPD
+	end if
     end upP
     
     proc downP
-        numFrames :=  FILLER_VARIABLE
-        if not doingAbility then
-            hitDamage := downPD
-        end if
+	numFrames :=  FILLER_VARIABLE
+	if not doingAbility then
+	    hitDamage := downPD
+	end if
     end downP
     
     proc rightP
-        numFrames :=  FILLER_VARIABLE
-        if not doingAbility then
-            hitDamage := sidePD
-        end if
+	numFrames :=  FILLER_VARIABLE
+	if not doingAbility then
+	    hitDamage := sidePD
+	end if
     end rightP
     
     proc leftP
-        numFrames :=  FILLER_VARIABLE
-        if not doingAbility then
-            hitDamage := sidePD
-        end if
+	numFrames :=  FILLER_VARIABLE
+	if not doingAbility then
+	    hitDamage := sidePD
+	end if
     end leftP
     
     proc knockBack(cX,cY,pX,pY:int) %cX,cY is center of other player, pX, pY is where character was hit
-        var kbD : real := kbDistance*damage/100  %distance character gets knocked back
-        %calculate new destination
-        %ABRUPT CHANGE OF DIRECTION VERSION
-        xDestination := round(x+(pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2))
-        yDestination := round(y+(pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2))
-        %KEEPS MOMENTUM VERSION
-        %xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-        %yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-        
-        %check if character bounces
-        if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
-            %character bounces
-            bounces := true
-            bounceX := xDestination
-            bounceY := platY + (platY - yDestination)
-        end if
+	var kbD : real := kbDistance*damage/100  %distance character gets knocked back
+	%calculate new destination
+	%ABRUPT CHANGE OF DIRECTION VERSION
+	xDestination := round(x+(pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2))
+	yDestination := round(y+(pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2))
+	%KEEPS MOMENTUM VERSION
+	%xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+	%yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+	
+	%check if character bounces
+	if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
+	    %character bounces
+	    bounces := true
+	    bounceX := xDestination
+	    bounceY := platY + (platY - yDestination)
+	end if
     end knockBack
     
     proc update(screenX, screenY: int)%, instructions : string)
-        %if we're performing an ability
-        if doingAbility then
-            %do the ability
-            x += abilXIncr
-            y += abilYIncr
-            %update number of frames done
-            numFrames -= 1
-            %did the ability end yet?
-            if numFrames = 0 then
-                %if yes then revert everything
-                doingAbility := false
-            end if
-        end if
-        x := convertX(x,screenX)
-        y := convertY(y,screenY)
-        %display status display
-        ^(pSD).display
+	%if we're performing an ability
+	if doingAbility then
+	    %do the ability
+	    x += abilXIncr
+	    y += abilYIncr
+	    %update number of frames done
+	    numFrames -= 1
+	    %did the ability end yet?
+	    if numFrames = 0 then
+		%if yes then revert everything
+		doingAbility := false
+	    end if
+	end if
+	x := convertX(x,screenX)
+	y := convertY(y,screenY)
+	%display status display
+	^(pSD).display
     end update
     
 end Character
@@ -321,90 +321,90 @@ procedure updateScreen
     
     %find leftMost and rightMost
     if ^(player1).x < ^(player2).x then
-        %if player 1 is to the left of player 2 and inside the world boundaries
-        if ^(player1).x - ^(player1).w/2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round(^(player1).x-^(player1).w/2)
-        else
-            leftMost := 0
-        end if
-        
-        %This means that player 2 is to the right of player 1
-        if ^(player2).x + ^(player2).w/2 < worldLength then
-            %player 2's x is rightmost
-            rightMost := round(^(player2).x + ^(player2).w/2)
-        else
-            rightMost := worldLength
-        end if
+	%if player 1 is to the left of player 2 and inside the world boundaries
+	if ^(player1).x - ^(player1).w/2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round(^(player1).x-^(player1).w/2)
+	else
+	    leftMost := 0
+	end if
+	
+	%This means that player 2 is to the right of player 1
+	if ^(player2).x + ^(player2).w/2 < worldLength then
+	    %player 2's x is rightmost
+	    rightMost := round(^(player2).x + ^(player2).w/2)
+	else
+	    rightMost := worldLength
+	end if
     else
-        %player 2 is to the left of player 1
-        if ^(player2).x - ^(player2).w/2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round(^(player2).x-^(player2).w/2)
-        else
-            leftMost := 0
-        end if
-        
-        %This means that player 1 is to the right of player 2
-        if ^(player1).x + ^(player1).w/2 < worldLength then
-            %player 1's x is leftmost
-            rightMost := round(^(player1).x + ^(player1).w/2)
-        else
-            rightMost := worldLength
-        end if
+	%player 2 is to the left of player 1
+	if ^(player2).x - ^(player2).w/2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round(^(player2).x-^(player2).w/2)
+	else
+	    leftMost := 0
+	end if
+	
+	%This means that player 1 is to the right of player 2
+	if ^(player1).x + ^(player1).w/2 < worldLength then
+	    %player 1's x is leftmost
+	    rightMost := round(^(player1).x + ^(player1).w/2)
+	else
+	    rightMost := worldLength
+	end if
     end if
     
     %find topmost and bottomMost
     if ^(player1).y < ^(player2).y then
-        %if player 1 is under player 2 and inside the world boundaries
-        if ^(player1).y - ^(player1).h/2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round(^(player1).y-^(player1).h/2)
-        else
-            bottomMost := 0
-        end if
-        
-        %This means that player 2 above player 1
-        if ^(player2).y + ^(player2).h/2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round(^(player2).y + ^(player2).h/2)
-        else
-            topMost := worldHeight
-        end if
+	%if player 1 is under player 2 and inside the world boundaries
+	if ^(player1).y - ^(player1).h/2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round(^(player1).y-^(player1).h/2)
+	else
+	    bottomMost := 0
+	end if
+	
+	%This means that player 2 above player 1
+	if ^(player2).y + ^(player2).h/2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round(^(player2).y + ^(player2).h/2)
+	else
+	    topMost := worldHeight
+	end if
     else
-        %if player 2 is under player 1 and inside the world boundaries
-        if ^(player2).y - ^(player2).h/2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round(^(player2).y-^(player2).h/2)
-        else
-            bottomMost := 0
-        end if
-        
-        %This means that player 1 above player 2
-        if ^(player1).y + ^(player1).h/2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round(^(player1).y + ^(player1).h/2)
-        else
-            topMost := worldHeight
-        end if
+	%if player 2 is under player 1 and inside the world boundaries
+	if ^(player2).y - ^(player2).h/2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round(^(player2).y-^(player2).h/2)
+	else
+	    bottomMost := 0
+	end if
+	
+	%This means that player 1 above player 2
+	if ^(player1).y + ^(player1).h/2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round(^(player1).y + ^(player1).h/2)
+	else
+	    topMost := worldHeight
+	end if
     end if
     
     
     %update screenX and screenY
     screenX := round((rightMost+leftMost)/2-maxx/2)
     if screenX < 0 then 
-        screenX := 0
+	screenX := 0
     end if
     if screenX > worldLength-maxx then
-        screenX := worldLength - maxx
+	screenX := worldLength - maxx
     end if
     
     screenY := round((bottomMost+topMost)/2-maxy/2)
     if screenY < 0 then
-        screenY := 0
+	screenY := 0
     end if
     if screenY > worldHeight - maxy then
-        screenY := worldHeight - maxy
+	screenY := worldHeight - maxy
     end if
     
     %put maxx
@@ -440,42 +440,55 @@ end updateScreen
 %                                                    GAME SCREEN                                                            %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
+var instructions: string  %instructions sent by client
 
 loop
-    %Input.KeyDown(chars)
+    %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
+    %SECOND DIGIT is similar for down, no, or up arrow pressed
     if Net.LineAvailable(stream1) and Net.LineAvailable(stream1) then
+    
+    
+    %update player 1's stuff
+    get:stream1,instructions
+    
+    if (instructions(1) = "1" ) then
+	^(player1).x += 4
+    end if
+    if (instructions(1) = "2" ) then
+	^(player1).x -= 4
+    end if
+    if (instructions(2) = "1" ) then
+	^(player1).y -= 4
+    end if
+    if (instructions(2) = "2" ) then
+	^(player1).y += 4
+    end if
+    
+    %update player 2's stuff
+    get:stream2,instructions
+    
+    if (instructions(1) = "1" ) then
+	^(player2).x += 4
+    end if
+    if (instructions(1) = "2" ) then
+	^(player2).x -= 4
+    end if
+    if (instructions(2) = "1" ) then
+	^(player2).y -= 4
+    end if
+    if (instructions(2) = "2" ) then
+	^(player2).y += 4
+    end if
+    
+    %send player info back
+    %PLAYER INFO FORM:
+    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
+    
+    put: stream1, intstr(round(^(player1).x))+" "+intstr(round(^(player1).y))+" "+intstr(round(^(player2).x))+" "+intstr(round(^(player2).y))
+    put: stream2, intstr(round(^(player2).x))+" "+intstr(round(^(player2).y))+" "+intstr(round(^(player1).x))+" "+intstr(round(^(player1).y))
+    
     updateScreen
     
-    if (chars('w')) then
-        ^(player1).y += 4
-    end if
-    if (chars('s')) then
-        ^(player1).y -= 4
-    end if
-    if (chars('a')) then
-        ^(player1).x -= 4
-    end if
-    if (chars('d')) then
-        ^(player1).x += 4
-    end if
-    if (chars(KEY_UP_ARROW)) then
-        ^(player2).y += 4
-    end if
-    if (chars(KEY_DOWN_ARROW)) then
-        ^(player2).y -= 4
-    end if
-    if (chars(KEY_LEFT_ARROW)) then
-        ^(player2).x -= 4
-    end if
-    if (chars(KEY_RIGHT_ARROW)) then
-        ^(player2).x += 4
-    end if
-    
-    updateBackground
-    %^(player1).update(screenX,screenY)
-    %^(player2).update(screenX,screenY)
-    Draw.FillOval(round((^(player1).x-screenX)),round((^(player1).y-screenY)),5,5,black)
-    Draw.FillOval(round((^(player2).x-screenX)),round((^(player2).y-screenY)),5,5,black)
     end if
 end loop
 

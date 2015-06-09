@@ -5,6 +5,7 @@ View.Set ("graphics")
 var characterX, characterY : int := 0
 var chars, charsLast : array char of boolean 
 var moveSpeed : int := 10
+
 var characterState : string := "R"
 
 %For keypress detection
@@ -25,6 +26,7 @@ end KeyHeldDown
 
 % Idle
 var kenIdleR, kenIdleL : array 1 .. 4 of int
+
 for i : 1 .. 4
     kenIdleR (i) := Pic.FileNew ("idle" + intstr(i) + ".jpeg")
     kenIdleL (i) := Pic.Mirror (kenIdleR (i))
@@ -33,6 +35,7 @@ end for
 % Move
 var kenMoveR, kenMoveL : array 1 .. 5 of int 
 for i : 1 .. 5
+    
     kenMoveR (i) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
     kenMoveL (i) := Pic.Mirror (kenMoveR (i))
 end for
@@ -43,16 +46,21 @@ var kenKneelL := Pic.Mirror (kenKneelR)
 
 % Jump
 var kenJumpR, kenJumpL : array 1 .. 7 of int
+
 for i : 1 .. 7
-    kenJumpR (i) := Pic.FileNew ("jump" + intstr(i) + ".jpeg")
-    kenJumpL (i) := Pic.Mirror (kenJumpR (i))
+    
+    kenJumpL (i) := Pic.FileNew ("jump" + intstr(i) + ".jpeg")
+    kenJumpR (i) := Pic.Mirror (kenJumpL (i))
 end for
     
 % Roundhouse
 var kenRoundhouseR, kenRoundhouseL : array 1 .. 5 of int
+
 for i : 1 .. 5
+    
     kenRoundhouseR (i) := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
     kenRoundhouseL (i) := Pic.Mirror (kenRoundhouseR (i))
+    
 end for
     
 %Punch
@@ -65,29 +73,35 @@ end for
 % Kick
 var kenKickR, kenKickL : array 1 .. 5 of int
 for i : 1 .. 5
-    kenKickR (i) := Pic.FileNew ("kick" + intstr(i) + ".jpeg")
-    kenKickL (i) := Pic.Mirror (kenKickR (i))
+    kenKickL (i) := Pic.FileNew ("kick" + intstr(i) + ".jpeg")
+    kenKickR (i) := Pic.Mirror (kenKickL (i))
 end for
     
 % Tatsumaki
 var kenTatsumakiR, kenTatsumakiL : array 1 .. 13 of int
 for i : 1 .. 13
-    kenTatsumakiR (i) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
-    kenTatsumakiL (i) := Pic.Mirror (kenTatsumakiR (i))
+    
+    kenTatsumakiL (i) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
+    kenTatsumakiR (i) := Pic.Mirror (kenTatsumakiL (i))
+    
 end for
     
 % Hadoken
 var kenHadokenR, kenHadokenL : array 1 .. 4 of int
 for i : 1 .. 4
-    kenHadokenR (i) := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
-    kenHadokenL (i) := Pic.Mirror (kenHadokenR (i))
+    
+    kenHadokenL (i) := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
+    kenHadokenR (i) := Pic.Mirror (kenHadokenL (i))
+    
 end for
     
 % Shoryuken
 var kenShoryukenR, kenShoryukenL : array 1 .. 7 of int
 for i : 1 .. 7
-    kenShoryukenR (i) := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
-    kenShoryukenL (i) := Pic.Mirror (kenShoryukenR (i))
+    
+    kenShoryukenL (i) := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
+    kenShoryukenR (i) := Pic.Mirror (kenShoryukenL (i))
+    
 end for
     
 %Character sprite
@@ -270,18 +284,22 @@ loop
     else
         if characterState = "L" then
             
-            for i : 1 .. 4 
-                Sprite.Animate (sprite, kenIdleL (i), characterX, characterY, false)
-                delay (80)
-            end for
+        else
+            if characterState = "L" then
                 
-        elsif characterState = "R" then
-            
-            for i : 1 .. 4
-                Sprite.Animate (sprite, kenIdleR (i), characterX, characterY, false)
-                delay (80)
-            end for
+                for i : 1 .. 4 
+                    Sprite.Animate (sprite, kenIdleL (i), characterX, characterY, false)
+                    delay (80)
+                end for
+                    
+            elsif characterState = "R" then
+                
+                for i : 1 .. 4
+                    Sprite.Animate (sprite, kenIdleR (i), characterX, characterY, false)
+                    delay (80)
+                end for
+            end if
         end if
+        Sprite.Show(sprite)
     end if
-    Sprite.Show(sprite)
 end loop 
