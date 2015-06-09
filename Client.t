@@ -273,8 +273,8 @@ function split(str:string, regex:string):array 1..4 of string
     var a : array 1..4 of string
     var pastSpace := 0
     var count := 0
-    for i:1..length(str)
-	if str(i) = " " then
+    for i:1..length(str)+1
+	if i = length(str)+1 or str(i) = " " then
 	    count += 1
 	    a(count) := str(pastSpace+1..i-1)
 	    pastSpace := i

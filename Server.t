@@ -445,7 +445,7 @@ var instructions: string  %instructions sent by client
 loop
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
-    if Net.LineAvailable(stream1) and Net.LineAvailable(stream1) then
+    if Net.LineAvailable(stream1) and Net.LineAvailable(stream2) then
     
     
     %update player 1's stuff
