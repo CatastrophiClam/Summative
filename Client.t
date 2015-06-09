@@ -358,14 +358,14 @@ loop
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
 	    toDoArray := split(positions," ")
-	    exit
+	    Draw.FillOval(strint(toDoArray(1)),strint(toDoArray(2)),5,5,black)
+	    Draw.FillOval(strint(toDoArray(3)),strint(toDoArray(4)),5,5,black)
 	end if
 
     
     updateBackground
     
-    Draw.FillOval(strint(toDoArray(1)),strint(toDoArray(2)),5,5,black)
-    Draw.FillOval(strint(toDoArray(3)),strint(toDoArray(4)),5,5,black)
+    
     delay(5)
 end loop
 
