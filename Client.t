@@ -338,16 +338,16 @@ loop
     Input.KeyDown(chars)
     updateScreen
     
-    if (KeyPushedDown(KEY_UP_ARROW)) then
+    if (chars(KEY_UP_ARROW)) then
 	instructions += "2"
-    elsif (KeyPushedDown(KEY_DOWN_ARROW)) then
+    elsif (chars(KEY_DOWN_ARROW)) then
 	instructions += "1"
     else
 	instructions += "0"
     end if
-    if (KeyPushedDown(KEY_LEFT_ARROW)) then
+    if (chars(KEY_LEFT_ARROW)) then
 	instructions += "1"
-    elsif (KeyPushedDown(KEY_RIGHT_ARROW)) then
+    elsif (chars(KEY_RIGHT_ARROW)) then
 	instructions += "2"
     else
 	instructions += "0"
