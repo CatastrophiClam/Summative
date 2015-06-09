@@ -360,12 +360,7 @@ loop
 	    toDoArray := split(positions," ")
 	    exit
 	end if
-<<<<<<< HEAD
-	
-    end loop
-=======
-    
->>>>>>> 39dcd5b0876a72b88bb6649f4f27a50d06d00d5c
+
     
     updateBackground
     
