@@ -440,42 +440,55 @@ end updateScreen
 %                                                    GAME SCREEN                                                            %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
+var instructions: string  %instructions sent by client
 
 loop
-    %Input.KeyDown(chars)
+    %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or-1, indicating left, no, or right arrow was pressed
+    %SECOND DIGIT is similar for up, no, or down arrow pressed
     if Net.LineAvailable(stream1) and Net.LineAvailable(stream1) then
-    updateScreen
     
-    if (chars('w')) then
-        ^(player1).y += 4
-    end if
-    if (chars('s')) then
-        ^(player1).y -= 4
-    end if
-    if (chars('a')) then
-        ^(player1).x -= 4
-    end if
-    if (chars('d')) then
+    
+    %update player 1's stuff
+    get:stream1,instructions
+    
+    if (instructions(1) = -1 ) then
         ^(player1).x += 4
     end if
-    if (chars(KEY_UP_ARROW)) then
-        ^(player2).y += 4
+    if (instructions(1) = 1 ) then
+        ^(player1).x -= 4
     end if
-    if (chars(KEY_DOWN_ARROW)) then
-        ^(player2).y -= 4
+    if (instructions(2) = -1 ) then
+        ^(player1).y -= 4
     end if
-    if (chars(KEY_LEFT_ARROW)) then
-        ^(player2).x -= 4
-    end if
-    if (chars(KEY_RIGHT_ARROW)) then
-        ^(player2).x += 4
+    if (instructions(2) = 1 ) then
+        ^(player1).y += 4
     end if
     
-    updateBackground
-    %^(player1).update(screenX,screenY)
-    %^(player2).update(screenX,screenY)
-    Draw.FillOval(round((^(player1).x-screenX)),round((^(player1).y-screenY)),5,5,black)
-    Draw.FillOval(round((^(player2).x-screenX)),round((^(player2).y-screenY)),5,5,black)
+    %update player 2's stuff
+    get:stream2,instructions
+    
+    if (instructions(1) = -1 ) then
+        ^(player2).x += 4
+    end if
+    if (instructions(1) = 1 ) then
+        ^(player2).x -= 4
+    end if
+    if (instructions(2) = -1 ) then
+        ^(player2).y -= 4
+    end if
+    if (instructions(2) = 1 ) then
+        ^(player2).y += 4
+    end if
+    
+    %send player info back
+    %PLAYER INFO FORM:
+    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
+    
+    put: stream1, intstr(^(player1)).x+" "+intstr(^(player1).y)+" "+intstr(^(player2)).x+" "+intstr(^(player2).y)
+    put: stream2, intstr(^(player2)).x+" "+intstr(^(player2).y)+" "+intstr(^(player1)).x+" "+intstr(^(player1).y)
+    
+    updateScreen
+    
     end if
 end loop
 
