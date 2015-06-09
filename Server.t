@@ -451,33 +451,33 @@ loop
     %update player 1's stuff
     get:stream1,instructions
     
-    if (instructions(1) = "1" ) then
-	^(player1).x += 4
-    end if
     if (instructions(1) = "2" ) then
-	^(player1).x -= 4
+	^(player1).x += 10
+    end if
+    if (instructions(1) = "1" ) then
+	^(player1).x -= 10
     end if
     if (instructions(2) = "1" ) then
-	^(player1).y -= 4
+	^(player1).y -= 10
     end if
     if (instructions(2) = "2" ) then
-	^(player1).y += 4
+	^(player1).y += 10
     end if
     
     %update player 2's stuff
     get:stream2,instructions
     
-    if (instructions(1) = "1" ) then
-	^(player2).x += 4
-    end if
     if (instructions(1) = "2" ) then
-	^(player2).x -= 4
+	^(player2).x += 10
+    end if
+    if (instructions(1) = "1" ) then
+	^(player2).x -= 10
     end if
     if (instructions(2) = "1" ) then
-	^(player2).y -= 4
+	^(player2).y -= 10
     end if
     if (instructions(2) = "2" ) then
-	^(player2).y += 4
+	^(player2).y += 10
     end if
     
     %send player info back
