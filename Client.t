@@ -358,7 +358,9 @@ loop
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
 	    toDoArray := split(positions," ")
+	    exit
 	end if
+	
     end loop
     
     updateBackground
