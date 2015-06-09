@@ -84,7 +84,13 @@ end PlayerStatusDisplay
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
-var chars : array char of boolean
+var chars, charsLast : array char of boolean 
+
+%--------------------------------NETWORK STUFF----------------------------------%
+var netStream : int
+var serverAddress : string := "10.174.28.204"
+var serverPort : int
+var playerNum : int
 
 %---------------------------------SCREEN STUFF----------------------------------%
 
@@ -129,7 +135,19 @@ new PlayerStatusDisplay,pSD2
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
-
+put "Enter player number: "
+get playerNum
+if playerNum = 1 then
+    serverPort := 5600
+else
+    serverPort := 5605
+end if
+netStream := Net.OpenConnection(serverAddress,serverPort)
+if not netStream <= 0 then
+    put "connected"
+else
+    put "not connected"
+end if
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -251,6 +269,35 @@ procedure updateScreen
     %put screenX
 end updateScreen
 
+function split(str:string, regex:string):array 1..4 of string
+    var a : array 1..4 of string
+    var pastSpace := 0
+    var count := 0
+    for i:1..length(str)
+        if str(i) = " " then
+            count += 1
+            a(count) := str(pastSpace+1..i-1)
+            pastSpace := i
+        end if
+    end for
+    result a
+end split
+
+%For keypress detection
+
+function KeyPushedDown (c : char) : boolean
+    result not charsLast (c) and chars (c)
+end KeyPushedDown
+
+function KeyReleased (c : char) : boolean
+    result not chars (c) and charsLast(c)
+end KeyReleased
+
+function KeyHeldDown (c : char) : boolean
+    result charsLast (c) and chars (c)
+end KeyHeldDown
+
+
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                             END FUNCTIONS AND PROCESSES                                                   %
@@ -277,29 +324,40 @@ end updateScreen
 %                                                    GAME SCREEN                                                            %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
-
+var instructions, positions:string
+var toDoArray : array 1..4 of string
 loop
+    instructions := ""
     Input.KeyDown(chars)
     updateScreen
     
-    if (chars(KEY_UP_ARROW)) then
-        otherPlayer.y += 4
+    if (KeyPushedDown(KEY_UP_ARROW)) then
+        instructions += "1"
+    elsif (KeyPushedDown(KEY_DOWN_ARROW)) then
+        instructions += "-1"
+    else
+        instructions += "0"
     end if
-    if (chars(KEY_DOWN_ARROW)) then
-        otherPlayer.y -= 4
+    if (KeyPushedDown(KEY_LEFT_ARROW)) then
+        instructions += "-1"
+    elsif (KeyPushedDown(KEY_RIGHT_ARROW)) then
+        instructions += "1"
+    else
+        instructions += "0"
     end if
-    if (chars(KEY_LEFT_ARROW)) then
-        otherPlayer.x -= 4
-    end if
-    if (chars(KEY_RIGHT_ARROW)) then
-        otherPlayer.x += 4
-    end if
+    put:netStream,instructions
+    
+    loop
+        if Net.LineAvailable(netStream) then
+            get:netStream, positions:*
+            toDoArray := split(positions," ")
+        end if
+    end loop
     
     updateBackground
-    %selfPlayer.update(screenX,screenY)
-    %otherPlayer.update(screenX,screenY)
-    Draw.FillOval(round((selfPlayer.x-screenX)),round((selfPlayer.y-screenY)),5,5,black)
-    Draw.FillOval(round((otherPlayer.x-screenX)),round((otherPlayer.y-screenY)),5,5,black)
+    
+    Draw.FillOval(strint(toDoArray(1)),strint(toDoArray(2)),5,5,black)
+    Draw.FillOval(strint(toDoArray(3)),strint(toDoArray(4)),5,5,black)
     delay(5)
 end loop
 
