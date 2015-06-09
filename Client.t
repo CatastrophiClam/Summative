@@ -106,14 +106,6 @@ backgroundSprite := Sprite.New(backgroundPic)
 
 %---------------------------------PLAYER STUFF----------------------------------%
 var selfPlayer, otherPlayer : Character
-selfPlayer.x := 565
-selfPlayer.y := 365
-selfPlayer.h := 2
-selfPlayer.w := 2
-otherPlayer.x := 1318
-otherPlayer.y := 365
-otherPlayer.h := 2
-otherPlayer.w := 2
 
 %--------------------PLAYER STATUS DISPLAYS------------------------%
 var pSD1, pSD2 : pointer to PlayerStatusDisplay
@@ -139,8 +131,24 @@ put "Enter player number: "
 get playerNum
 if playerNum = 1 then
     serverPort := 5600
+    selfPlayer.x := 565
+    selfPlayer.y := 365
+    selfPlayer.h := 2
+    selfPlayer.w := 2
+    otherPlayer.x := 1318
+    otherPlayer.y := 365
+    otherPlayer.h := 2
+    otherPlayer.w := 2
 else
     serverPort := 5605
+    otherPlayer.x := 565
+    otherPlayer.y := 365
+    otherPlayer.h := 2
+    otherPlayer.w := 2
+    selfPlayer.x := 1318
+    selfPlayer.y := 365
+    selfPlayer.h := 2
+    selfPlayer.w := 2
 end if
 netStream := Net.OpenConnection(serverAddress,serverPort)
 if not netStream <= 0 then
@@ -338,13 +346,6 @@ loop
     Input.KeyDown(chars)
     updateScreen
     
-    if (chars(KEY_UP_ARROW)) then
-	instructions += "2"
-    elsif (chars(KEY_DOWN_ARROW)) then
-	instructions += "1"
-    else
-	instructions += "0"
-    end if
     if (chars(KEY_LEFT_ARROW)) then
 	instructions += "1"
     elsif (chars(KEY_RIGHT_ARROW)) then
@@ -352,6 +353,15 @@ loop
     else
 	instructions += "0"
     end if
+    
+    if (chars(KEY_UP_ARROW)) then
+	instructions += "2"
+    elsif (chars(KEY_DOWN_ARROW)) then
+	instructions += "1"
+    else
+	instructions += "0"
+    end if
+    
     put:netStream,instructions
     
     
