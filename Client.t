@@ -339,29 +339,33 @@ loop
     updateScreen
     
     if (KeyPushedDown(KEY_UP_ARROW)) then
-	instructions += "1"
+	instructions += "2"
     elsif (KeyPushedDown(KEY_DOWN_ARROW)) then
-	instructions += "-1"
+	instructions += "1"
     else
 	instructions += "0"
     end if
     if (KeyPushedDown(KEY_LEFT_ARROW)) then
-	instructions += "-1"
-    elsif (KeyPushedDown(KEY_RIGHT_ARROW)) then
 	instructions += "1"
+    elsif (KeyPushedDown(KEY_RIGHT_ARROW)) then
+	instructions += "2"
     else
 	instructions += "0"
     end if
     put:netStream,instructions
     
-    loop
+    
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
 	    toDoArray := split(positions," ")
 	    exit
 	end if
+<<<<<<< HEAD
 	
     end loop
+=======
+    
+>>>>>>> 39dcd5b0876a72b88bb6649f4f27a50d06d00d5c
     
     updateBackground
     
