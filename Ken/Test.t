@@ -5,7 +5,8 @@ View.Set ("graphics")
 var characterX, characterY : int := 0
 var chars, charsLast : array char of boolean 
 var moveSpeed : int := 10
-var characterState : string := "L"
+
+var characterState : string := "R"
 
 %For keypress detection
 
@@ -25,41 +26,48 @@ end KeyHeldDown
 
 % Idle
 var kenIdleR, kenIdleL : array 1 .. 4 of int
+
 for i : 1 .. 4
-    kenIdleL (i) := Pic.FileNew ("idle" + intstr(i) + ".jpeg")
-    kenIdleR (i) := Pic.Mirror (kenIdleL (i))
+    kenIdleR (i) := Pic.FileNew ("idle" + intstr(i) + ".jpeg")
+    kenIdleL (i) := Pic.Mirror (kenIdleR (i))
 end for
     
 % Move
 var kenMoveR, kenMoveL : array 1 .. 5 of int 
 for i : 1 .. 5
-    kenMoveL (i) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
-    kenMoveR (i) := Pic.Mirror (kenMoveL (i))
+    
+    kenMoveR (i) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    kenMoveL (i) := Pic.Mirror (kenMoveR (i))
 end for
     
 % Kneel
-var kenKneelL := Pic.FileNew ("kneel.jpeg")
-var kenKneelR := Pic.Mirror (kenKneelL)
+var kenKneelR := Pic.FileNew ("kneel.jpeg")
+var kenKneelL := Pic.Mirror (kenKneelR)
 
 % Jump
 var kenJumpR, kenJumpL : array 1 .. 7 of int
+
 for i : 1 .. 7
+    
     kenJumpL (i) := Pic.FileNew ("jump" + intstr(i) + ".jpeg")
     kenJumpR (i) := Pic.Mirror (kenJumpL (i))
 end for
     
 % Roundhouse
 var kenRoundhouseR, kenRoundhouseL : array 1 .. 5 of int
+
 for i : 1 .. 5
-    kenRoundhouseL (i) := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
-    kenRoundhouseR (i) := Pic.Mirror (kenRoundhouseL (i))
+    
+    kenRoundhouseR (i) := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
+    kenRoundhouseL (i) := Pic.Mirror (kenRoundhouseR (i))
+    
 end for
     
 %Punch
 var kenPunchR, kenPunchL : array 1 .. 3 of int
 for i : 1 .. 3
-    kenPunchL (i) := Pic.FileNew ("punch" + intstr(i) + ".jpeg")
-    kenPunchR (i) := Pic.Mirror (kenPunchL (i))
+    kenPunchR (i) := Pic.FileNew ("punch" + intstr(i) + ".jpeg")
+    kenPunchL (i) := Pic.Mirror (kenPunchR (i))
 end for
     
 % Kick
@@ -72,22 +80,28 @@ end for
 % Tatsumaki
 var kenTatsumakiR, kenTatsumakiL : array 1 .. 13 of int
 for i : 1 .. 13
+    
     kenTatsumakiL (i) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
     kenTatsumakiR (i) := Pic.Mirror (kenTatsumakiL (i))
+    
 end for
     
 % Hadoken
 var kenHadokenR, kenHadokenL : array 1 .. 4 of int
 for i : 1 .. 4
+    
     kenHadokenL (i) := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
     kenHadokenR (i) := Pic.Mirror (kenHadokenL (i))
+    
 end for
     
 % Shoryuken
 var kenShoryukenR, kenShoryukenL : array 1 .. 7 of int
 for i : 1 .. 7
+    
     kenShoryukenL (i) := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
     kenShoryukenR (i) := Pic.Mirror (kenShoryukenL (i))
+    
 end for
     
 %Character sprite
@@ -110,8 +124,6 @@ loop
         characterY += 70
         if characterState = "L" then
             
-            Sprite.Animate(sprite,kenJumpL (1),characterX, characterY, false)
-            
             for i : 1 .. 7
                 Sprite.Animate (sprite, kenJumpL (i), characterX, characterY, false)
                 delay (80)
@@ -119,8 +131,6 @@ loop
             end for
                 
         elsif characterState = "R" then
-            
-            Sprite.Animate(sprite,kenJumpR (1),characterX, characterY, false)
             
             for i : 1 .. 7
                 Sprite.Animate (sprite, kenJumpR (i), characterX, characterY, false)
@@ -149,7 +159,6 @@ loop
     if KeyHeldDown (KEY_LEFT_ARROW) then     
         characterX -= moveSpeed
         characterState := "L"
-        Sprite.Animate(sprite,kenMoveL(1),characterX, characterY, false)
         
         for i : 1 .. 5
             Sprite.Animate (sprite, kenMoveL (i), characterX, characterY, false)
@@ -160,14 +169,13 @@ loop
     elsif KeyHeldDown (KEY_RIGHT_ARROW) then 
         characterX += moveSpeed
         characterState := "R"
-        Sprite.Animate(sprite, kenMoveR(1),characterX, characterY, false)
         
         for i : 1 .. 5
             Sprite.Animate (sprite, kenMoveR (i), characterX, characterY, false)
             delay (50)
         end for
             
-    elsif KeyPushedDown ("e") then
+    elsif KeyHeldDown ("e") then
         
         if characterState = "L" then
             
@@ -184,25 +192,114 @@ loop
             end for
         end if
         
-    else
+    elsif KeyHeldDown ("z") then
+        
         if characterState = "L" then
             
-            Sprite.Animate(sprite,kenIdleL(1),characterX, characterY, false)
-            
-            for i : 1 .. 4 
-                Sprite.Animate (sprite, kenIdleL (i), characterX, characterY, false)
-                delay (80)
+            for i : 1 .. 5
+                Sprite.Animate(sprite, kenKickL(i), characterX, characterY, false)
+                delay (50)
             end for
                 
         elsif characterState = "R" then
             
-            Sprite.Animate(sprite,kenIdleR(1), characterX, characterY, false)
-            
-            for i : 1 .. 4
-                Sprite.Animate (sprite, kenIdleR (i), characterX, characterY, false)
-                delay (80)
+            for i : 1 .. 5
+                Sprite.Animate(sprite, kenKickR(i), characterX, characterY, false)
+                delay (50)
             end for
         end if
+        
+    elsif KeyHeldDown ("a") then
+        
+        if characterState = "L" then
+            
+            for i : 1 .. 3
+                Sprite.Animate(sprite, kenPunchL(i), characterX, characterY, false)
+                delay (50)
+            end for
+                
+        elsif characterState = "R" then
+            
+            for i : 1 .. 3
+                Sprite.Animate(sprite, kenPunchR(i), characterX, characterY, false)
+                delay (50)
+            end for
+        end if
+        
+    elsif KeyPushedDown ("s") then
+        
+        if characterState = "L" then
+            
+            for i : 1 .. 4
+                Sprite.Animate(sprite, kenHadokenL(i), characterX, characterY, false)
+                delay (100)
+            end for
+                
+        elsif characterState = "R" then
+            
+            for i : 1 .. 4
+                Sprite.Animate(sprite, kenHadokenR(i), characterX, characterY, false)
+                delay (100)
+            end for
+        end if
+        
+    elsif KeyPushedDown ("d") then
+        characterY += 91
+        
+        if characterState = "L" then
+            for i : 1 .. 7
+                characterY -= 13
+                Sprite.Animate(sprite, kenShoryukenL(i), characterX, characterY, false)
+                delay (100)
+            end for
+                
+        elsif characterState = "R" then
+            
+            for i : 1 .. 7
+                characterY -= 13
+                Sprite.Animate(sprite, kenShoryukenR(i), characterX, characterY, false)
+                delay (100)
+            end for
+        end if
+        
+    elsif KeyHeldDown ("q") then
+        characterY += 78
+        if characterState = "L" then
+            
+            for i : 1 .. 13
+                characterY -= 6
+                Sprite.Animate(sprite, kenTatsumakiL(i), characterX, characterY, false)
+                delay (50)
+            end for
+                
+        elsif characterState = "R" then
+            
+            for i : 1 .. 13
+                characterY -= 6
+                Sprite.Animate(sprite, kenTatsumakiR(i), characterX, characterY, false)
+                delay (50)
+            end for
+        end if
+        
+    else
+        if characterState = "L" then
+            
+        else
+            if characterState = "L" then
+                
+                for i : 1 .. 4 
+                    Sprite.Animate (sprite, kenIdleL (i), characterX, characterY, false)
+                    delay (80)
+                end for
+                    
+            elsif characterState = "R" then
+                
+                for i : 1 .. 4
+                    Sprite.Animate (sprite, kenIdleR (i), characterX, characterY, false)
+                    delay (80)
+                end for
+            end if
+        end if
+        Sprite.Show(sprite)
     end if
-    Sprite.Show(sprite)
 end loop 
