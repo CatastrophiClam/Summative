@@ -22,6 +22,7 @@ var platX2 := 1418
 %character type
 type Character:
     record
+
         x:int
         y:int
         h:int
@@ -59,7 +60,7 @@ class PlayerStatusDisplay
     picSprite := Sprite.New(spritePic)
     
     proc _init(lives:int)
-        numLives := lives
+	numLives := lives
     end _init
     
     proc updatePic()
@@ -85,7 +86,13 @@ end PlayerStatusDisplay
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
-var chars : array char of boolean
+var chars, charsLast : array char of boolean 
+
+%--------------------------------NETWORK STUFF----------------------------------%
+var netStream : int
+var serverAddress : string := "10.174.28.204"
+var serverPort : int
+var playerNum : int
 
 %---------------------------------SCREEN STUFF----------------------------------%
 
@@ -101,14 +108,6 @@ backgroundSprite := Sprite.New(backgroundPic)
 
 %---------------------------------PLAYER STUFF----------------------------------%
 var selfPlayer, otherPlayer : Character
-selfPlayer.x := 565
-selfPlayer.y := 365
-selfPlayer.h := 2
-selfPlayer.w := 2
-otherPlayer.x := 1318
-otherPlayer.y := 365
-otherPlayer.h := 2
-otherPlayer.w := 2
 
 var animationCounter : int
 
@@ -122,6 +121,49 @@ new PlayerStatusDisplay,pSD2
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                                  END VARIABLES                                                            %
+%                                                                                                                           %
+%---------------------------------------------------------------------------------------------------------------------------%
+
+
+%---------------------------------------------------------------------------------------------------------------------------%
+%                                                                                                                           %
+%                                                  NETWORK STUFF                                                            %
+%                                                                                                                           %
+%---------------------------------------------------------------------------------------------------------------------------%
+
+put "Enter player number: "
+get playerNum
+if playerNum = 1 then
+    serverPort := 5600
+    selfPlayer.x := 565
+    selfPlayer.y := 365
+    selfPlayer.h := 2
+    selfPlayer.w := 2
+    otherPlayer.x := 1318
+    otherPlayer.y := 365
+    otherPlayer.h := 2
+    otherPlayer.w := 2
+else
+    serverPort := 5605
+    otherPlayer.x := 565
+    otherPlayer.y := 365
+    otherPlayer.h := 2
+    otherPlayer.w := 2
+    selfPlayer.x := 1318
+    selfPlayer.y := 365
+    selfPlayer.h := 2
+    selfPlayer.w := 2
+end if
+netStream := Net.OpenConnection(serverAddress,serverPort)
+if not netStream <= 0 then
+    put "connected"
+else
+    put "not connected"
+end if
+
+%---------------------------------------------------------------------------------------------------------------------------%
+%                                                                                                                           %
+%                                                END NETWORK STUFF                                                          %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
@@ -145,98 +187,107 @@ procedure updateScreen
     
     %find leftMost and rightMost
     if selfPlayer.x < otherPlayer.x then
-        %if player 1 is to the left of player 2 and inside the world boundaries
-        if selfPlayer.x - selfPlayer.w/2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round(selfPlayer.x-selfPlayer.w/2)
-        else
-            leftMost := 0
-        end if
-        
-        %This means that player 2 is to the right of player 1
-        if otherPlayer.x + otherPlayer.w/2 < worldLength then
-            %player 2's x is rightmost
-            rightMost := round(otherPlayer.x + otherPlayer.w/2)
-        else
-            rightMost := worldLength
-        end if
+	%if player 1 is to the left of player 2 and inside the world boundaries
+	if selfPlayer.x - selfPlayer.w/2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round(selfPlayer.x-selfPlayer.w/2)
+	else
+	    leftMost := 0
+	end if
+	
+	%This means that player 2 is to the right of player 1
+	if otherPlayer.x + otherPlayer.w/2 < worldLength then
+	    %player 2's x is rightmost
+	    rightMost := round(otherPlayer.x + otherPlayer.w/2)
+	else
+	    rightMost := worldLength
+	end if
     else
-        %player 2 is to the left of player 1
-        if otherPlayer.x - otherPlayer.w/2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round(otherPlayer.x-otherPlayer.w/2)
-        else
-            leftMost := 0
-        end if
-        
-        %This means that player 1 is to the right of player 2
-        if selfPlayer.x + selfPlayer.w/2 < worldLength then
-            %player 1's x is leftmost
-            rightMost := round(selfPlayer.x + selfPlayer.w/2)
-        else
-            rightMost := worldLength
-        end if
+	%player 2 is to the left of player 1
+	if otherPlayer.x - otherPlayer.w/2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round(otherPlayer.x-otherPlayer.w/2)
+	else
+	    leftMost := 0
+	end if
+	
+	%This means that player 1 is to the right of player 2
+	if selfPlayer.x + selfPlayer.w/2 < worldLength then
+	    %player 1's x is leftmost
+	    rightMost := round(selfPlayer.x + selfPlayer.w/2)
+	else
+	    rightMost := worldLength
+	end if
     end if
     
     %find topmost and bottomMost
     if selfPlayer.y < otherPlayer.y then
-        %if player 1 is under player 2 and inside the world boundaries
-        if selfPlayer.y - selfPlayer.h/2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round(selfPlayer.y-selfPlayer.h/2)
-        else
-            bottomMost := 0
-        end if
-        
-        %This means that player 2 above player 1
-        if otherPlayer.y + otherPlayer.h/2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round(otherPlayer.y + otherPlayer.h/2)
-        else
-            topMost := worldHeight
-        end if
+	%if player 1 is under player 2 and inside the world boundaries
+	if selfPlayer.y - selfPlayer.h/2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round(selfPlayer.y-selfPlayer.h/2)
+	else
+	    bottomMost := 0
+	end if
+	
+	%This means that player 2 above player 1
+	if otherPlayer.y + otherPlayer.h/2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round(otherPlayer.y + otherPlayer.h/2)
+	else
+	    topMost := worldHeight
+	end if
     else
-        %if player 2 is under player 1 and inside the world boundaries
-        if otherPlayer.y - otherPlayer.h/2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round(otherPlayer.y-otherPlayer.h/2)
-        else
-            bottomMost := 0
-        end if
-        
-        %This means that player 1 above player 2
-        if selfPlayer.y + selfPlayer.h/2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round(selfPlayer.y + selfPlayer.h/2)
-        else
-            topMost := worldHeight
-        end if
+	%if player 2 is under player 1 and inside the world boundaries
+	if otherPlayer.y - otherPlayer.h/2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round(otherPlayer.y-otherPlayer.h/2)
+	else
+	    bottomMost := 0
+	end if
+	
+	%This means that player 1 above player 2
+	if selfPlayer.y + selfPlayer.h/2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round(selfPlayer.y + selfPlayer.h/2)
+	else
+	    topMost := worldHeight
+	end if
     end if
     
     
     %update screenX and screenY
     screenX := round((rightMost+leftMost)/2-maxx/2)
     if screenX < 0 then 
-        screenX := 0
+	screenX := 0
     end if
     if screenX > worldLength-maxx then
-        screenX := worldLength - maxx
+	screenX := worldLength - maxx
     end if
     
     screenY := round((bottomMost+topMost)/2-maxy/2)
     if screenY < 0 then
-        screenY := 0
+	screenY := 0
     end if
     if screenY > worldHeight - maxy then
-        screenY := worldHeight - maxy
+	screenY := worldHeight - maxy
     end if
     
-    %put maxx
-    %put maxy
-    %put rightMost-leftMost
-    %put topMost-bottomMost
-    %put screenX
 end updateScreen
+
+function split(str:string, regex:string):array 1..4 of string
+    var a : array 1..4 of string
+    var pastSpace := 0
+    var count := 0
+    for i:1..length(str)+1
+	if i = length(str)+1 or str(i) = " " then
+	    count += 1
+	    a(count) := str(pastSpace+1..i-1)
+	    pastSpace := i
+	end if
+    end for
+    result a
+end split
 
 %For keypress detection
 
@@ -261,37 +312,6 @@ end KeyHeldDown
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
-%                                                  NETWORK STUFF                                                            %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-var playerNum : int  %which player are we?
-var port : int
-var serverAddress : string
-var stream : int
-
-put "Player 1 or 2? :"
-get playerNum
-
-%init port based on player number
-if playerNum = 1 then
-    port := 5600
-else
-    port := 5605
-end if
-
-stream := Net.OpenConnection(serverAddress,port)
-cls
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                END NETWORK STUFF                                                          %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
 %                                                   TITLE SCREEN                                                            %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -309,29 +329,47 @@ cls
 %                                                    GAME SCREEN                                                            %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
+var instructions, positions:string
+var toDoArray : array 1..4 of string
+
+%Initialize
+
+Input.KeyDown (charsLast)
+Input.KeyDown (chars)
 
 loop
+    instructions := ""
+    charsLast := chars
     Input.KeyDown(chars)
     updateScreen
     
-    if (chars(KEY_UP_ARROW)) then
-        otherPlayer.y += 4
-    end if
-    if (chars(KEY_DOWN_ARROW)) then
-        otherPlayer.y -= 4
-    end if
     if (chars(KEY_LEFT_ARROW)) then
-        otherPlayer.x -= 4
-    end if
-    if (chars(KEY_RIGHT_ARROW)) then
-        otherPlayer.x += 4
+	instructions += "1"
+    elsif (chars(KEY_RIGHT_ARROW)) then
+	instructions += "2"
+    else
+	instructions += "0"
     end if
     
+    if (chars(KEY_UP_ARROW)) then
+	instructions += "2"
+    elsif (chars(KEY_DOWN_ARROW)) then
+	instructions += "1"
+    else
+	instructions += "0"
+    end if
+    
+    put:netStream,instructions
+    
+	if Net.LineAvailable(netStream) then
+	    get:netStream, positions:*
+	    toDoArray := split(positions," ")
+	    Draw.FillOval(strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,5,5,black)
+	    Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
+	end if
+    
     updateBackground
-    %selfPlayer.update(screenX,screenY)
-    %otherPlayer.update(screenX,screenY)
-    Draw.FillOval(round((selfPlayer.x-screenX)),round((selfPlayer.y-screenY)),5,5,black)
-    Draw.FillOval(round((otherPlayer.x-screenX)),round((otherPlayer.y-screenY)),5,5,black)
+    
     delay(5)
 end loop
 
