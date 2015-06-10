@@ -57,9 +57,9 @@ var platX2 := 1418
 %THIS IS ONE FRAME OF FIGHTER 
 type position:  
     record
-        pic : int   %this is the picture 
-        hitX : int  %this is the point that can hit the other player
-        hitY : int
+	pic : int   %this is the picture 
+	hitX : int  %this is the point that can hit the other player
+	hitY : int
     end record
 
 %Display thingy at bottom of screen with character lives and damage
@@ -248,18 +248,18 @@ class Character
     end knockBack
     
     proc update(instructions : string)
-        if (instructions(1) = "2" ) then
-            x += 10
-        end if
-        if (instructions(1) = "1" ) then
-            x -= 10
-        end if
-        if (instructions(2) = "1" ) then
-            y -= 10
-        end if
-        if (instructions(2) = "2" ) then
-            y += 10
-        end if
+	if (instructions(1) = "2" ) then
+	    x += 10
+	end if
+	if (instructions(1) = "1" ) then
+	    x -= 10
+	end if
+	if (instructions(2) = "1" ) then
+	    y -= 10
+	end if
+	if (instructions(2) = "2" ) then
+	    y += 10
+	end if
     end update
     
 end Character
@@ -323,7 +323,7 @@ pictures (3,1,1).hitY := pictures (3,1,2).hitY
 
 % Jump
 for i : 1 .. 7
-    pictures (4,i,2).pic := Pic.FileNew ("Ken/move" + intstr(i) + ".jpeg")
+    pictures (4,i,2).pic := Pic.FileNew ("Ken/jump" + intstr(i) + ".jpeg")
     pictures (4,i,2).hitX := FILLER_VARIABLE
     pictures (4,i,2).hitY := FILLER_VARIABLE
     pictures (4,i,1).pic := Pic.Mirror (pictures (4,i,2).pic)
@@ -373,12 +373,12 @@ end for
     
 % Hadoken
 for i : 1 .. 4
-    pictures (9,i,2).pic := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
+    pictures (9,i,2).pic := Pic.FileNew ("Ken/hadoken" + intstr(i) + ".jpeg")
     pictures (9,i,2).hitX := FILLER_VARIABLE
     pictures (9,i,2).hitY := FILLER_VARIABLE
     pictures (9,i,1).pic := Pic.Mirror (pictures (9,i,2).pic)
     pictures (9,i,1).hitX := 70-pictures (9,i,2).hitX
-    pictures (91,i,1).hitY := pictures (9,i,2).hitY
+    pictures (9,i,1).hitY := pictures (9,i,2).hitY
 end for
     
 % Shoryuken
@@ -534,33 +534,40 @@ end updateScreen
 %                                                     GAME LOOP                                                             %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
-var instructions: string  %instructions sent by client
+var instructions1, instructions2: string := "00n" %instructions sent by client
 
 loop
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
+    loop
     if Net.LineAvailable(stream1) and Net.LineAvailable(stream2) then
     
     %update player 1's stuff
-    get:stream1,instructions
+    get:stream1,instructions1
     
-    ^(player1).update(instructions)
+    
     
     %update player 2's stuff
-    get:stream2,instructions
-    
-    ^(player2).update(instructions)
-    
-    %send player info back
-    %PLAYER INFO FORM:
-    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
-    
-    put: stream1, intstr(round(^(player1).x))+" "+intstr(round(^(player1).y))+" "+intstr(round(^(player2).x))+" "+intstr(round(^(player2).y))
-    put: stream2, intstr(round(^(player2).x))+" "+intstr(round(^(player2).y))+" "+intstr(round(^(player1).x))+" "+intstr(round(^(player1).y))
-    
+    get:stream2,instructions2
+
     updateScreen
     
+    else
+	^(player1).update(instructions1)
+	^(player2).update(instructions2)
+	%send player info back
+	%PLAYER INFO FORM:
+	%PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
+    
+	put: stream1, intstr(round(^(player1).x))+" "+intstr(round(^(player1).y))+" "+intstr(round(^(player2).x))+" "+intstr(round(^(player2).y))
+	put: stream2, intstr(round(^(player2).x))+" "+intstr(round(^(player2).y))+" "+intstr(round(^(player1).x))+" "+intstr(round(^(player1).y))
+    
+	put intstr(round(^(player1).x))+" "+intstr(round(^(player1).y))+" "+intstr(round(^(player2).x))+" "+intstr(round(^(player2).y))
+	put intstr(round(^(player2).x))+" "+intstr(round(^(player2).y))+" "+intstr(round(^(player1).x))+" "+intstr(round(^(player1).y))
+	
+	exit
     end if
+    end loop
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
