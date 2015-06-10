@@ -18,7 +18,7 @@ const FILLER_VARIABLE := 2 %if you see this, it means theres some value we haven
 %--------------------------------------------------------%
 
 var port1 := 5600
-var port2 := 5601
+var port2 := 5605
 
 var stream1, stream2:int
 
