@@ -5,7 +5,6 @@ View.Set ("graphics")
 var characterX, characterY : int := 0
 var chars, charsLast : array char of boolean 
 var moveSpeed : int := 10
-
 var characterState : string := "R"
 
 %For keypress detection
@@ -35,32 +34,27 @@ end for
 % Move
 var kenMoveR, kenMoveL : array 1 .. 5 of int 
 for i : 1 .. 5
-    
-    kenMoveR (i) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
-    kenMoveL (i) := Pic.Mirror (kenMoveR (i))
+    kenMoveL (i) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    kenMoveR (i) := Pic.Mirror (kenMoveL (i))
 end for
     
 % Kneel
-var kenKneelR := Pic.FileNew ("kneel.jpeg")
-var kenKneelL := Pic.Mirror (kenKneelR)
+var kenKneelL := Pic.FileNew ("kneel.jpeg")
+var kenKneelR := Pic.Mirror (kenKneelL)
 
 % Jump
 var kenJumpR, kenJumpL : array 1 .. 7 of int
-
 for i : 1 .. 7
-    
-    kenJumpL (i) := Pic.FileNew ("jump" + intstr(i) + ".jpeg")
-    kenJumpR (i) := Pic.Mirror (kenJumpL (i))
+    kenMoveR (i) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    kenMoveL (i) := Pic.Mirror (kenMoveR (i))
 end for
     
 % Roundhouse
 var kenRoundhouseR, kenRoundhouseL : array 1 .. 5 of int
 
 for i : 1 .. 5
-    
     kenRoundhouseR (i) := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
     kenRoundhouseL (i) := Pic.Mirror (kenRoundhouseR (i))
-    
 end for
     
 %Punch
@@ -80,28 +74,22 @@ end for
 % Tatsumaki
 var kenTatsumakiR, kenTatsumakiL : array 1 .. 13 of int
 for i : 1 .. 13
-    
     kenTatsumakiL (i) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
     kenTatsumakiR (i) := Pic.Mirror (kenTatsumakiL (i))
-    
 end for
     
 % Hadoken
 var kenHadokenR, kenHadokenL : array 1 .. 4 of int
 for i : 1 .. 4
-    
     kenHadokenL (i) := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
     kenHadokenR (i) := Pic.Mirror (kenHadokenL (i))
-    
 end for
     
 % Shoryuken
 var kenShoryukenR, kenShoryukenL : array 1 .. 7 of int
-for i : 1 .. 7
-    
+for i : 1 .. 7    
     kenShoryukenL (i) := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
     kenShoryukenR (i) := Pic.Mirror (kenShoryukenL (i))
-    
 end for
     
 %Character sprite
@@ -123,7 +111,6 @@ loop
     if chars (KEY_UP_ARROW) then 
         characterY += 70
         if characterState = "L" then
-            
             for i : 1 .. 7
                 Sprite.Animate (sprite, kenJumpL (i), characterX, characterY, false)
                 delay (80)
@@ -131,7 +118,7 @@ loop
             end for
                 
         elsif characterState = "R" then
-            
+
             for i : 1 .. 7
                 Sprite.Animate (sprite, kenJumpR (i), characterX, characterY, false)
                 delay (80)
@@ -191,7 +178,7 @@ loop
                 delay (50)
             end for
         end if
-        
+
     elsif KeyHeldDown ("z") then
         
         if characterState = "L" then
@@ -219,7 +206,6 @@ loop
             end for
                 
         elsif characterState = "R" then
-            
             for i : 1 .. 3
                 Sprite.Animate(sprite, kenPunchR(i), characterX, characterY, false)
                 delay (50)
