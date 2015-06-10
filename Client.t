@@ -452,8 +452,8 @@ loop
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
 	    toDoArray := split(positions," ")
-        Sprite.Animate(selfPlayer.sprite,pictures(1,1,1),strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,false)
-        Sprite.Animate(otherPlayer.sprite,pictures(1,1,1),strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,false)
+        Sprite.Animate(selfPlayer.sprite,pictures(1,1,1),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
+        Sprite.Animate(otherPlayer.sprite,pictures(1,1,1),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
 	    %Draw.FillOval(strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,5,5,black)
 	    %Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
 	end if

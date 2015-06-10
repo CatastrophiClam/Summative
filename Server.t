@@ -247,24 +247,19 @@ class Character
 	end if
     end knockBack
     
-    proc update(screenX, screenY: int)%, instructions : string)
-	%if we're performing an ability
-	if doingAbility then
-	    %do the ability
-	    x += abilXIncr
-	    y += abilYIncr
-	    %update number of frames done
-	    numFrames -= 1
-	    %did the ability end yet?
-	    if numFrames = 0 then
-		%if yes then revert everything
-		doingAbility := false
-	    end if
-	end if
-	x := convertX(x,screenX)
-	y := convertY(y,screenY)
-	%display status display
-	^(pSD).display
+    proc update(instructions : string)
+        if (instructions(1) = "2" ) then
+            x += 10
+        end if
+        if (instructions(1) = "1" ) then
+            x -= 10
+        end if
+        if (instructions(2) = "1" ) then
+            y -= 10
+        end if
+        if (instructions(2) = "2" ) then
+            y += 10
+        end if
     end update
     
 end Character
@@ -549,34 +544,12 @@ loop
     %update player 1's stuff
     get:stream1,instructions
     
-    if (instructions(1) = "2" ) then
-	^(player1).x += 10
-    end if
-    if (instructions(1) = "1" ) then
-	^(player1).x -= 10
-    end if
-    if (instructions(2) = "1" ) then
-	^(player1).y -= 10
-    end if
-    if (instructions(2) = "2" ) then
-	^(player1).y += 10
-    end if
+    ^(player1).update(instructions)
     
     %update player 2's stuff
     get:stream2,instructions
     
-    if (instructions(1) = "2" ) then
-	^(player2).x += 10
-    end if
-    if (instructions(1) = "1" ) then
-	^(player2).x -= 10
-    end if
-    if (instructions(2) = "1" ) then
-	^(player2).y -= 10
-    end if
-    if (instructions(2) = "2" ) then
-	^(player2).y += 10
-    end if
+    ^(player2).update(instructions)
     
     %send player info back
     %PLAYER INFO FORM:
