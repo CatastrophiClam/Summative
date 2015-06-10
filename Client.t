@@ -232,6 +232,15 @@ else
     put "not connected"
 end if
 
+var startStr : string
+%wait for all players to be connected
+loop
+    if Net.LineAvailable(netStream) then
+	get: netStream, startStr
+	exit
+    end if
+loop
+
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                                END NETWORK STUFF                                                          %
