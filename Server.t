@@ -114,10 +114,9 @@ class Character
     var hitDamage : int %how much damage does this character deal?
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
-    var dir : int %the way the character is facing - 0 indicates left, 1 indicates right
+    var dir : int %the way the character is facing - 1 indicates left, 2 indicates right
     var kbDistance : int := 700 %base distance character gets knocked back
     var knockedBack := false %is player traveling because he got knocked back?
-    var actionLock := false % is the player currently performing an action that can't be switched until its finished?
     
     var jumpSpeed :int := 9
     var fallSpeed : int := 1
@@ -134,9 +133,9 @@ class Character
     
     %Character abilities stuff
     var doingAbility : boolean %is character currently performing an ability?
-    var numFrames : int %number of frames an ability lasts for
-    var abilXIncr : int %how much does the character move horizontally each frame during the ability?
-    var abilYIncr : int %same for vertically
+    var actionLock := false % is the player currently performing an action that can't be switched until its finished?
+    var abilNumber := 1 %1 - idle  2 - move  3 - kneel  4 - jump  etc
+    var frameNumber : int  %which point in the ability are we at?
     
     %Character movement stuff
     var xDir := 0  %-1 indicates to the left, 0 indicates stopped, 1 indicates to the right
@@ -248,18 +247,18 @@ class Character
     end knockBack
     
     proc update(instructions : string)
-	if (instructions(1) = "2" ) then
-	    x += 10
-	end if
-	if (instructions(1) = "1" ) then
-	    x -= 10
-	end if
-	if (instructions(2) = "1" ) then
-	    y -= 10
-	end if
-	if (instructions(2) = "2" ) then
-	    y += 10
-	end if
+        if (instructions(1) = "2" ) then
+            x += 10
+        end if
+        if (instructions(1) = "1" ) then
+            x -= 10
+        end if
+        if (instructions(2) = "1" ) then
+            y -= 10
+        end if
+        if (instructions(2) = "2" ) then
+            y += 10
+        end if
     end update
     
 end Character

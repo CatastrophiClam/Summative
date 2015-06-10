@@ -411,7 +411,7 @@ end KeyHeldDown
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions, positions:string
 var toDoArray : array 1..4 of string
-var netLimiter := 0
+var netLimiter := 0  %
 
 %Initialize
 
