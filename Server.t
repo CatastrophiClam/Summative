@@ -120,6 +120,17 @@ class Character
     var kbDistance : int := 700 %base distance character gets knocked back
     var knockedBack := false %is player traveling because he got knocked back?
     var actionLock := false % is the player currently performing an action that can't be switched until its finished?
+    var moveSpeeds : array 1..10 of int %speed at which character moves for each ability
+    moveSpeeds(1) := 5
+    moveSpeeds(2) := 15
+    moveSpeeds(3) := 3
+    moveSpeeds(4) := 30
+    moveSpeeds(5) := 5
+    moveSpeeds(6) := 5
+    moveSpeeds(7) := 5
+    moveSpeeds(8) := 20
+    moveSpeeds(9) := 5
+    moveSpeeds(10) := 30
 
     var jumpSpeed : int := 9
     var fallSpeed : int := 1
@@ -135,7 +146,7 @@ class Character
     %^(pSD)._init(lives)
 
     %Character abilities stuff
-    var doingAbility : boolean %is character currently performing an ability?
+    var ability : int %current ability player is performing
     var numFrames : int %number of frames an ability lasts for
     var abilXIncr : int %how much does the character move horizontally each frame during the ability?
     var abilYIncr : int %same for vertically
@@ -250,6 +261,7 @@ class Character
     end knockBack
 
     proc update (instructions : string)
+        var moveSpeed := moveSpeeds(ability)
 	if (instructions (1) = "2") then
 	    x += 10
 	end if
@@ -262,6 +274,14 @@ class Character
 	if (instructions (2) = "2") then
 	    y += 10
 	end if
+    
+    %character moves differently when he is knocked back than when he is just moving
+    if knockedBack then
+    
+    else
+        
+    end if
+    
     end update
 
 end Character
