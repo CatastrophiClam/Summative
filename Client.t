@@ -23,12 +23,12 @@ var platX2 := 1418
 type Character:
     record
 
-        x:int
-        y:int
-        h:int
-        w:int
-        pic:int
-        sprite:int
+	x:int
+	y:int
+	h:int
+	w:int
+	pic:int
+	sprite:int
     end record
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -134,7 +134,7 @@ pictures(3,1,1) := Pic.Mirror (pictures(3,1,2))
 
 % Jump
 for i : 1 .. 7
-    pictures (4,i,2) := Pic.FileNew ("Ken/move" + intstr(i) + ".jpeg")
+    pictures (4,i,2) := Pic.FileNew ("Ken/jump" + intstr(i) + ".jpeg")
     pictures (4,i,1) := Pic.Mirror (pictures (4,i,2))
 end for
 
@@ -231,6 +231,15 @@ if not netStream <= 0 then
 else
     put "not connected"
 end if
+
+var startStr : string
+%wait for all players to be connected
+loop
+    if Net.LineAvailable(netStream) then
+	get: netStream, startStr
+	exit
+    end if
+loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -438,13 +447,13 @@ loop
     
     %attack instructions
     if not chars(KEY_DOWN_ARROW) then
-        if chars('q') then
-            instructions += "q"
-        elsif chars ('w') then
-            instructions += "w"
-        else
-            instructions += "n"
-        end if
+	if chars('q') then
+	    instructions += "q"
+	elsif chars ('w') then
+	    instructions += "w"
+	else
+	    instructions += "n"
+	end if
     end if
     
     put:netStream,instructions
@@ -452,8 +461,8 @@ loop
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
 	    toDoArray := split(positions," ")
-        Sprite.Animate(selfPlayer.sprite,pictures(1,1,1),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
-        Sprite.Animate(otherPlayer.sprite,pictures(1,1,1),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
+	Sprite.Animate(selfPlayer.sprite,pictures(1,1,1),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
+	Sprite.Animate(otherPlayer.sprite,pictures(1,1,1),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
 	    %Draw.FillOval(strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,5,5,black)
 	    %Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
 	end if
@@ -461,7 +470,7 @@ loop
     updateBackground
     Sprite.Show(otherPlayer.sprite)
     Sprite.Show(selfPlayer.sprite)
-    delay(5)
+    %delay(1)
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
