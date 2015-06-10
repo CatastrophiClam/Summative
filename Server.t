@@ -320,11 +320,11 @@ end for
 
 % Kneel
 pictures(3,1,2).pic := Pic.FileNew ("kneel.jpeg")
-pictures (3,i,2).hitX := FILLER_VARIABLE
-pictures (3,i,2).hitY := FILLER_VARIABLE
-pictures(3,1,1).pic := Pic.Mirror (pictures (3,i,2).pic)
-pictures (3,i,1).hitX := 70-pictures (3,i,2).hitX
-pictures (3,i,1).hitY := pictures (3,i,2).hitY
+pictures (3,1,2).hitX := FILLER_VARIABLE
+pictures (3,1,2).hitY := FILLER_VARIABLE
+pictures(3,1,1).pic := Pic.Mirror (pictures (3,1,2).pic)
+pictures (3,1,1).hitX := 70-pictures (3,1,2).hitX
+pictures (3,1,1).hitY := pictures (3,1,2).hitY
 
 % Jump
 for i : 1 .. 7
