@@ -119,59 +119,59 @@ var pictures : array 1..10,1..13,1..2 of int
 % Idle
 for i : 1 .. 4
     pictures (1,i,2) := Pic.FileNew ("idle" + intstr(i) + ".jpeg")
-    pictures (1,i,1) := Pic.Mirror (kenIdleR (i))
+    pictures (1,i,1) := Pic.Mirror (pictures (1,i,2))
 end for
 
 % Move
 for i : 1 .. 5
     pictures (2,i,2) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
-    pictures (2,i,1) := Pic.Mirror (kenMoveL (i))
+    pictures (2,i,1) := Pic.Mirror (pictures (2,i,2))
 end for
 
 % Kneel
 pictures(3,1,2) := Pic.FileNew ("kneel.jpeg")
-pictures(3,1,1) := Pic.Mirror (kenKneelL)
+pictures(3,1,1) := Pic.Mirror (pictures(3,1,2))
 
 % Jump
 for i : 1 .. 7
     pictures (4,i,2) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
-    pictures (4,i,1) := Pic.Mirror (kenMoveR (i))
+    pictures (4,i,1) := Pic.Mirror (pictures (4,i,2))
 end for
 
 % Roundhouse - side kick
 for i : 1 .. 5
     pictures (5,i,2) := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
-    pictures (5,i,1) := Pic.Mirror (kenRoundhouseR (i))
+    pictures (5,i,1) := Pic.Mirror (pictures (5,i,2))
 end for
     
 %Punch - punch
 for i : 1 .. 3
     pictures (6,i,2) := Pic.FileNew ("punch" + intstr(i) + ".jpeg")
-    pictures (7,i,1) := Pic.Mirror (kenPunchR (i))
+    pictures (7,i,1) := Pic.Mirror (pictures (6,i,2))
 end for
     
 % Kick - kick
 for i : 1 .. 5
     pictures (7,i,2) := Pic.FileNew ("kick" + intstr(i) + ".jpeg")
-    pictures (7,i,1) := Pic.Mirror (kenKickL (i))
+    pictures (7,i,1) := Pic.Mirror (pictures (7,i,2))
 end for
     
 % Tatsumaki  - up kick
 for i : 1 .. 13
     pictures (8,i,2) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
-    pictures (8,i,1) := Pic.Mirror (kenTatsumakiL (i))
+    pictures (8,i,1) := Pic.Mirror (pictures (8,i,2))
 end for
     
 % Hadoken - side punch
 for i : 1 .. 4
     pictures (9,i,2) := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
-    pictures (9,i,1) := Pic.Mirror (kenHadokenL (i))
+    pictures (9,i,1) := Pic.Mirror (pictures (9,i,2))
 end for
     
 % Shoryuken - up punch
 for i : 1 .. 7    
     pictures (10,i,2) := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
-    pictures (10,i,1) := Pic.Mirror (kenShoryukenL (i))
+    pictures (10,i,1) := Pic.Mirror (pictures (10,i,2))
 end for
 
 var selfPlayer, otherPlayer : Character
