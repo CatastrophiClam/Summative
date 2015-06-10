@@ -1,4 +1,4 @@
-%Super Crash Pros --------------------------------> By: Bowen and Max
+%Super Crash Pros Client--------------------------------> By: Bowen and Max
 
 View.Set("graphics:max;max,position:center;center")
 
@@ -107,6 +107,73 @@ var backgroundSprite : int
 backgroundSprite := Sprite.New(backgroundPic)
 
 %---------------------------------PLAYER STUFF----------------------------------%
+
+%---------------------PLAYER PICTURES--------------------%
+
+%THE FIRST INDEX OF PICTURES IS THE MOVE TYPE:
+%1 - idle  2 - move  3 - kneel  4 - jump  5 - roundhouse  6 - punch  7 - kick  8 - tatsumaki  9 - hadoken  10 - shoryuken
+%THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
+%THE THIRD INDEX OF PICTURES IS THE SIDE PLAYER IS FACING: 1 - left  2 - right
+var pictures : array 1..10,1..13,1..2 of int
+
+% Idle
+for i : 1 .. 4
+    pictures (1,i,2) := Pic.FileNew ("idle" + intstr(i) + ".jpeg")
+    pictures (1,i,1) := Pic.Mirror (kenIdleR (i))
+end for
+
+% Move
+for i : 1 .. 5
+    pictures (2,i,2) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    pictures (2,i,1) := Pic.Mirror (kenMoveL (i))
+end for
+
+% Kneel
+pictures(3,1,2) := Pic.FileNew ("kneel.jpeg")
+pictures(3,1,1) := Pic.Mirror (kenKneelL)
+
+% Jump
+for i : 1 .. 7
+    pictures (4,i,2) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    pictures (4,i,1) := Pic.Mirror (kenMoveR (i))
+end for
+
+% Roundhouse
+for i : 1 .. 5
+    pictures (5,i,2) := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
+    pictures (5,i,1) := Pic.Mirror (kenRoundhouseR (i))
+end for
+    
+%Punch
+for i : 1 .. 3
+    pictures (6,i,2) := Pic.FileNew ("punch" + intstr(i) + ".jpeg")
+    pictures (7,i,1) := Pic.Mirror (kenPunchR (i))
+end for
+    
+% Kick
+for i : 1 .. 5
+    pictures (7,i,2) := Pic.FileNew ("kick" + intstr(i) + ".jpeg")
+    pictures (7,i,1) := Pic.Mirror (kenKickL (i))
+end for
+    
+% Tatsumaki
+for i : 1 .. 13
+    pictures (8,i,2) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
+    pictures (8,i,1) := Pic.Mirror (kenTatsumakiL (i))
+end for
+    
+% Hadoken
+for i : 1 .. 4
+    pictures (9,i,2) := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
+    pictures (9,i,1) := Pic.Mirror (kenHadokenL (i))
+end for
+    
+% Shoryuken
+for i : 1 .. 7    
+    pictures (10,i,2) := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
+    pictures (10,i,1) := Pic.Mirror (kenShoryukenL (i))
+end for
+
 var selfPlayer, otherPlayer : Character
 
 var animationCounter : int

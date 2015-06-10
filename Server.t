@@ -1,4 +1,4 @@
-%Super Crash Pros --------------------------------> By: Bowen and Max
+%Super Crash Pros Server --------------------------------> By: Bowen and Max
 
 %NOTES
 % 1). IMPORTANT: 0,0 IS THE BOTTOM LEFT POINT OF THE WORLD
@@ -54,11 +54,11 @@ var platX2 := 1418
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
-%THIS IS ONE PICTURE OF FIGHTER 
+%THIS IS ONE FRAME OF FIGHTER 
 type position:  
     record
-        pic : int   %THIS IS THE PICTURE
-        hitX : int  %THIS IS THE POINT THAT CAN HIT THE OTHER PLAYER
+        pic : int   %this is the picture 
+        hitX : int  %this is the point that can hit the other player
         hitY : int
     end record
 
@@ -294,64 +294,105 @@ var screenX, screenY : int %location of BOTTOM LEFT of screen IN THE WORLD
 %1 - idle  2 - move  3 - kneel  4 - jump  5 - roundhouse  6 - punch  7 - kick  8 - tatsumaki  9 - hadoken  10 - shoryuken
 %THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
 %THE THIRD INDEX OF PICTURES IS THE SIDE PLAYER IS FACING: 1 - left  2 - right
-var pictures : array 1..10,1..13,1..2 of int
+%NOTE WE'RE PROBABLY GONNA HAVE TO READ THE FILLER_VARIABLES FROM A FILE
+var pictures : array 1..10,1..13,1..2 of position
 
 % Idle
 for i : 1 .. 4
-    pictures (1,i,2) := Pic.FileNew ("idle" + intstr(i) + ".jpeg")
-    pictures (1,i,1) := Pic.Mirror (kenIdleR (i))
+    pictures (1,i,2).pic := Pic.FileNew ("idle" + intstr(i) + ".jpeg")
+    pictures (1,i,2).hitX := FILLER_VARIABLE
+    pictures (1,i,2).hitY := FILLER_VARIABLE
+    pictures (1,i,1).pic := Pic.Mirror (pictures (1,i,2).pic)
+    pictures (1,i,1).hitX := 70-pictures (1,i,2).hitX
+    pictures (1,i,1).hitY := pictures (1,i,2).hitY
 end for
 
 % Move
 for i : 1 .. 5
-    pictures (2,i,2) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
-    pictures (2,i,1) := Pic.Mirror (kenMoveL (i))
+    pictures (2,i,2).pic := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    pictures (2,i,2).hitX := FILLER_VARIABLE
+    pictures (2,i,2).hitY := FILLER_VARIABLE
+    pictures (2,i,1).pic := Pic.Mirror (pictures (2,i,2).pic)
+    pictures (2,i,1).hitX := 70-pictures (2,i,2).hitX
+    pictures (2,i,1).hitY := pictures (2,i,2).hitY
 end for
 
 % Kneel
-pictures(3,1,2) := Pic.FileNew ("kneel.jpeg")
-pictures(3,1,1) := Pic.Mirror (kenKneelL)
+pictures(3,1,2).pic := Pic.FileNew ("kneel.jpeg")
+pictures (3,i,2).hitX := FILLER_VARIABLE
+pictures (3,i,2).hitY := FILLER_VARIABLE
+pictures(3,1,1).pic := Pic.Mirror (pictures (3,i,2).pic)
+pictures (3,i,1).hitX := 70-pictures (3,i,2).hitX
+pictures (3,i,1).hitY := pictures (3,i,2).hitY
 
 % Jump
 for i : 1 .. 7
-    pictures (4,i,2) := Pic.FileNew ("move" + intstr(i) + ".jpeg")
-    pictures (4,i,1) := Pic.Mirror (kenMoveR (i))
+    pictures (4,i,2).pic := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    pictures (4,i,2).hitX := FILLER_VARIABLE
+    pictures (4,i,2).hitY := FILLER_VARIABLE
+    pictures (4,i,1).pic := Pic.Mirror (pictures (4,i,2).pic)
+    pictures (4,i,1).hitX := 70-pictures (4,i,2).hitX
+    pictures (4,i,1).hitY := pictures (4,i,2).hitY
 end for
 
 % Roundhouse
 for i : 1 .. 5
-    pictures (5,i,2) := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
-    pictures (5,i,1) := Pic.Mirror (kenRoundhouseR (i))
+    pictures (5,i,2).pic := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
+    pictures (5,i,2).hitX := FILLER_VARIABLE
+    pictures (5,i,2).hitY := FILLER_VARIABLE
+    pictures (5,i,1).pic := Pic.Mirror (pictures (5,i,2).pic)
+    pictures (5,i,1).hitX := 70-pictures (5,i,2).hitX
+    pictures (5,i,1).hitY := pictures (5,i,2).hitY
 end for
     
 %Punch
 for i : 1 .. 3
-    pictures (6,i,2) := Pic.FileNew ("punch" + intstr(i) + ".jpeg")
-    pictures (7,i,1) := Pic.Mirror (kenPunchR (i))
+    pictures (6,i,2).pic := Pic.FileNew ("punch" + intstr(i) + ".jpeg")
+    pictures (6,i,2).hitX := FILLER_VARIABLE
+    pictures (6,i,2).hitY := FILLER_VARIABLE
+    pictures (6,i,1).pic := Pic.Mirror (pictures (6,i,2).pic)
+    pictures (6,i,1).hitX := 70-pictures (6,i,2).hitX
+    pictures (6,i,1).hitY := pictures (6,i,2).hitY
 end for
     
 % Kick
 for i : 1 .. 5
-    pictures (7,i,2) := Pic.FileNew ("kick" + intstr(i) + ".jpeg")
-    pictures (7,i,1) := Pic.Mirror (kenKickL (i))
+    pictures (7,i,2).pic := Pic.FileNew ("kick" + intstr(i) + ".jpeg")
+    pictures (7,i,2).hitX := FILLER_VARIABLE
+    pictures (7,i,2).hitY := FILLER_VARIABLE
+    pictures (7,i,1).pic := Pic.Mirror (pictures (7,i,2).pic)
+    pictures (7,i,1).hitX := 70-pictures (7,i,2).hitX
+    pictures (7,i,1).hitY := pictures (7,i,2).hitY
 end for
     
 % Tatsumaki
 for i : 1 .. 13
-    pictures (8,i,2) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
-    pictures (8,i,1) := Pic.Mirror (kenTatsumakiL (i))
+    pictures (8,i,2).pic := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
+    pictures (8,i,2).hitX := FILLER_VARIABLE
+    pictures (8,i,2).hitY := FILLER_VARIABLE
+    pictures (8,i,1).pic := Pic.Mirror (pictures (8,i,2).pic)
+    pictures (8,i,1).hitX := 70-pictures (8,i,2).hitX
+    pictures (8,i,1).hitY := pictures (8,i,2).hitY
 end for
     
 % Hadoken
 for i : 1 .. 4
-    pictures (9,i,2) := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
-    pictures (9,i,1) := Pic.Mirror (kenHadokenL (i))
+    pictures (9,i,2).pic := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
+    pictures (9,i,2).hitX := FILLER_VARIABLE
+    pictures (9,i,2).hitY := FILLER_VARIABLE
+    pictures (9,i,1).pic := Pic.Mirror (pictures (9,i,2).pic)
+    pictures (9,i,1).hitX := 70-pictures (9,i,2).hitX
+    pictures (91,i,1).hitY := pictures (9,i,2).hitY
 end for
     
 % Shoryuken
 for i : 1 .. 7    
-    pictures (10,i,2) := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
-    pictures (10,i,1) := Pic.Mirror (kenShoryukenL (i))
+    pictures (10,i,2).pic := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
+    pictures (10,i,2).hitX := FILLER_VARIABLE
+    pictures (10,i,2).hitY := FILLER_VARIABLE
+    pictures (10,i,1).pic := Pic.Mirror (pictures (10,i,2).pic)
+    pictures (10,i,1).hitX := 70-pictures (10,i,2).hitX
+    pictures (10,i,1).hitY := pictures (10,i,2).hitY
 end for
 
 var player1, player2 : pointer to Character
@@ -494,21 +535,7 @@ end updateScreen
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
-%                                                   TITLE SCREEN                                                            %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                 END TITLE SCREEN                                                          %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                    GAME SCREEN                                                            %
+%                                                     GAME LOOP                                                             %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions: string  %instructions sent by client
@@ -517,7 +544,6 @@ loop
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
     if Net.LineAvailable(stream1) and Net.LineAvailable(stream2) then
-    
     
     %update player 1's stuff
     get:stream1,instructions
@@ -568,11 +594,6 @@ end loop
 %                                                   END GAME SCREEN                                                         %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
-
-
-%agaso;eivbjas;eifja;soeifjas;elfj
-%a;osigj;asiojef;oiesfj;oij
-
 
 
 
