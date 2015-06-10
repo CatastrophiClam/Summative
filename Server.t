@@ -295,7 +295,7 @@ var pictures : array 1..10,1..13,1..2 of position
 
 % Idle
 for i : 1 .. 4
-    pictures (1,i,2).pic := Pic.FileNew ("idle" + intstr(i) + ".jpeg")
+    pictures (1,i,2).pic := Pic.FileNew ("Ken/idle" + intstr(i) + ".jpeg")
     pictures (1,i,2).hitX := FILLER_VARIABLE
     pictures (1,i,2).hitY := FILLER_VARIABLE
     pictures (1,i,1).pic := Pic.Mirror (pictures (1,i,2).pic)
@@ -305,7 +305,7 @@ end for
 
 % Move
 for i : 1 .. 5
-    pictures (2,i,2).pic := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    pictures (2,i,2).pic := Pic.FileNew ("Ken/move" + intstr(i) + ".jpeg")
     pictures (2,i,2).hitX := FILLER_VARIABLE
     pictures (2,i,2).hitY := FILLER_VARIABLE
     pictures (2,i,1).pic := Pic.Mirror (pictures (2,i,2).pic)
@@ -314,7 +314,7 @@ for i : 1 .. 5
 end for
 
 % Kneel
-pictures(3,1,2).pic := Pic.FileNew ("kneel.jpeg")
+pictures(3,1,2).pic := Pic.FileNew ("Ken/kneel.jpeg")
 pictures (3,1,2).hitX := FILLER_VARIABLE
 pictures (3,1,2).hitY := FILLER_VARIABLE
 pictures(3,1,1).pic := Pic.Mirror (pictures (3,1,2).pic)
@@ -323,7 +323,7 @@ pictures (3,1,1).hitY := pictures (3,1,2).hitY
 
 % Jump
 for i : 1 .. 7
-    pictures (4,i,2).pic := Pic.FileNew ("move" + intstr(i) + ".jpeg")
+    pictures (4,i,2).pic := Pic.FileNew ("Ken/move" + intstr(i) + ".jpeg")
     pictures (4,i,2).hitX := FILLER_VARIABLE
     pictures (4,i,2).hitY := FILLER_VARIABLE
     pictures (4,i,1).pic := Pic.Mirror (pictures (4,i,2).pic)
@@ -333,7 +333,7 @@ end for
 
 % Roundhouse
 for i : 1 .. 5
-    pictures (5,i,2).pic := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
+    pictures (5,i,2).pic := Pic.FileNew ("Ken/roundhouse" + intstr(i) + ".jpeg")
     pictures (5,i,2).hitX := FILLER_VARIABLE
     pictures (5,i,2).hitY := FILLER_VARIABLE
     pictures (5,i,1).pic := Pic.Mirror (pictures (5,i,2).pic)
@@ -343,7 +343,7 @@ end for
     
 %Punch
 for i : 1 .. 3
-    pictures (6,i,2).pic := Pic.FileNew ("punch" + intstr(i) + ".jpeg")
+    pictures (6,i,2).pic := Pic.FileNew ("Ken/punch" + intstr(i) + ".jpeg")
     pictures (6,i,2).hitX := FILLER_VARIABLE
     pictures (6,i,2).hitY := FILLER_VARIABLE
     pictures (6,i,1).pic := Pic.Mirror (pictures (6,i,2).pic)
@@ -353,7 +353,7 @@ end for
     
 % Kick
 for i : 1 .. 5
-    pictures (7,i,2).pic := Pic.FileNew ("kick" + intstr(i) + ".jpeg")
+    pictures (7,i,2).pic := Pic.FileNew ("Ken/kick" + intstr(i) + ".jpeg")
     pictures (7,i,2).hitX := FILLER_VARIABLE
     pictures (7,i,2).hitY := FILLER_VARIABLE
     pictures (7,i,1).pic := Pic.Mirror (pictures (7,i,2).pic)
@@ -363,7 +363,7 @@ end for
     
 % Tatsumaki
 for i : 1 .. 13
-    pictures (8,i,2).pic := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
+    pictures (8,i,2).pic := Pic.FileNew ("Ken/tatsumaki" + intstr(i) + ".jpeg")
     pictures (8,i,2).hitX := FILLER_VARIABLE
     pictures (8,i,2).hitY := FILLER_VARIABLE
     pictures (8,i,1).pic := Pic.Mirror (pictures (8,i,2).pic)
@@ -383,7 +383,7 @@ end for
     
 % Shoryuken
 for i : 1 .. 7    
-    pictures (10,i,2).pic := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
+    pictures (10,i,2).pic := Pic.FileNew ("Ken/shoryuken" + intstr(i) + ".jpeg")
     pictures (10,i,2).hitX := FILLER_VARIABLE
     pictures (10,i,2).hitY := FILLER_VARIABLE
     pictures (10,i,1).pic := Pic.Mirror (pictures (10,i,2).pic)
