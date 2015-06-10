@@ -134,7 +134,7 @@ pictures(3,1,1) := Pic.Mirror (pictures(3,1,2))
 
 % Jump
 for i : 1 .. 7
-    pictures (4,i,2) := Pic.FileNew ("Ken/move" + intstr(i) + ".jpeg")
+    pictures (4,i,2) := Pic.FileNew ("Ken/jump" + intstr(i) + ".jpeg")
     pictures (4,i,1) := Pic.Mirror (pictures (4,i,2))
 end for
 
@@ -461,7 +461,7 @@ loop
     updateBackground
     Sprite.Show(otherPlayer.sprite)
     Sprite.Show(selfPlayer.sprite)
-    delay(5)
+    %delay(1)
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
