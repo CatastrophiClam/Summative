@@ -138,37 +138,37 @@ for i : 1 .. 7
     pictures (4,i,1) := Pic.Mirror (kenMoveR (i))
 end for
 
-% Roundhouse
+% Roundhouse - side kick
 for i : 1 .. 5
     pictures (5,i,2) := Pic.FileNew ("roundhouse" + intstr(i) + ".jpeg")
     pictures (5,i,1) := Pic.Mirror (kenRoundhouseR (i))
 end for
     
-%Punch
+%Punch - punch
 for i : 1 .. 3
     pictures (6,i,2) := Pic.FileNew ("punch" + intstr(i) + ".jpeg")
     pictures (7,i,1) := Pic.Mirror (kenPunchR (i))
 end for
     
-% Kick
+% Kick - kick
 for i : 1 .. 5
     pictures (7,i,2) := Pic.FileNew ("kick" + intstr(i) + ".jpeg")
     pictures (7,i,1) := Pic.Mirror (kenKickL (i))
 end for
     
-% Tatsumaki
+% Tatsumaki  - up kick
 for i : 1 .. 13
     pictures (8,i,2) := Pic.FileNew ("tatsumaki" + intstr(i) + ".jpeg")
     pictures (8,i,1) := Pic.Mirror (kenTatsumakiL (i))
 end for
     
-% Hadoken
+% Hadoken - side punch
 for i : 1 .. 4
     pictures (9,i,2) := Pic.FileNew ("hadoken" + intstr(i) + ".jpeg")
     pictures (9,i,1) := Pic.Mirror (kenHadokenL (i))
 end for
     
-% Shoryuken
+% Shoryuken - up punch
 for i : 1 .. 7    
     pictures (10,i,2) := Pic.FileNew ("shoryuken" + intstr(i) + ".jpeg")
     pictures (10,i,1) := Pic.Mirror (kenShoryukenL (i))
@@ -206,20 +206,24 @@ if playerNum = 1 then
     selfPlayer.y := 365
     selfPlayer.h := 2
     selfPlayer.w := 2
+    selfPlayer.sprite := Sprite.New(pictures(1,1,2))
     otherPlayer.x := 1318
     otherPlayer.y := 365
     otherPlayer.h := 2
     otherPlayer.w := 2
+    otherPlayer.sprite := Sprite.New(pictures(1,1,1))
 else
     serverPort := 5605
     otherPlayer.x := 565
     otherPlayer.y := 365
     otherPlayer.h := 2
     otherPlayer.w := 2
+    otherPlayer.sprite := Sprite.New(pictures(1,1,2))
     selfPlayer.x := 1318
     selfPlayer.y := 365
     selfPlayer.h := 2
     selfPlayer.w := 2
+    selfPlayer.sprite := Sprite.New(pictures(1,1,1))
 end if
 netStream := Net.OpenConnection(serverAddress,serverPort)
 if not netStream <= 0 then
@@ -404,12 +408,18 @@ var toDoArray : array 1..4 of string
 Input.KeyDown (charsLast)
 Input.KeyDown (chars)
 
+%INSTRUCTIONS FORMAT : ABC
+%A is either a 0,1,or 2 - 0 indicates player not moving horizontally, 1 indicates moving left, 2 indicates moving right
+%B is same as A except 1 indicates moving down and 2 indicates moving up
+%C is either q, w, or n - kick or punch, or no action
+
 loop
     instructions := ""
     charsLast := chars
     Input.KeyDown(chars)
     updateScreen
     
+    %Movement instructions
     if (chars(KEY_LEFT_ARROW)) then
 	instructions += "1"
     elsif (chars(KEY_RIGHT_ARROW)) then
@@ -426,17 +436,31 @@ loop
 	instructions += "0"
     end if
     
+    %attack instructions
+    if not chars(KEY_DOWN_ARROW) then
+        if chars('q') then
+            instructions += "q"
+        elsif chars ('w') then
+            instructions += "w"
+        else
+            instructions += "n"
+        end if
+    end if
+    
     put:netStream,instructions
     
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
 	    toDoArray := split(positions," ")
-	    Draw.FillOval(strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,5,5,black)
-	    Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
+        Sprite.Animate(selfPlayer.sprite,pictures(1,1,1),strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,false)
+        Sprite.Animate(otherPlayer.sprite,pictures(1,1,1),strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,false)
+	    %Draw.FillOval(strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,5,5,black)
+	    %Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
 	end if
     
     updateBackground
-    
+    Sprite.Show(otherPlayer.sprite)
+    Sprite.Show(selfPlayer.sprite)
     delay(5)
 end loop
 

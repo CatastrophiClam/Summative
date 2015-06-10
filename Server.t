@@ -117,6 +117,7 @@ class Character
     var dir : int %the way the character is facing - 0 indicates left, 1 indicates right
     var kbDistance : int := 700 %base distance character gets knocked back
     var knockedBack := false %is player traveling because he got knocked back?
+    var actionLock := false % is the player currently performing an action that can't be switched until its finished?
     
     var jumpSpeed :int := 9
     var fallSpeed : int := 1
