@@ -239,7 +239,7 @@ loop
 	get: netStream, startStr
 	exit
     end if
-loop
+end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -411,6 +411,7 @@ end KeyHeldDown
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions, positions:string
 var toDoArray : array 1..4 of string
+var netLimiter := 0
 
 %Initialize
 
@@ -456,13 +457,17 @@ loop
 	end if
     end if
     
-    put:netStream,instructions
-    
+    if netLimiter < 5 then
+	put:netStream,instructions
+	netLimiter += 1
+    end if
+
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
 	    toDoArray := split(positions," ")
-	Sprite.Animate(selfPlayer.sprite,pictures(1,1,1),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
-	Sprite.Animate(otherPlayer.sprite,pictures(1,1,1),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
+	    Sprite.Animate(selfPlayer.sprite,pictures(1,1,1),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
+	    Sprite.Animate(otherPlayer.sprite,pictures(1,1,1),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
+	    netLimiter -= 1
 	    %Draw.FillOval(strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,5,5,black)
 	    %Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
 	end if
