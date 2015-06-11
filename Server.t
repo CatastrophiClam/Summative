@@ -352,22 +352,28 @@ class Character
 
     proc update (instructions : string)
         var moveSpeed := moveStuff(ability)
-        if (instructions (1) = "2") then
-            xDestination += 10
-            ability := 2
-        end if
-        if (instructions (1) = "1") then
-            xDestination -= 10
-            ability := 2
-        end if
-        if (instructions (2) = "1") then
-            yDestination -= 10
-            ability := 3
-        end if
-        if (instructions (2) = "2") then
-            if not actionLock and canJump then
-                ability := 4
-                canJump := false  %can't jump after jumping once
+        if not actionLock then
+            if (instructions (1) = "2") then
+                xDestination += 10
+                ability := 2
+                doingAction := true
+            end if
+            if (instructions (1) = "1") then
+                xDestination -= 10
+                ability := 2
+                doingAction := true
+            end if
+            if (instructions (2) = "1") then
+                yDestination -= 10
+                ability := 3
+                doingAction := true
+            end if
+            if (instructions (2) = "2") then
+                if not actionLock and canJump then
+                    ability := 4
+                    canJump := false  %can't jump after jumping once
+                    doingAction := true
+                end if
             end if
         end if
         
