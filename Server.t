@@ -364,14 +364,22 @@ class Character
 	var moveSpeed := moveStuff(ability)
 	if not actionLock then
 	    if (instructions (1) = "2") then
-		xDestination += 10
-		ability := 2
+		xDestination += moveSpeeds(ability).xIncrement
+		if instructions(2) = "1" then
+		    ability := 3
+		else
+		    ability := 2
+		end if
 		doingAction := true
 		dir := 2
 	    end if
 	    if (instructions (1) = "1") then
-		xDestination -= 10
-		ability := 2
+		xDestination -= moveSpeeds(ability).xIncrement
+		if instructions(2) = "1" then
+		    ability := 3
+		else
+		    ability := 2
+		end if
 		doingAction := true
 		dir := 1
 	    end if
@@ -657,7 +665,7 @@ end updateScreen
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions1, instructions2 : string := "00n" %instructions sent by client
-
+var picStuff1, picStuff2 : string
 
 loop
 
@@ -679,14 +687,14 @@ loop
 	else
 	    put instructions1
 	    put instructions2
-	    ^ (player1).update (instructions1,player2)
-	    ^ (player2).update (instructions2,player1)
+	    picStuff1 := ^ (player1).update (instructions1,player2)
+	    picStuff2 := ^ (player2).update (instructions2,player1)
 	    %send player info back
 	    %PLAYER INFO FORM:
 	    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
 	    
-	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
-	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
+	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1
+	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2
 	    
 	    %put intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
 	    %put intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
