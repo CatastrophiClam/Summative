@@ -347,8 +347,9 @@ class Character
     var jumping := false %is player jumping
     var atDestination := true %is player at his destination
     var moveStuff : array 1..10 of Ability %player moves at 1/moveStuff(i) of the distance between him and destination every update
-    var hitX, hitY : int %point relative to bottom left of character that can hit the other player
-    var hitBoxX1, hitBoxX2, hitBoxY1, hitBoxY2 : int
+    var hitX, hitY : int %point IN THE WORLD that can hit the other player
+    var hitBoxX1, hitBoxX2, hitBoxY1, hitBoxY2 : int %box IN THE WORLD that can be hit by the other player
+    var cX, cY : int %center of hitbox/player
     moveStuff(1).speed := 1
     moveStuff(1).xIncrement := 0
     moveStuff(1).yIncrement := 0
@@ -460,8 +461,12 @@ class Character
     end knockBack
     
     %did current character get hit?
-    proc getHit(hX,hY:int)
-	
+    proc getHit(hX,hY,cX,cY:int) %hX,hY is point that got hit, cX,cY is center of other player
+        %if player did get hit
+        if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
+            damage += FILLER_VARIABLE
+            knockBack(cX,cY,hX,hY)
+        end if
     end getHit
     
     function update (instructions : string, oP:pointer to Character) : string
@@ -605,9 +610,19 @@ class Character
 		end if
 	    end if
 	end if
+    
+    %update player hit stuff
+    hitX := x+pictures(ability).hitX
+    hitY := y+pictures(ability).hitY
+    hitBoxX1 := x+pictures(ability).hBX1
+    hitBoxY1 := y+pictures(ability).hBY1
+    hitBoxX2 := x+pictures(ability).hBX2
+    hitBoxY2 := y+pictures(ability).hBY2
+    cX := round((hitBoxX2-hitBoxX1)/2)
+    cY := round((hitBoxY2-hitBoxY1)/2)
 	
 	%see if player hit other player
-	%^(oP).getHit(round(x+hitX),round(y+hitY))
+	^(oP).getHit(round(hitX),round(hitY),cX,cY)
 	
 	result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
 	
