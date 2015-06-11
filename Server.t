@@ -240,6 +240,7 @@ class Character
     var canDoAction := true % can the player perform an ability?
     var doingAction := false % is the player already performing an action?
     var canJump := true %can player jump?
+    var jumping := false %is player jumping
     var atDestination := true %is player at his destination
     var moveStuff : array 1..10 of Ability %player moves at 1/moveStuff(i) of the distance between him and destination every update
     var hitX, hitY : int %point relative to bottom left of character that can hit the other player
@@ -384,6 +385,7 @@ class Character
 		    ability := 4
 		    canJump := false  %can't jump after jumping once
 		    doingAction := true
+		    jumping := true
 		end if
 	    end if
 	end if
@@ -460,6 +462,25 @@ class Character
 	else
 	    x += 1/moveStuff(ability).speed*(xDestination-x)
 	    y += 1/moveStuff(ability).speed*(yDestination-y)
+	    
+	    %If player isn't performing an uninteruptable action, he falls if he isn't on the ground
+	    if not actionLock and not jumping then
+		if x > platX1 and x < platX2 then
+		    if y > platY then
+			y -= fallSpeed
+			yDestination -= fallSpeed
+		    else
+			%player is on the ground
+			canJump := true
+			jumping := false
+			canDoAction := true
+			y := platY
+		    end if
+		else
+		    y -= fallSpeed
+		    yDestination -= fallSpeed
+		end if
+	    end if
 	end if
 	
 	%check to see if player was hit by other player
