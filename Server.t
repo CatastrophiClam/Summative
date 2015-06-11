@@ -666,42 +666,44 @@ end updateScreen
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions1, instructions2 : string := "00n" %instructions sent by client
-
+var picStuff1, picStuff2 : string
 
 loop
     
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
     loop
-        if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
-            
-            %update player 1's stuff
-            get : stream1, instructions1
-            
-            
-            
-            %update player 2's stuff
-            get : stream2, instructions2
-            
-            updateScreen
-            
-        else
-            put instructions1
-            put instructions2
-            ^ (player1).update (instructions1,player2)
-            ^ (player2).update (instructions2,player1)
-            %send player info back
-            %PLAYER INFO FORM:
-            %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
-            
-            put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
-            put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
-            
-            %put intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
-            %put intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
-            
-            exit
-        end if
+
+	if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
+	    
+	    %update player 1's stuff
+	    get : stream1, instructions1
+	    
+	    
+	    
+	    %update player 2's stuff
+	    get : stream2, instructions2
+	    
+	    updateScreen
+	    
+	else
+	    put instructions1
+	    put instructions2
+	    picStuff1 := ^ (player1).update (instructions1,player2)
+	    picStuff2 := ^ (player2).update (instructions2,player1)
+	    %send player info back
+	    %PLAYER INFO FORM:
+	    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
+	    
+	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1
+	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2
+	    
+	    %put intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
+	    %put intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
+	    
+	    exit
+	end if
+
     end loop
     
 end loop
