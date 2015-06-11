@@ -109,12 +109,119 @@ class PlayerStatusDisplay
 
 end PlayerStatusDisplay
 
+%---------------------PLAYER PICTURES--------------------%
+
+%THE FIRST INDEX OF PICTURES IS THE MOVE TYPE:
+%1 - idle  2 - move  3 - kneel  4 - jump  5 - roundhouse  6 - punch  7 - kick  8 - tatsumaki  9 - hadoken  10 - shoryuken
+%THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
+%THE THIRD INDEX OF PICTURES IS THE SIDE PLAYER IS FACING: 1 - left  2 - right
+%NOTE WE'RE PROBABLY GONNA HAVE TO READ THE FILLER_VARIABLES FROM A FILE
+var pictures : array 1 .. 10, 1 .. 13, 1 .. 2 of position
+
+% Idle
+for i : 1 .. 4
+    pictures (1, i, 2).pic := Pic.FileNew ("Ken/idle" + intstr (i) + ".jpeg")
+    pictures (1, i, 2).hitX := FILLER_VARIABLE
+    pictures (1, i, 2).hitY := FILLER_VARIABLE
+    pictures (1, i, 1).pic := Pic.Mirror (pictures (1, i, 2).pic)
+    pictures (1, i, 1).hitX := 70 - pictures (1, i, 2).hitX
+    pictures (1, i, 1).hitY := pictures (1, i, 2).hitY
+end for
+
+% Move
+for i : 1 .. 5
+    pictures (2, i, 2).pic := Pic.FileNew ("Ken/move" + intstr (i) + ".jpeg")
+    pictures (2, i, 2).hitX := FILLER_VARIABLE
+    pictures (2, i, 2).hitY := FILLER_VARIABLE
+    pictures (2, i, 1).pic := Pic.Mirror (pictures (2, i, 2).pic)
+    pictures (2, i, 1).hitX := 70 - pictures (2, i, 2).hitX
+    pictures (2, i, 1).hitY := pictures (2, i, 2).hitY
+end for
+
+% Kneel
+pictures (3, 1, 2).pic := Pic.FileNew ("Ken/kneel.jpeg")
+pictures (3, 1, 2).hitX := FILLER_VARIABLE
+pictures (3, 1, 2).hitY := FILLER_VARIABLE
+pictures (3, 1, 1).pic := Pic.Mirror (pictures (3, 1, 2).pic)
+pictures (3, 1, 1).hitX := 70 - pictures (3, 1, 2).hitX
+pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
+
+% Jump
+for i : 1 .. 7
+    pictures (4, i, 2).pic := Pic.FileNew ("Ken/jump" + intstr (i) + ".jpeg")
+    pictures (4, i, 2).hitX := FILLER_VARIABLE
+    pictures (4, i, 2).hitY := FILLER_VARIABLE
+    pictures (4, i, 1).pic := Pic.Mirror (pictures (4, i, 2).pic)
+    pictures (4, i, 1).hitX := 70 - pictures (4, i, 2).hitX
+    pictures (4, i, 1).hitY := pictures (4, i, 2).hitY
+end for
+
+% Roundhouse
+for i : 1 .. 5
+    pictures (5, i, 2).pic := Pic.FileNew ("Ken/roundhouse" + intstr (i) + ".jpeg")
+    pictures (5, i, 2).hitX := FILLER_VARIABLE
+    pictures (5, i, 2).hitY := FILLER_VARIABLE
+    pictures (5, i, 1).pic := Pic.Mirror (pictures (5, i, 2).pic)
+    pictures (5, i, 1).hitX := 70 - pictures (5, i, 2).hitX
+    pictures (5, i, 1).hitY := pictures (5, i, 2).hitY
+end for
+
+%Punch
+for i : 1 .. 3
+    pictures (6, i, 2).pic := Pic.FileNew ("Ken/punch" + intstr (i) + ".jpeg")
+    pictures (6, i, 2).hitX := FILLER_VARIABLE
+    pictures (6, i, 2).hitY := FILLER_VARIABLE
+    pictures (6, i, 1).pic := Pic.Mirror (pictures (6, i, 2).pic)
+    pictures (6, i, 1).hitX := 70 - pictures (6, i, 2).hitX
+    pictures (6, i, 1).hitY := pictures (6, i, 2).hitY
+end for
+
+% Kick
+for i : 1 .. 5
+    pictures (7, i, 2).pic := Pic.FileNew ("Ken/kick" + intstr (i) + ".jpeg")
+    pictures (7, i, 2).hitX := FILLER_VARIABLE
+    pictures (7, i, 2).hitY := FILLER_VARIABLE
+    pictures (7, i, 1).pic := Pic.Mirror (pictures (7, i, 2).pic)
+    pictures (7, i, 1).hitX := 70 - pictures (7, i, 2).hitX
+    pictures (7, i, 1).hitY := pictures (7, i, 2).hitY
+end for
+
+% Tatsumaki
+for i : 1 .. 13
+    pictures (8, i, 2).pic := Pic.FileNew ("Ken/tatsumaki" + intstr (i) + ".jpeg")
+    pictures (8, i, 2).hitX := FILLER_VARIABLE
+    pictures (8, i, 2).hitY := FILLER_VARIABLE
+    pictures (8, i, 1).pic := Pic.Mirror (pictures (8, i, 2).pic)
+    pictures (8, i, 1).hitX := 70 - pictures (8, i, 2).hitX
+    pictures (8, i, 1).hitY := pictures (8, i, 2).hitY
+end for
+
+% Hadoken
+for i : 1 .. 4
+    pictures (9, i, 2).pic := Pic.FileNew ("Ken/hadoken" + intstr (i) + ".jpeg")
+    pictures (9, i, 2).hitX := FILLER_VARIABLE
+    pictures (9, i, 2).hitY := FILLER_VARIABLE
+    pictures (9, i, 1).pic := Pic.Mirror (pictures (9, i, 2).pic)
+    pictures (9, i, 1).hitX := 70 - pictures (9, i, 2).hitX
+    pictures (9, i, 1).hitY := pictures (9, i, 2).hitY
+end for
+
+% Shoryuken
+for i : 1 .. 7
+    pictures (10, i, 2).pic := Pic.FileNew ("Ken/shoryuken" + intstr (i) + ".jpeg")
+    pictures (10, i, 2).hitX := FILLER_VARIABLE
+    pictures (10, i, 2).hitY := FILLER_VARIABLE
+    pictures (10, i, 1).pic := Pic.Mirror (pictures (10, i, 2).pic)
+    pictures (10, i, 1).hitX := 70 - pictures (10, i, 2).hitX
+    pictures (10, i, 1).hitY := pictures (10, i, 2).hitY
+end for
+
 %NOTE HERE'S HOW CHARACTER MOVEMENT WORKS: character has a destination: this is the point his center is moving towards. moving the character with
 %the keyboard changes the destination, and he moves towards it with his movement speed
 %represents a character in the game
 class Character
 
-    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE
+    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, ability, pictures
 
     export var x, var y, var h, var w, var damage, var charType, update %exported variables
 
@@ -307,113 +414,6 @@ var chars : array char of boolean
 var screenX, screenY : int %location of BOTTOM LEFT of screen IN THE WORLD
 
 %---------------------------------PLAYER STUFF----------------------------------%
-
-%---------------------PLAYER PICTURES--------------------%
-
-%THE FIRST INDEX OF PICTURES IS THE MOVE TYPE:
-%1 - idle  2 - move  3 - kneel  4 - jump  5 - roundhouse  6 - punch  7 - kick  8 - tatsumaki  9 - hadoken  10 - shoryuken
-%THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
-%THE THIRD INDEX OF PICTURES IS THE SIDE PLAYER IS FACING: 1 - left  2 - right
-%NOTE WE'RE PROBABLY GONNA HAVE TO READ THE FILLER_VARIABLES FROM A FILE
-var pictures : array 1 .. 10, 1 .. 13, 1 .. 2 of position
-
-% Idle
-for i : 1 .. 4
-    pictures (1, i, 2).pic := Pic.FileNew ("Ken/idle" + intstr (i) + ".jpeg")
-    pictures (1, i, 2).hitX := FILLER_VARIABLE
-    pictures (1, i, 2).hitY := FILLER_VARIABLE
-    pictures (1, i, 1).pic := Pic.Mirror (pictures (1, i, 2).pic)
-    pictures (1, i, 1).hitX := 70 - pictures (1, i, 2).hitX
-    pictures (1, i, 1).hitY := pictures (1, i, 2).hitY
-end for
-
-% Move
-for i : 1 .. 5
-    pictures (2, i, 2).pic := Pic.FileNew ("Ken/move" + intstr (i) + ".jpeg")
-    pictures (2, i, 2).hitX := FILLER_VARIABLE
-    pictures (2, i, 2).hitY := FILLER_VARIABLE
-    pictures (2, i, 1).pic := Pic.Mirror (pictures (2, i, 2).pic)
-    pictures (2, i, 1).hitX := 70 - pictures (2, i, 2).hitX
-    pictures (2, i, 1).hitY := pictures (2, i, 2).hitY
-end for
-
-% Kneel
-pictures (3, 1, 2).pic := Pic.FileNew ("Ken/kneel.jpeg")
-pictures (3, 1, 2).hitX := FILLER_VARIABLE
-pictures (3, 1, 2).hitY := FILLER_VARIABLE
-pictures (3, 1, 1).pic := Pic.Mirror (pictures (3, 1, 2).pic)
-pictures (3, 1, 1).hitX := 70 - pictures (3, 1, 2).hitX
-pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
-
-% Jump
-for i : 1 .. 7
-    pictures (4, i, 2).pic := Pic.FileNew ("Ken/jump" + intstr (i) + ".jpeg")
-    pictures (4, i, 2).hitX := FILLER_VARIABLE
-    pictures (4, i, 2).hitY := FILLER_VARIABLE
-    pictures (4, i, 1).pic := Pic.Mirror (pictures (4, i, 2).pic)
-    pictures (4, i, 1).hitX := 70 - pictures (4, i, 2).hitX
-    pictures (4, i, 1).hitY := pictures (4, i, 2).hitY
-end for
-
-% Roundhouse
-for i : 1 .. 5
-    pictures (5, i, 2).pic := Pic.FileNew ("Ken/roundhouse" + intstr (i) + ".jpeg")
-    pictures (5, i, 2).hitX := FILLER_VARIABLE
-    pictures (5, i, 2).hitY := FILLER_VARIABLE
-    pictures (5, i, 1).pic := Pic.Mirror (pictures (5, i, 2).pic)
-    pictures (5, i, 1).hitX := 70 - pictures (5, i, 2).hitX
-    pictures (5, i, 1).hitY := pictures (5, i, 2).hitY
-end for
-
-%Punch
-for i : 1 .. 3
-    pictures (6, i, 2).pic := Pic.FileNew ("Ken/punch" + intstr (i) + ".jpeg")
-    pictures (6, i, 2).hitX := FILLER_VARIABLE
-    pictures (6, i, 2).hitY := FILLER_VARIABLE
-    pictures (6, i, 1).pic := Pic.Mirror (pictures (6, i, 2).pic)
-    pictures (6, i, 1).hitX := 70 - pictures (6, i, 2).hitX
-    pictures (6, i, 1).hitY := pictures (6, i, 2).hitY
-end for
-
-% Kick
-for i : 1 .. 5
-    pictures (7, i, 2).pic := Pic.FileNew ("Ken/kick" + intstr (i) + ".jpeg")
-    pictures (7, i, 2).hitX := FILLER_VARIABLE
-    pictures (7, i, 2).hitY := FILLER_VARIABLE
-    pictures (7, i, 1).pic := Pic.Mirror (pictures (7, i, 2).pic)
-    pictures (7, i, 1).hitX := 70 - pictures (7, i, 2).hitX
-    pictures (7, i, 1).hitY := pictures (7, i, 2).hitY
-end for
-
-% Tatsumaki
-for i : 1 .. 13
-    pictures (8, i, 2).pic := Pic.FileNew ("Ken/tatsumaki" + intstr (i) + ".jpeg")
-    pictures (8, i, 2).hitX := FILLER_VARIABLE
-    pictures (8, i, 2).hitY := FILLER_VARIABLE
-    pictures (8, i, 1).pic := Pic.Mirror (pictures (8, i, 2).pic)
-    pictures (8, i, 1).hitX := 70 - pictures (8, i, 2).hitX
-    pictures (8, i, 1).hitY := pictures (8, i, 2).hitY
-end for
-
-% Hadoken
-for i : 1 .. 4
-    pictures (9, i, 2).pic := Pic.FileNew ("Ken/hadoken" + intstr (i) + ".jpeg")
-    pictures (9, i, 2).hitX := FILLER_VARIABLE
-    pictures (9, i, 2).hitY := FILLER_VARIABLE
-    pictures (9, i, 1).pic := Pic.Mirror (pictures (9, i, 2).pic)
-    pictures (9, i, 1).hitX := 70 - pictures (9, i, 2).hitX
-    pictures (9, i, 1).hitY := pictures (9, i, 2).hitY
-end for
-
-% Shoryuken
-for i : 1 .. 7
-    pictures (10, i, 2).pic := Pic.FileNew ("Ken/shoryuken" + intstr (i) + ".jpeg")
-    pictures (10, i, 2).hitX := FILLER_VARIABLE
-    pictures (10, i, 2).hitY := FILLER_VARIABLE
-    pictures (10, i, 1).pic := Pic.Mirror (pictures (10, i, 2).pic)
-    pictures (10, i, 1).hitX := 70 - pictures (10, i, 2).hitX
-    pictures (10, i, 1).hitY := pictures (10, i, 2).hitY
-end for
 
 var player1, player2 : pointer to Character
 new Character, player1
