@@ -412,7 +412,7 @@ end KeyHeldDown
 var instructions, positions:string
 var toDoArray : array 1..4 of string
 var netLimiter := 0  %
-var mostRecentKey : int := 0
+var mostRecentKey : string := "0"
 
 %Initialize
 
@@ -439,26 +439,26 @@ loop
         %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
         %chooses the last pressed key for attack
         if KeyPushedDown(KEY_LEFT_ARROW) then
-            mostRecentKey := 1
+            mostRecentKey := "1"
         end if
     elsif (chars(KEY_RIGHT_ARROW)) then
         instructions += "2"
         if KeyPushedDown(KEY_RIGHT_ARROW) then
-            mostRecentKey := 1
+            mostRecentKey := "2"
         end if
     else
-        instructions += "0"
+        mostRecentKey := "0"
     end if
     
     if (chars(KEY_UP_ARROW)) then
         instructions += "2"
         if KeyPushedDown(KEY_UP_ARROW) then
-            mostRecentKey := 4
+            mostRecentKey := "4"
         end if
     elsif (chars(KEY_DOWN_ARROW)) then
         instructions += "1"
         if KeyPushedDown(KEY_DOWN_ARROW) then
-            mostRecentKey := 3
+            mostRecentKey := "3"
         end if
     else
         instructions += "0"
