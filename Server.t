@@ -224,7 +224,7 @@ class Character
     
     import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures
     
-    export var x, var y, var h, var w, var damage, var charType, update, getHit %exported variables
+    export var x, var y, var xDestination, var yDestination, var h, var w, var damage, var charType, update, getHit %exported variables
     
     %Character attributes
     var charType : int  %which character does this class represent?
@@ -297,9 +297,9 @@ class Character
     %^(pSD)._init(lives)
     
     %Character abilities stuff
-    var ability : int %current ability player is performing
+    var ability : int := 1%current ability player is performing
     var frameNums : int %number of frames an ability lasts for
-	var abilXIncr : int %how much does the character move horizontally each frame during the ability?
+    var abilXIncr : int %how much does the character move horizontally each frame during the ability?
     var abilYIncr : int %same for vertically
     
     %Character movement stuff
@@ -442,7 +442,7 @@ class Character
 	end if
 	
 	%see if player hit other player
-	^(oP).getHit(round(x+hitX),round(y+hitY))
+	%^(oP).getHit(round(x+hitX),round(y+hitY))
 	
 	%move x and y towards xDestination and yDestination
 	%character moves differently when he is knocked back than when he is just moving
@@ -492,11 +492,15 @@ var player1, player2 : pointer to Character
 new Character, player1
 new Character, player2
 ^ (player1).x := 565
+^ (player1).xDestination := 565
 ^ (player1).y := 365
+^ (player1).yDestination := 365
 ^ (player1).h := 2
 ^ (player1).w := 2
 ^ (player2).x := 1318
+^ (player2).xDestination := 1318
 ^ (player2).y := 365
+^ (player2).yDestination := 365
 ^ (player2).h := 2
 ^ (player2).w := 2
 
@@ -652,6 +656,8 @@ loop
 	    updateScreen
 	    
 	else
+	    put instructions1
+	    put instructions2
 	    ^ (player1).update (instructions1,player2)
 	    ^ (player2).update (instructions2,player1)
 	    %send player info back
@@ -661,8 +667,8 @@ loop
 	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
 	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
 	    
-	    put intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
-	    put intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
+	    %put intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
+	    %put intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
 	    
 	    exit
 	end if

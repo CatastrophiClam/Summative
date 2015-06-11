@@ -435,33 +435,34 @@ loop
     
     %Movement instructions
     if (chars(KEY_LEFT_ARROW)) then
-        instructions += "1"
-        %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
-        %chooses the last pressed key for attack
-        if KeyPushedDown(KEY_LEFT_ARROW) then
-            mostRecentKey := "1"
-        end if
+	instructions += "1"
+	%this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
+	%chooses the last pressed key for attack
+	if KeyPushedDown(KEY_LEFT_ARROW) then
+	    mostRecentKey := "1"
+	end if
     elsif (chars(KEY_RIGHT_ARROW)) then
-        instructions += "2"
-        if KeyPushedDown(KEY_RIGHT_ARROW) then
-            mostRecentKey := "2"
-        end if
+	instructions += "2"
+	if KeyPushedDown(KEY_RIGHT_ARROW) then
+	    mostRecentKey := "2"
+	end if
     else
-        mostRecentKey := "0"
+	instructions += "0"
+	mostRecentKey := "0"
     end if
     
     if (chars(KEY_UP_ARROW)) then
-        instructions += "2"
-        if KeyPushedDown(KEY_UP_ARROW) then
-            mostRecentKey := "4"
-        end if
+	instructions += "2"
+	if KeyPushedDown(KEY_UP_ARROW) then
+	    mostRecentKey := "4"
+	end if
     elsif (chars(KEY_DOWN_ARROW)) then
-        instructions += "1"
-        if KeyPushedDown(KEY_DOWN_ARROW) then
-            mostRecentKey := "3"
-        end if
+	instructions += "1"
+	if KeyPushedDown(KEY_DOWN_ARROW) then
+	    mostRecentKey := "3"
+	end if
     else
-        instructions += "0"
+	instructions += "0"
     end if
     
     instructions += mostRecentKey
