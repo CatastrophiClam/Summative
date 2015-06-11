@@ -452,7 +452,7 @@ class Character
 	end if
 	
 	frameNums += 1
-	if frameNums > moveStuff(ability).frames + 1 then
+	if frameNums > moveStuff(ability).frames then
 	    frameNums := 0
 	    doingAction := false
 	    actionLock := false
