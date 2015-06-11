@@ -147,7 +147,7 @@ end for
 %Punch - punch
 for i : 1 .. 3
     pictures (6,i,2) := Pic.FileNew ("Ken/punch" + intstr(i) + ".jpeg")
-    pictures (7,i,1) := Pic.Mirror (pictures (6,i,2))
+    pictures (6,i,1) := Pic.Mirror (pictures (6,i,2))
 end for
     
 % Kick - kick
@@ -478,7 +478,7 @@ loop
     end if
     
     if netLimiter < 5 then
-	put:netStream,instructions
+	put: netStream,instructions
 	netLimiter += 1
     end if
 
