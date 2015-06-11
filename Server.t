@@ -63,6 +63,14 @@ type position :
 	hitX : int  %this is the point that can hit the other player
 	hitY : int
     end record
+    
+%This contains relevant movement info for each ability
+type ability:
+    record
+    speed : int  %character moves 1/speed of the distance between him and his destination each update
+    xIncrement : int
+    yIncrement : int
+    end record
 
 %Display thingy at bottom of screen with character lives and damage
 class PlayerStatusDisplay
@@ -120,21 +128,41 @@ class Character
     var kbDistance : int := 700 %base distance character gets knocked back
     var knockedBack := false %is player traveling because he got knocked back?
     var actionLock := false % is the player currently performing an action that can't be switched until its finished?
-    var moveSpeeds : array 1..10 of int %speed at which character moves for each ability
-    moveSpeeds(1) := 5
-    moveSpeeds(2) := 15
-    moveSpeeds(3) := 3
-    moveSpeeds(4) := 30
-    moveSpeeds(5) := 5
-    moveSpeeds(6) := 5
-    moveSpeeds(7) := 5
-    moveSpeeds(8) := 20
-    moveSpeeds(9) := 5
-    moveSpeeds(10) := 30
+    var canDoAction := true % can the player perform an ability?
+    var atDestination := true %is player at his destination
+    var moveSpeeds : array 1..10 of ability %player moves at 1/moveSpeeds(i) of the distance between him and destination every update
+    moveSpeeds(1).speed := 1
+    moveSpeeds(1).xIncrement := 0
+    moveSpeeds(1).yIncrement := 0
+    moveSpeeds(2).speed := 1
+    moveSpeeds(2).xIncrement :=10
+    moveSpeeds(2).yIncrement :=0
+    moveSpeeds(3).speed := 1
+    moveSpeeds(3).xIncrement :=4
+    moveSpeeds(3).yIncrement :=0
+    moveSpeeds(4).speed := 20
+    moveSpeeds(4).xIncrement :=0
+    moveSpeeds(4).yIncrement :=200
+    moveSpeeds(5).speed := 15
+    moveSpeeds(5).xIncrement :=0
+    moveSpeeds(5).yIncrement :=0
+    moveSpeeds(6).speed := 1
+    moveSpeeds(6).xIncrement :=0
+    moveSpeeds(6).yIncrement :=0
+    moveSpeeds(7).speed := 1
+    moveSpeeds(7).xIncrement :=0
+    moveSpeeds(7).yIncrement :=0
+    moveSpeeds(8).speed := 25
+    moveSpeeds(8).xIncrement :=20
+    moveSpeeds(8).yIncrement :=140
+    moveSpeeds(9).speed := 1
+    moveSpeeds(9).xIncrement :=10
+    moveSpeeds(9).yIncrement :=0
+    moveSpeeds(10).speed := 20
+    moveSpeeds(10).xIncrement :=0
+    moveSpeeds(10).yIncrement :=170
 
-    var jumpSpeed : int := 9
-    var fallSpeed : int := 1
-    var moveSpeed : int := 5
+    var fallSpeed : int := 2
 
     var isHit := false %did the character get hit?
 
@@ -184,63 +212,6 @@ class Character
 	result round (y_ - screenY)
     end convertY
 
-    %ABILITIES
-    proc upO
-	numFrames := FILLER_VARIABLE
-	if not doingAbility then
-	    hitDamage := upOD
-	end if
-    end upO
-
-    proc downO
-	numFrames := FILLER_VARIABLE
-	if not doingAbility then
-	    hitDamage := downOD
-	end if
-    end downO
-
-    proc rightO
-	numFrames := FILLER_VARIABLE
-	if not doingAbility then
-	    hitDamage := sideOD
-	end if
-    end rightO
-
-    proc leftO
-	numFrames := FILLER_VARIABLE
-	if not doingAbility then
-	    hitDamage := sideOD
-	end if
-    end leftO
-
-    proc upP
-	numFrames := FILLER_VARIABLE
-	if not doingAbility then
-	    hitDamage := upPD
-	end if
-    end upP
-
-    proc downP
-	numFrames := FILLER_VARIABLE
-	if not doingAbility then
-	    hitDamage := downPD
-	end if
-    end downP
-
-    proc rightP
-	numFrames := FILLER_VARIABLE
-	if not doingAbility then
-	    hitDamage := sidePD
-	end if
-    end rightP
-
-    proc leftP
-	numFrames := FILLER_VARIABLE
-	if not doingAbility then
-	    hitDamage := sidePD
-	end if
-    end leftP
-
     proc knockBack (cX, cY, pX, pY : int) %cX,cY is center of other player, pX, pY is where character was hit
 	var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
 	%calculate new destination
@@ -262,25 +233,37 @@ class Character
 
     proc update (instructions : string)
         var moveSpeed := moveSpeeds(ability)
-	if (instructions (1) = "2") then
-	    x += 10
-	end if
-	if (instructions (1) = "1") then
-	    x -= 10
-	end if
-	if (instructions (2) = "1") then
-	    y -= 10
-	end if
-	if (instructions (2) = "2") then
-	    y += 10
-	end if
-    
-    %character moves differently when he is knocked back than when he is just moving
-    if knockedBack then
-    
-    else
+        if (instructions (1) = "2") then
+            x += 10
+        end if
+        if (instructions (1) = "1") then
+            x -= 10
+        end if
+        if (instructions (2) = "1") then
+            y -= 10
+        end if
+        if (instructions (2) = "2") then
+            y += 10
+        end if
         
-    end if
+        %move x and y towards xDestination and yDestination
+        %character moves differently when he is knocked back than when he is just moving
+        if knockedBack then
+            x += 1/20*(xDestination-x)
+            y += 1/20*(yDestination-y)
+            %if character is knocked into the ground, he bounces
+            if bounces then
+                if x > platX1 and x < platX2 and y < platY then
+                    xDestination := bounceX
+                    yDestination := bounceY
+                    bounces := false
+                end if
+            end if
+        else
+            
+        end if
+        
+        %check to see if player was hit by other player
     
     end update
 
