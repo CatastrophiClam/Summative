@@ -355,7 +355,7 @@ procedure updateScreen
     
 end updateScreen
 
-function split(str:string, regex:string):array 1..4 of string
+function split(str:string, regex:string):array 1..10 of string
     var a : array 1..4 of string
     var pastSpace := 0
     var count := 0
@@ -410,7 +410,7 @@ end KeyHeldDown
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions, positions:string
-var toDoArray : array 1..4 of string
+var toDoArray : array 1..10 of string
 var netLimiter := 0  %
 var mostRecentKey : string := "0"
 
@@ -488,8 +488,8 @@ loop
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
 	    toDoArray := split(positions," ")
-	    Sprite.Animate(selfPlayer.sprite,pictures(1,1,1),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
-	    Sprite.Animate(otherPlayer.sprite,pictures(1,1,1),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
+	    Sprite.Animate(selfPlayer.sprite,pictures(toDoArray(5),toDoArray(6),toDoArray(7)),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
+	    Sprite.Animate(otherPlayer.sprite,pictures(toDoArray(8),toDoArray(9),toDoArray(10)),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
 	    netLimiter -= 1
 	    %Draw.FillOval(strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,5,5,black)
 	    %Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
