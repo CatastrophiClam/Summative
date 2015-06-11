@@ -65,7 +65,7 @@ type position :
     end record
     
 %This contains relevant movement info for each ability
-type ability:
+type Ability:
     record
     speed : int  %character moves 1/speed of the distance between him and his destination each update
     xIncrement : int
@@ -221,9 +221,9 @@ end for
 %represents a character in the game
 class Character
 
-    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, ability, pictures
+    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures
 
-    export var x, var y, var h, var w, var damage, var charType, update %exported variables
+    export var x, var y, var h, var w, var damage, var charType, update, getHit %exported variables
 
     %Character attributes
     var charType : int  %which character does this class represent?
@@ -232,14 +232,16 @@ class Character
     var hitDamage : int %how much damage does this character deal?
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
-    var dir : int %the way the character is facing - 0 indicates left, 1 indicates right
+    var dir : int %the way the character is facing - 1 indicates left, 2 indicates right
     var kbDistance : int := 700 %base distance character gets knocked back
     var knockedBack := false %is player traveling because he got knocked back?
     var actionLock := false % is the player currently performing an action that can't be switched until its finished?
     var canDoAction := true % can the player perform an ability?
     var canJump := true %can player jump?
     var atDestination := true %is player at his destination
-    var moveStuff : array 1..10 of ability %player moves at 1/moveStuff(i) of the distance between him and destination every update
+    var moveStuff : array 1..10 of Ability %player moves at 1/moveStuff(i) of the distance between him and destination every update
+    var hitX, hitY : int %point relative to bottom left of character that can hit the other player
+    var hitBoxX1, hitBoxX2, hitBoxY1, hitBoxY2 : int
     moveStuff(1).speed := 1
     moveStuff(1).xIncrement := 0
     moveStuff(1).yIncrement := 0
@@ -306,9 +308,6 @@ class Character
     var bounceX, bounceY : int %coords of where character will bounce (if character is hit towards ground)
     var bounces := false %does the character bounce?
 
-    %Character picture stuff
-    var bodyPic, bodyFPic : int
-
     %initialize damages
     proc initDamage (uO, dO, sO, uP, dP, sP : int)
 	upOD := uO
@@ -349,19 +348,26 @@ class Character
 	    bounceY := platY + (platY - yDestination)
 	end if
     end knockBack
+    
+    %did current character get hit?
+    proc getHit(hX,hY:int)
+        
+    end getHit
 
-    proc update (instructions : string)
+    proc update (instructions : string, oP:pointer to Character)
         var moveSpeed := moveStuff(ability)
         if not actionLock then
             if (instructions (1) = "2") then
                 xDestination += 10
                 ability := 2
                 doingAction := true
+                dir := 2
             end if
             if (instructions (1) = "1") then
                 xDestination -= 10
                 ability := 2
                 doingAction := true
+                dir := 1
             end if
             if (instructions (2) = "1") then
                 yDestination -= 10
@@ -395,7 +401,8 @@ class Character
             y += 1/moveStuff(ability).speed*(yDestination-y)
         end if
         
-        %check to see if player was hit by other player
+        %see if player hit other player
+        ^(oP).getHit(round(x+hitX),round(y+hitY))
     
     end update
 
@@ -584,8 +591,8 @@ loop
 	    updateScreen
 
 	else
-	    ^ (player1).update (instructions1)
-	    ^ (player2).update (instructions2)
+	    ^ (player1).update (instructions1,player2)
+	    ^ (player2).update (instructions2,player1)
 	    %send player info back
 	    %PLAYER INFO FORM:
 	    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
