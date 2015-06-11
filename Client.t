@@ -356,7 +356,7 @@ procedure updateScreen
 end updateScreen
 
 function split(str:string, regex:string):array 1..10 of string
-    var a : array 1..4 of string
+    var a : array 1..10 of string
     var pastSpace := 0
     var count := 0
     for i:1..length(str)+1
@@ -488,13 +488,13 @@ loop
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
 	    toDoArray := split(positions," ")
-	    Sprite.Animate(selfPlayer.sprite,pictures(toDoArray(5),toDoArray(6),toDoArray(7)),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
-	    Sprite.Animate(otherPlayer.sprite,pictures(toDoArray(8),toDoArray(9),toDoArray(10)),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
+	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
+	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
 	    netLimiter -= 1
 	    %Draw.FillOval(strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,5,5,black)
 	    %Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
 	end if
-
+    
     updateBackground
     Sprite.Show(otherPlayer.sprite)
     Sprite.Show(selfPlayer.sprite)
