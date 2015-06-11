@@ -412,16 +412,20 @@ end KeyHeldDown
 var instructions, positions:string
 var toDoArray : array 1..4 of string
 var netLimiter := 0  %
+var mostRecentKey : int := 0
 
 %Initialize
 
 Input.KeyDown (charsLast)
 Input.KeyDown (chars)
 
-%INSTRUCTIONS FORMAT : ABC
+%INSTRUCTIONS FORMAT : ABCD
 %A is either a 0,1,or 2 - 0 indicates player not moving horizontally, 1 indicates moving left, 2 indicates moving right
 %B is same as A except 1 indicates moving down and 2 indicates moving up
-%C is either q, w, or n - kick or punch, or no action
+
+%C and D is the attack move
+%C is either 0,1,2,3 or 4 - 0 indicates no arrow, 1 indicates left, 2 indicates right, 3 indicates down, 4 indicates up
+%D is either q, w, or n - kick or punch, or no action
 
 loop
     instructions := ""
@@ -431,20 +435,36 @@ loop
     
     %Movement instructions
     if (chars(KEY_LEFT_ARROW)) then
-	instructions += "1"
+        instructions += "1"
+        %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
+        %chooses the last pressed key for attack
+        if KeyPushedDown(KEY_LEFT_ARROW) then
+            mostRecentKey := 1
+        end if
     elsif (chars(KEY_RIGHT_ARROW)) then
-	instructions += "2"
+        instructions += "2"
+        if KeyPushedDown(KEY_RIGHT_ARROW) then
+            mostRecentKey := 1
+        end if
     else
-	instructions += "0"
+        instructions += "0"
     end if
     
     if (chars(KEY_UP_ARROW)) then
-	instructions += "2"
+        instructions += "2"
+        if KeyPushedDown(KEY_UP_ARROW) then
+            mostRecentKey := 4
+        end if
     elsif (chars(KEY_DOWN_ARROW)) then
-	instructions += "1"
+        instructions += "1"
+        if KeyPushedDown(KEY_DOWN_ARROW) then
+            mostRecentKey := 3
+        end if
     else
-	instructions += "0"
+        instructions += "0"
     end if
+    
+    instructions += mostRecentKey
     
     %attack instructions
     if not chars(KEY_DOWN_ARROW) then
