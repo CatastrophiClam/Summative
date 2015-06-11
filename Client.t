@@ -476,6 +476,8 @@ loop
 	else
 	    instructions += "n"
 	end if
+    else
+	instructions += "n"
     end if
     
     if netLimiter < 5 then
