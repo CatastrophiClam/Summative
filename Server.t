@@ -88,7 +88,7 @@ class PlayerStatusDisplay
     %picture stuff
     %bascically, in order for the display to be drawn over the background, it has to be a sprite
     %to make the picture for the sprite, we draw everything that is needed outside of the display, and
-        %we take a picture of that and put it into the sprite
+	%we take a picture of that and put it into the sprite
     var picSprite : int
     var spritePic : int
     var offScreenX := 0
@@ -97,15 +97,15 @@ class PlayerStatusDisplay
     picSprite := Sprite.New (spritePic)
     
     proc _init (lives : int)
-        numLives := lives
+	numLives := lives
     end _init
     
     proc updatePic ()
-        
+	
     end updatePic
     
     proc display ()
-        
+	
     end display
     
 end PlayerStatusDisplay
@@ -300,7 +300,7 @@ class Character
     %Character abilities stuff
     var ability : int := 1%current ability player is performing
     var frameNums : int %number of frames an ability lasts for
-        var abilXIncr : int %how much does the character move horizontally each frame during the ability?
+	var abilXIncr : int %how much does the character move horizontally each frame during the ability?
     var abilYIncr : int %same for vertically
     
     %Character movement stuff
@@ -316,184 +316,192 @@ class Character
     
     %initialize damages
     proc initDamage (uO, dO, sO, uP, dP, sP : int)
-        upOD := uO
-        downOD := dO
-        sideOD := sO
-        upPD := uP
-        downPD := dP
-        sidePD := sP
+	upOD := uO
+	downOD := dO
+	sideOD := sO
+	upPD := uP
+	downPD := dP
+	sidePD := sP
     end initDamage
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertX (x_, screenX : real) : int
-        result round (x_ - screenX)
+	result round (x_ - screenX)
     end convertX
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertY (y_, screenY : real) : int
-        result round (y_ - screenY)
+	result round (y_ - screenY)
     end convertY
     
     proc knockBack (cX, cY, pX, pY : int) %cX,cY is center of other player, pX, pY is where character was hit
-        var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
-        %calculate new destination
-        %ABRUPT CHANGE OF DIRECTION VERSION
-        xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
-        yDestination := round (y + (pY - cY) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
-        %KEEPS MOMENTUM VERSION
-        %xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-        %yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-        
-        %check if character bounces
-        if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
-            %character bounces
-            bounces := true
-            bounceX := xDestination
-            bounceY := platY + (platY - yDestination)
-        end if
+	var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
+	%calculate new destination
+	%ABRUPT CHANGE OF DIRECTION VERSION
+	xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+	yDestination := round (y + (pY - cY) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+	%KEEPS MOMENTUM VERSION
+	%xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+	%yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+	
+	%check if character bounces
+	if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
+	    %character bounces
+	    bounces := true
+	    bounceX := xDestination
+	    bounceY := platY + (platY - yDestination)
+	end if
     end knockBack
     
     %did current character get hit?
     proc getHit(hX,hY:int)
-        
+	
     end getHit
     
-    function update (instructions : string, oP:pointer to Character)
-        var moveSpeed := moveStuff(ability)
-        if not actionLock then
-            if (instructions (1) = "2") then
-                xDestination += 10
-                ability := 2
-                doingAction := true
-                dir := 2
-            end if
-            if (instructions (1) = "1") then
-                xDestination -= 10
-                ability := 2
-                doingAction := true
-                dir := 1
-            end if
-            if (instructions (2) = "1") then
-                yDestination -= 10
-                ability := 3
-                doingAction := true
-            end if
-            if (instructions (2) = "2") then
-                if not actionLock and canJump then
-                    ability := 4
-                    canJump := false  %can't jump after jumping once
-                    doingAction := true
-                    jumping := true
-                end if
-            end if
-        end if
-        
-        if doingAction = false then
-            ability := 1
-            
-        elsif doingAction = true and actionLock = false then
-            if instructions (4) = "q" then
-                if instructions (3) = "0" then
-                    ability := 6
-                    xDestination += moveStuff(ability).xIncrement
-                    yDestination += moveStuff(ability).yIncrement
-                    %actionLock := true
-                elsif instructions (3) = "1" then
-                    ability := 9
-                    xDestination -= moveStuff(ability).xIncrement
-                    yDestination += moveStuff(ability).yIncrement
-                    %actionLock := true
-                elsif instructions (3) = "2" then
-                    ability := 9
-                    xDestination += moveStuff(ability).xIncrement
-                    yDestination += moveStuff(ability).yIncrement
-                    %actionLock := true
-                elsif instructions (3) = "4" then
-                    ability := 10
-                    xDestination += moveStuff(ability).xIncrement
-                    yDestination += moveStuff(ability).yIncrement
-                    %actionLock := true
-                end if
-            end if
-            
-            if instructions (4) = "w" then
-                if instructions (3) = "0" then
-                    ability := 7
-                    xDestination += moveStuff(ability).xIncrement
-                    yDestination += moveStuff(ability).yIncrement
-                    %actionLock := true
-                elsif instructions (3) = "1" then
-                    ability := 5
-                    xDestination -= moveStuff(ability).xIncrement
-                    yDestination += moveStuff(ability).yIncrement
-                    %actionLock := true
-                elsif instructions (3) = "2" then
-                    ability := 5
-                    xDestination += moveStuff(ability).xIncrement
-                    yDestination += moveStuff(ability).yIncrement
-                    %actionLock := true
-                elsif instructions (3) = "4" then
-                    ability := 8
-                    xDestination += moveStuff(ability).xIncrement
-                    yDestination += moveStuff(ability).yIncrement
-                    %actionLock := true
-                end if
-            end if
-        end if
-        
-        frameNums += 1
-        if frameNums > moveStuff(ability).frames + 1 then
-            frameNums := 0
-            doingAction := false
-            actionLock := false
-        end if
-        
-        %see if player hit other player
-        %^(oP).getHit(round(x+hitX),round(y+hitY))
-        
-        %move x and y towards xDestination and yDestination
-        %character moves differently when he is knocked back than when he is just moving
-        if knockedBack then
-            x += 1/20*(xDestination-x)
-            y += 1/20*(yDestination-y)
-            %if character is knocked into the ground, he bounces
-            if bounces then
-                if x > platX1 and x < platX2 and y < platY then
-                    xDestination := bounceX
-                    yDestination := bounceY
-                    bounces := false
-                end if
-            end if
-        else
-            x += 1/moveStuff(ability).speed*(xDestination-x)
-            y += 1/moveStuff(ability).speed*(yDestination-y)
-            
-            %If player isn't performing an uninteruptable action, he falls if he isn't on the ground
-            if not actionLock and not jumping then
-                if x > platX1 and x < platX2 then
-                    if y > platY then
-                        y -= fallSpeed
-                        yDestination -= fallSpeed
-                    else
-                        %player is on the ground
-                        canJump := true
-                        jumping := false
-                        canDoAction := true
-                        y := platY
-                    end if
-                else
-                    y -= fallSpeed
-                    yDestination -= fallSpeed
-                end if
-            end if
-        end if
-        
-        %check to see if player was hit by other player
-        
-        result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
-        
+    function update (instructions : string, oP:pointer to Character) : string
+	var moveSpeed := moveStuff(ability)
+	if not actionLock then
+	    if (instructions (1) = "2") then
+		xDestination += moveStuff(ability).xIncrement
+		if instructions(2) = "1" then
+		    ability := 3
+		else
+		    ability := 2
+		end if
+		doingAction := true
+		dir := 2
+	    end if
+	    if (instructions (1) = "1") then
+		xDestination -= moveStuff(ability).xIncrement
+		if instructions(2) = "1" then
+		    ability := 3
+		else
+		    ability := 2
+		end if
+		doingAction := true
+		dir := 1
+	    end if
+	    if (instructions (2) = "1") then
+		yDestination -= 10
+		ability := 3
+		doingAction := true
+	    end if
+	    if (instructions (2) = "2") then
+		if not actionLock and canJump then
+		    ability := 4
+		    canJump := false  %can't jump after jumping once
+		    doingAction := true
+		    jumping := true
+		end if
+	    end if
+	end if
+	
+	if doingAction = false then
+	    ability := 1
+	    
+	elsif doingAction = true and actionLock = false then
+	    if instructions (4) = "q" then
+		if instructions (3) = "0" then
+		    ability := 6
+		    xDestination += moveStuff(ability).xIncrement
+		    yDestination += moveStuff(ability).yIncrement
+		    %actionLock := true
+		elsif instructions (3) = "1" then
+		    ability := 9
+		    xDestination -= moveStuff(ability).xIncrement
+		    yDestination += moveStuff(ability).yIncrement
+		    %actionLock := true
+		elsif instructions (3) = "2" then
+		    ability := 9
+		    xDestination += moveStuff(ability).xIncrement
+		    yDestination += moveStuff(ability).yIncrement
+		    %actionLock := true
+		elsif instructions (3) = "4" then
+		    ability := 10
+		    xDestination += moveStuff(ability).xIncrement
+		    yDestination += moveStuff(ability).yIncrement
+		    %actionLock := true
+		end if
+	    end if
+	    
+	    if instructions (4) = "w" then
+		if instructions (3) = "0" then
+		    ability := 7
+		    xDestination += moveStuff(ability).xIncrement
+		    yDestination += moveStuff(ability).yIncrement
+		    %actionLock := true
+		elsif instructions (3) = "1" then
+		    ability := 5
+		    xDestination -= moveStuff(ability).xIncrement
+		    yDestination += moveStuff(ability).yIncrement
+		    %actionLock := true
+		elsif instructions (3) = "2" then
+		    ability := 5
+		    xDestination += moveStuff(ability).xIncrement
+		    yDestination += moveStuff(ability).yIncrement
+		    %actionLock := true
+		elsif instructions (3) = "4" then
+		    ability := 8
+		    xDestination += moveStuff(ability).xIncrement
+		    yDestination += moveStuff(ability).yIncrement
+		    %actionLock := true
+		end if
+	    end if
+	end if
+	
+	frameNums += 1
+	if frameNums > moveStuff(ability).frames + 1 then
+	    frameNums := 0
+	    doingAction := false
+	    actionLock := false
+	end if
+	
+	%see if player hit other player
+	%^(oP).getHit(round(x+hitX),round(y+hitY))
+	
+	%move x and y towards xDestination and yDestination
+	%character moves differently when he is knocked back than when he is just moving
+	if knockedBack then
+	    x += 1/20*(xDestination-x)
+	    y += 1/20*(yDestination-y)
+	    %if character is knocked into the ground, he bounces
+	    if bounces then
+		if x > platX1 and x < platX2 and y < platY then
+		    xDestination := bounceX
+		    yDestination := bounceY
+		    bounces := false
+		end if
+	    end if
+	else
+	    x += 1/moveStuff(ability).speed*(xDestination-x)
+	    y += 1/moveStuff(ability).speed*(yDestination-y)
+	    
+	    %If player isn't performing an uninteruptable action, he falls if he isn't on the ground
+	    if not actionLock and not jumping then
+		if x > platX1 and x < platX2 then
+		    if y > platY then
+			y -= fallSpeed
+			yDestination -= fallSpeed
+		    else
+			%player is on the ground
+			canJump := true
+			jumping := false
+			canDoAction := true
+			y := platY
+		    end if
+		else
+		    y -= fallSpeed
+		    yDestination -= fallSpeed
+		end if
+	    end if
+	end if
+	
+	%check to see if player was hit by other player
+	
+	result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
+	
     end update
     
 end Character
@@ -560,90 +568,90 @@ procedure updateScreen
     
     %find leftMost and rightMost
     if ^ (player1).x < ^ (player2).x then
-        %if player 1 is to the left of player 2 and inside the world boundaries
-        if ^ (player1).x - ^ (player1).w / 2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round ( ^ (player1).x - ^ (player1).w / 2)
-        else
-            leftMost := 0
-        end if
-        
-        %This means that player 2 is to the right of player 1
-        if ^ (player2).x + ^ (player2).w / 2 < worldLength then
-            %player 2's x is rightmost
-            rightMost := round ( ^ (player2).x + ^ (player2).w / 2)
-        else
-            rightMost := worldLength
-        end if
+	%if player 1 is to the left of player 2 and inside the world boundaries
+	if ^ (player1).x - ^ (player1).w / 2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round ( ^ (player1).x - ^ (player1).w / 2)
+	else
+	    leftMost := 0
+	end if
+	
+	%This means that player 2 is to the right of player 1
+	if ^ (player2).x + ^ (player2).w / 2 < worldLength then
+	    %player 2's x is rightmost
+	    rightMost := round ( ^ (player2).x + ^ (player2).w / 2)
+	else
+	    rightMost := worldLength
+	end if
     else
-        %player 2 is to the left of player 1
-        if ^ (player2).x - ^ (player2).w / 2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round ( ^ (player2).x - ^ (player2).w / 2)
-        else
-            leftMost := 0
-        end if
-        
-        %This means that player 1 is to the right of player 2
-        if ^ (player1).x + ^ (player1).w / 2 < worldLength then
-            %player 1's x is leftmost
-            rightMost := round ( ^ (player1).x + ^ (player1).w / 2)
-        else
-            rightMost := worldLength
-        end if
+	%player 2 is to the left of player 1
+	if ^ (player2).x - ^ (player2).w / 2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round ( ^ (player2).x - ^ (player2).w / 2)
+	else
+	    leftMost := 0
+	end if
+	
+	%This means that player 1 is to the right of player 2
+	if ^ (player1).x + ^ (player1).w / 2 < worldLength then
+	    %player 1's x is leftmost
+	    rightMost := round ( ^ (player1).x + ^ (player1).w / 2)
+	else
+	    rightMost := worldLength
+	end if
     end if
     
     %find topmost and bottomMost
     if ^ (player1).y < ^ (player2).y then
-        %if player 1 is under player 2 and inside the world boundaries
-        if ^ (player1).y - ^ (player1).h / 2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round ( ^ (player1).y - ^ (player1).h / 2)
-        else
-            bottomMost := 0
-        end if
-        
-        %This means that player 2 above player 1
-        if ^ (player2).y + ^ (player2).h / 2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round ( ^ (player2).y + ^ (player2).h / 2)
-        else
-            topMost := worldHeight
-        end if
+	%if player 1 is under player 2 and inside the world boundaries
+	if ^ (player1).y - ^ (player1).h / 2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round ( ^ (player1).y - ^ (player1).h / 2)
+	else
+	    bottomMost := 0
+	end if
+	
+	%This means that player 2 above player 1
+	if ^ (player2).y + ^ (player2).h / 2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round ( ^ (player2).y + ^ (player2).h / 2)
+	else
+	    topMost := worldHeight
+	end if
     else
-        %if player 2 is under player 1 and inside the world boundaries
-        if ^ (player2).y - ^ (player2).h / 2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round ( ^ (player2).y - ^ (player2).h / 2)
-        else
-            bottomMost := 0
-        end if
-        
-        %This means that player 1 above player 2
-        if ^ (player1).y + ^ (player1).h / 2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round ( ^ (player1).y + ^ (player1).h / 2)
-        else
-            topMost := worldHeight
-        end if
+	%if player 2 is under player 1 and inside the world boundaries
+	if ^ (player2).y - ^ (player2).h / 2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round ( ^ (player2).y - ^ (player2).h / 2)
+	else
+	    bottomMost := 0
+	end if
+	
+	%This means that player 1 above player 2
+	if ^ (player1).y + ^ (player1).h / 2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round ( ^ (player1).y + ^ (player1).h / 2)
+	else
+	    topMost := worldHeight
+	end if
     end if
     
     
     %update screenX and screenY
     screenX := round ((rightMost + leftMost) / 2 - maxx / 2)
     if screenX < 0 then
-        screenX := 0
+	screenX := 0
     end if
     if screenX > worldLength - maxx then
-        screenX := worldLength - maxx
+	screenX := worldLength - maxx
     end if
     
     screenY := round ((bottomMost + topMost) / 2 - maxy / 2)
     if screenY < 0 then
-        screenY := 0
+	screenY := 0
     end if
     if screenY > worldHeight - maxy then
-        screenY := worldHeight - maxy
+	screenY := worldHeight - maxy
     end if
     
     %put maxx
@@ -695,8 +703,8 @@ loop
 	    %PLAYER INFO FORM:
 	    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
 	    
-	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1
-	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2
+	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2
+	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1
 	    
 	    %put intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
 	    %put intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
