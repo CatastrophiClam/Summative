@@ -62,6 +62,10 @@ record
     pic : int   %this is the picture
     hitX : int  %this is the point that can hit the other player
     hitY : int
+    hBX1 : int  %hitbox for the position
+    hBX2 : int
+    hBY1 : int
+    hBY2 : int
 end record
 
 %This contains relevant movement info for each ability
@@ -127,6 +131,16 @@ for i : 1 .. 4
     pictures (1, i, 1).pic := Pic.Mirror (pictures (1, i, 2).pic)
     pictures (1, i, 1).hitX := 70 - pictures (1, i, 2).hitX
     pictures (1, i, 1).hitY := pictures (1, i, 2).hitY
+    
+    %hitboxes
+    pictures (1, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (1, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (1, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (1, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (1, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (1, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (1, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (1, i, 2).hBY2 := FILLER_VARIABLE
 end for
     
 % Move
@@ -137,6 +151,16 @@ for i : 1 .. 5
     pictures (2, i, 1).pic := Pic.Mirror (pictures (2, i, 2).pic)
     pictures (2, i, 1).hitX := 70 - pictures (2, i, 2).hitX
     pictures (2, i, 1).hitY := pictures (2, i, 2).hitY
+    
+    %hitboxes
+    pictures (2, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (2, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (2, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (2, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (2, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (2, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (2, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (2, i, 2).hBY2 := FILLER_VARIABLE
 end for
     
 % Kneel
@@ -147,6 +171,16 @@ pictures (3, 1, 1).pic := Pic.Mirror (pictures (3, 1, 2).pic)
 pictures (3, 1, 1).hitX := 70 - pictures (3, 1, 2).hitX
 pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
 
+    %hitboxes
+    pictures (3, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (3, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (3, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (3, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (3, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (3, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (3, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (3, i, 2).hBY2 := FILLER_VARIABLE
+
 % Jump
 for i : 1 .. 7
     pictures (4, i, 2).pic := Pic.FileNew ("Ken/jump" + intstr (i) + ".jpeg")
@@ -155,6 +189,16 @@ for i : 1 .. 7
     pictures (4, i, 1).pic := Pic.Mirror (pictures (4, i, 2).pic)
     pictures (4, i, 1).hitX := 70 - pictures (4, i, 2).hitX
     pictures (4, i, 1).hitY := pictures (4, i, 2).hitY
+    
+    %hitboxes
+    pictures (4, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (4, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (4, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (4, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (4, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (4, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (4, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (4, i, 2).hBY2 := FILLER_VARIABLE
 end for
     
 % Roundhouse
@@ -165,6 +209,16 @@ for i : 1 .. 5
     pictures (5, i, 1).pic := Pic.Mirror (pictures (5, i, 2).pic)
     pictures (5, i, 1).hitX := 70 - pictures (5, i, 2).hitX
     pictures (5, i, 1).hitY := pictures (5, i, 2).hitY
+    
+    %hitboxes
+    pictures (5, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (5, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (5, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (5, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (5, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (5, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (5, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (5, i, 2).hBY2 := FILLER_VARIABLE
 end for
     
 %Punch
@@ -175,6 +229,16 @@ for i : 1 .. 3
     pictures (6, i, 1).pic := Pic.Mirror (pictures (6, i, 2).pic)
     pictures (6, i, 1).hitX := 70 - pictures (6, i, 2).hitX
     pictures (6, i, 1).hitY := pictures (6, i, 2).hitY
+    
+    %hitboxes
+    pictures (6, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (6, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (6, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (6, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (6, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (6, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (6, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (6, i, 2).hBY2 := FILLER_VARIABLE
 end for
     
 % Kick
@@ -185,6 +249,16 @@ for i : 1 .. 5
     pictures (7, i, 1).pic := Pic.Mirror (pictures (7, i, 2).pic)
     pictures (7, i, 1).hitX := 70 - pictures (7, i, 2).hitX
     pictures (7, i, 1).hitY := pictures (7, i, 2).hitY
+    
+    %hitboxes
+    pictures (7, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (7, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (7, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (7, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (7, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (7, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (7, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (7, i, 2).hBY2 := FILLER_VARIABLE
 end for
     
 % Tatsumaki
@@ -195,6 +269,16 @@ for i : 1 .. 13
     pictures (8, i, 1).pic := Pic.Mirror (pictures (8, i, 2).pic)
     pictures (8, i, 1).hitX := 70 - pictures (8, i, 2).hitX
     pictures (8, i, 1).hitY := pictures (8, i, 2).hitY
+    
+    %hitboxes
+    pictures (8, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (8, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (8, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (8, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (8, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (8, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (8, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (8, i, 2).hBY2 := FILLER_VARIABLE
 end for
     
 % Hadoken
@@ -205,6 +289,16 @@ for i : 1 .. 4
     pictures (9, i, 1).pic := Pic.Mirror (pictures (9, i, 2).pic)
     pictures (9, i, 1).hitX := 70 - pictures (9, i, 2).hitX
     pictures (9, i, 1).hitY := pictures (9, i, 2).hitY
+    
+    %hitboxes
+    pictures (9, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (9, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (9, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (9, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (9, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (9, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (9, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (9, i, 2).hBY2 := FILLER_VARIABLE
 end for
     
 % Shoryuken
@@ -215,6 +309,16 @@ for i : 1 .. 7
     pictures (10, i, 1).pic := Pic.Mirror (pictures (10, i, 2).pic)
     pictures (10, i, 1).hitX := 70 - pictures (10, i, 2).hitX
     pictures (10, i, 1).hitY := pictures (10, i, 2).hitY
+    
+    %hitboxes
+    pictures (10, i, 1).hBX1 := FILLER_VARIABLE
+    pictures (10, i, 1).hBY1 := FILLER_VARIABLE
+    pictures (10, i, 1).hBX2 := FILLER_VARIABLE
+    pictures (10, i, 1).hBY2 := FILLER_VARIABLE
+    pictures (10, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (10, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (10, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (10, i, 2).hBY2 := FILLER_VARIABLE
 end for
     
 %NOTE HERE'S HOW CHARACTER MOVEMENT WORKS: character has a destination: this is the point his center is moving towards. moving the character with
@@ -299,7 +403,7 @@ class Character
     
     %Character abilities stuff
     var ability : int := 1%current ability player is performing
-    var frameNums : int %number of frames an ability lasts for
+    var frameNums : int := 0 %frame number in an ability
 	var abilXIncr : int %how much does the character move horizontally each frame during the ability?
     var abilYIncr : int %same for vertically
     
@@ -362,105 +466,109 @@ class Character
     
     function update (instructions : string, oP:pointer to Character) : string
 	var moveSpeed := moveStuff(ability)
-	if not actionLock then
-	    if (instructions (1) = "2") then
-		xDestination += moveStuff(ability).xIncrement
-		if instructions(2) = "1" then
-		    ability := 3
-		else
-		    ability := 2
-		end if
-		doingAction := true
-		dir := 2
+    
+    %if we can perform an action, look at instructions sent by client
+	if not actionLock then  %if we can perform an action
+	    if (instructions (1) = "2") then  %going right
+            xDestination += moveStuff(ability).xIncrement
+            if instructions(2) = "1" then
+                ability := 3
+            else
+                ability := 2
+            end if
+            doingAction := true
+            dir := 2
 	    end if
-	    if (instructions (1) = "1") then
-		xDestination -= moveStuff(ability).xIncrement
-		if instructions(2) = "1" then
-		    ability := 3
-		else
-		    ability := 2
-		end if
-		doingAction := true
-		dir := 1
+	    if (instructions (1) = "1") then %go left
+            xDestination -= moveStuff(ability).xIncrement
+            if instructions(2) = "1" then
+                ability := 3
+            else
+                ability := 2
+            end if
+            doingAction := true
+            dir := 1
 	    end if
-	    if (instructions (2) = "1") then
-		yDestination -= 10
-		ability := 3
-		doingAction := true
-	    end if
-	    if (instructions (2) = "2") then
-		if not actionLock and canJump then
-		    ability := 4
-		    canJump := false  %can't jump after jumping once
-		    doingAction := true
-		    jumping := true
-		end if
+	    if (instructions (2) = "1") then %crouch
+            yDestination -= 10
+            ability := 3
+            doingAction := true
+        end if
+        if (instructions (2) = "2") then %jump
+            if canJump then
+                ability := 4
+                canJump := false  %can't jump after jumping once
+                doingAction := true
+                jumping := true
+                yDestination += moveStuff(ability).yIncrement
+            end if
 	    end if
 	end if
 	
+    %update destination position
 	if doingAction = false then
 	    ability := 1
 	    
-	elsif doingAction = true and actionLock = false then
+	elsif not actionLock then
 	    if instructions (4) = "q" then
-		if instructions (3) = "0" then
-		    ability := 6
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "1" then
-		    ability := 9
-		    xDestination -= moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "2" then
-		    ability := 9
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "4" then
-		    ability := 10
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		end if
+            if instructions (3) = "0" then
+                ability := 6
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "1" then
+                ability := 9
+                xDestination -= moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "2" then
+                ability := 9
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "4" then
+                ability := 10
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            end if
 	    end if
 	    
 	    if instructions (4) = "w" then
-		if instructions (3) = "0" then
-		    ability := 7
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "1" then
-		    ability := 5
-		    xDestination -= moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "2" then
-		    ability := 5
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "4" then
-		    ability := 8
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		end if
+            if instructions (3) = "0" then
+                ability := 7
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "1" then
+                ability := 5
+                xDestination -= moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "2" then
+                ability := 5
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "4" then
+                ability := 8
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            end if
 	    end if
 	end if
 	
+    %update how player looks
 	frameNums += 1
 	if frameNums > moveStuff(ability).frames then
-	    frameNums := 0
+	    frameNums := 1
 	    doingAction := false
 	    actionLock := false
-	end if
+        ability := 1
+    end if
 	
-	%see if player hit other player
-	%^(oP).getHit(round(x+hitX),round(y+hitY))
-	
+    %update player position
 	%move x and y towards xDestination and yDestination
 	%character moves differently when he is knocked back than when he is just moving
 	if knockedBack then
@@ -498,7 +606,8 @@ class Character
 	    end if
 	end if
 	
-	%check to see if player was hit by other player
+	%see if player hit other player
+	%^(oP).getHit(round(x+hitX),round(y+hitY))
 	
 	result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
 	
