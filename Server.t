@@ -70,6 +70,7 @@ type ability:
     speed : int  %character moves 1/speed of the distance between him and his destination each update
     xIncrement : int
     yIncrement : int
+    frames : int  %number of frames ability lasts for
     end record
 
 %Display thingy at bottom of screen with character lives and damage
@@ -129,38 +130,49 @@ class Character
     var knockedBack := false %is player traveling because he got knocked back?
     var actionLock := false % is the player currently performing an action that can't be switched until its finished?
     var canDoAction := true % can the player perform an ability?
+    var canJump := true %can player jump?
     var atDestination := true %is player at his destination
-    var moveSpeeds : array 1..10 of ability %player moves at 1/moveSpeeds(i) of the distance between him and destination every update
-    moveSpeeds(1).speed := 1
-    moveSpeeds(1).xIncrement := 0
-    moveSpeeds(1).yIncrement := 0
-    moveSpeeds(2).speed := 1
-    moveSpeeds(2).xIncrement :=10
-    moveSpeeds(2).yIncrement :=0
-    moveSpeeds(3).speed := 1
-    moveSpeeds(3).xIncrement :=4
-    moveSpeeds(3).yIncrement :=0
-    moveSpeeds(4).speed := 20
-    moveSpeeds(4).xIncrement :=0
-    moveSpeeds(4).yIncrement :=200
-    moveSpeeds(5).speed := 15
-    moveSpeeds(5).xIncrement :=0
-    moveSpeeds(5).yIncrement :=0
-    moveSpeeds(6).speed := 1
-    moveSpeeds(6).xIncrement :=0
-    moveSpeeds(6).yIncrement :=0
-    moveSpeeds(7).speed := 1
-    moveSpeeds(7).xIncrement :=0
-    moveSpeeds(7).yIncrement :=0
-    moveSpeeds(8).speed := 25
-    moveSpeeds(8).xIncrement :=20
-    moveSpeeds(8).yIncrement :=140
-    moveSpeeds(9).speed := 1
-    moveSpeeds(9).xIncrement :=10
-    moveSpeeds(9).yIncrement :=0
-    moveSpeeds(10).speed := 20
-    moveSpeeds(10).xIncrement :=0
-    moveSpeeds(10).yIncrement :=170
+    var moveStuff : array 1..10 of ability %player moves at 1/moveStuff(i) of the distance between him and destination every update
+    moveStuff(1).speed := 1
+    moveStuff(1).xIncrement := 0
+    moveStuff(1).yIncrement := 0
+    moveStuff(1).frames := 4
+    moveStuff(2).speed := 1
+    moveStuff(2).xIncrement :=10
+    moveStuff(2).yIncrement :=0
+    moveStuff(2).frames :=5
+    moveStuff(3).speed := 1
+    moveStuff(3).xIncrement :=4
+    moveStuff(3).yIncrement :=0
+    moveStuff(3).frames :=1
+    moveStuff(4).speed := 15
+    moveStuff(4).xIncrement :=0
+    moveStuff(4).yIncrement :=200
+    moveStuff(4).frames :=7
+    moveStuff(5).speed := 10
+    moveStuff(5).xIncrement :=0
+    moveStuff(5).yIncrement :=0
+    moveStuff(5).frames :=5
+    moveStuff(6).speed := 1
+    moveStuff(6).xIncrement :=0
+    moveStuff(6).yIncrement :=0
+    moveStuff(6).frames :=3
+    moveStuff(7).speed := 1
+    moveStuff(7).xIncrement :=0
+    moveStuff(7).yIncrement :=0
+    moveStuff(7).frames :=5
+    moveStuff(8).speed := 17
+    moveStuff(8).xIncrement :=20
+    moveStuff(8).yIncrement :=140
+    moveStuff(8).frames :=13
+    moveStuff(9).speed := 1
+    moveStuff(9).xIncrement :=10
+    moveStuff(9).yIncrement :=0
+    moveStuff(9).frames :=4
+    moveStuff(10).speed := 14
+    moveStuff(10).xIncrement :=0
+    moveStuff(10).yIncrement :=170
+    moveStuff(10).frames :=7
 
     var fallSpeed : int := 2
 
@@ -232,18 +244,24 @@ class Character
     end knockBack
 
     proc update (instructions : string)
-        var moveSpeed := moveSpeeds(ability)
+        var moveSpeed := moveStuff(ability)
         if (instructions (1) = "2") then
-            x += 10
+            xDestination += 10
+            ability := 2
         end if
         if (instructions (1) = "1") then
-            x -= 10
+            xDestination -= 10
+            ability := 2
         end if
         if (instructions (2) = "1") then
-            y -= 10
+            yDestination -= 10
+            ability := 3
         end if
         if (instructions (2) = "2") then
-            y += 10
+            if not actionLock and canJump then
+                ability := 4
+                canJump := false  %can't jump after jumping once
+            end if
         end if
         
         %move x and y towards xDestination and yDestination
@@ -260,7 +278,8 @@ class Character
                 end if
             end if
         else
-            
+            x += 1/moveStuff(ability).speed*(xDestination-x)
+            y += 1/moveStuff(ability).speed*(yDestination-y)
         end if
         
         %check to see if player was hit by other player
