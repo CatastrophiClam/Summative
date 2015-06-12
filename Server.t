@@ -334,7 +334,17 @@ class Character
     var charType : int  %which character does this class represent?
     var lives : int := 5 %how many lives does this character have?
     var damage : int %how much damage has the character taken? (damage determines how much the character flies)
-    var hitDamage : int %how much damage does this character deal?
+    var damageArray : array 1..10 of int %how much damage does this character deal?
+    damageArray(1) :=1
+    damageArray(2) :=2
+    damageArray(3) :=4
+    damageArray(4) :=4
+    damageArray(5) :=20
+    damageArray(6) :=10
+    damageArray(7) :=15
+    damageArray(8) :=35
+    damageArray(9) :=30
+    damageArray(10) :=30
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
     var dir : int %the way the character is facing - 1 indicates left, 2 indicates right
@@ -419,16 +429,6 @@ class Character
     %Character picture stuff
     var bodyPic, bodyFPic : int
     
-    %initialize damages
-    proc initDamage (uO, dO, sO, uP, dP, sP : int)
-	upOD := uO
-	downOD := dO
-	sideOD := sO
-	upPD := uP
-	downPD := dP
-	sidePD := sP
-    end initDamage
-    
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertX (x_, screenX : real) : int
@@ -461,10 +461,10 @@ class Character
     end knockBack
     
     %did current character get hit?
-    proc getHit(hX,hY,cX,cY:int) %hX,hY is point that got hit, cX,cY is center of other player
+    proc getHit(hX,hY,cX,cY,damageTaken:int) %hX,hY is point that got hit, cX,cY is center of other player
         %if player did get hit
         if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
-            damage += FILLER_VARIABLE
+            damage += damageTaken
             knockBack(cX,cY,hX,hY)
         end if
     end getHit
@@ -622,7 +622,7 @@ class Character
     cY := round((hitBoxY2-hitBoxY1)/2)
 	
 	%see if player hit other player
-	^(oP).getHit(round(hitX),round(hitY),cX,cY)
+	^(oP).getHit(round(hitX),round(hitY),cX,cY,damageArray(ability))
 	
 	result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
 	
