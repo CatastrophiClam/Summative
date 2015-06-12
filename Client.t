@@ -494,7 +494,7 @@ loop
 	    %Draw.FillOval(strint(toDoArray(1))+screenX,strint(toDoArray(2))+screenY,5,5,black)
 	    %Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
 	end if
-    
+
     updateBackground
     Sprite.Show(otherPlayer.sprite)
     Sprite.Show(selfPlayer.sprite)
