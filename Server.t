@@ -4,8 +4,11 @@
 % 1). IMPORTANT: 0,0 IS THE BOTTOM LEFT POINT OF THE WORLD
 % 2). Any coordinates that are "IN THE WORLD" must be converted to on-screen coordinates before being displayed
 
-const FILLER_VARIABLE := 2 %if you see this, it means theres some value we haven't decided on yet and we need it declared for the program to run
+const FILLER_VARIABLE : int := 2 %if you see this, it means theres some value we haven't decided on yet and we need it declared for the program to run
 
+%--------------------------------------------------------%
+%                DECLARE GLOBAL VARIABLES                %
+%--------------------------------------------------------%
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -62,6 +65,10 @@ record
     pic : int   %this is the picture
     hitX : int  %this is the point that can hit the other player
     hitY : int
+    hBX1 : int  %hitbox for the position
+    hBX2 : int
+    hBY1 : int
+    hBY2 : int
 end record
 
 %This contains relevant movement info for each ability
@@ -110,13 +117,31 @@ class PlayerStatusDisplay
     
 end PlayerStatusDisplay
 
+var gameOver := false
+
 %---------------------PLAYER PICTURES--------------------%
+
+var hitFile,boxFile:int %hitcoords and hitboxes files
+open:hitFile,"HitCoords.txt",get
+open:boxFile,"HitBoxes.txt",get
 
 %THE FIRST INDEX OF PICTURES IS THE MOVE TYPE:
 %1 - idle  2 - move  3 - kneel  4 - jump  5 - roundhouse  6 - punch  7 - kick  8 - tatsumaki  9 - hadoken  10 - shoryuken
 %THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
 %THE THIRD INDEX OF PICTURES IS THE SIDE PLAYER IS FACING: 1 - left  2 - right
 %NOTE WE'RE PROBABLY GONNA HAVE TO READ THE FILLER_VARIABLES FROM A FILE
+
+%FILE STUFF
+%NOTE HITCOORDS FILE GOES:
+%hitX
+%hitY
+%...
+%HITBOXES FILE GOES:
+%X1
+%Y1
+%X2
+%Y2
+
 var pictures : array 1 .. 10, 1 .. 13, 1 .. 2 of position
 
 % Idle
@@ -127,6 +152,16 @@ for i : 1 .. 4
     pictures (1, i, 1).pic := Pic.Mirror (pictures (1, i, 2).pic)
     pictures (1, i, 1).hitX := 70 - pictures (1, i, 2).hitX
     pictures (1, i, 1).hitY := pictures (1, i, 2).hitY
+    
+    %hitboxes
+    pictures (1, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (1, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (1, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (1, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (1, i, 1).hBX1 := 70-pictures (1, i, 2).hBX1
+    pictures (1, i, 1).hBY1 := pictures (1, i, 2).hBY1
+    pictures (1, i, 1).hBX2 := 70-pictures (1, i, 2).hBX2
+    pictures (1, i, 1).hBY2 := pictures (1, i, 2).hBY2
 end for
     
 % Move
@@ -137,6 +172,16 @@ for i : 1 .. 5
     pictures (2, i, 1).pic := Pic.Mirror (pictures (2, i, 2).pic)
     pictures (2, i, 1).hitX := 70 - pictures (2, i, 2).hitX
     pictures (2, i, 1).hitY := pictures (2, i, 2).hitY
+    
+    %hitboxes
+    pictures (2, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (2, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (2, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (2, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (2, i, 1).hBX1 := 70-pictures (2, i, 2).hBX1
+    pictures (2, i, 1).hBY1 := pictures (2, i, 2).hBY1
+    pictures (2, i, 1).hBX2 := 70-pictures (2, i, 2).hBX2
+    pictures (2, i, 1).hBY2 := pictures (2, i, 2).hBY2
 end for
     
 % Kneel
@@ -147,6 +192,16 @@ pictures (3, 1, 1).pic := Pic.Mirror (pictures (3, 1, 2).pic)
 pictures (3, 1, 1).hitX := 70 - pictures (3, 1, 2).hitX
 pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
 
+    %hitboxes
+    pictures (3, 1, 2).hBX1 := FILLER_VARIABLE
+    pictures (3, 1, 2).hBY1 := FILLER_VARIABLE
+    pictures (3, 1, 2).hBX2 := FILLER_VARIABLE
+    pictures (3, 1, 2).hBY2 := FILLER_VARIABLE
+    pictures (3, 1, 1).hBX1 := 70-pictures (3, 1, 2).hBX1
+    pictures (3, 1, 1).hBY1 := pictures (3, 1, 2).hBY1
+    pictures (3, 1, 1).hBX2 := 70-pictures (3, 1, 2).hBX2
+    pictures (3, 1, 1).hBY2 := pictures (3, 1, 2).hBY2
+
 % Jump
 for i : 1 .. 7
     pictures (4, i, 2).pic := Pic.FileNew ("Ken/jump" + intstr (i) + ".jpeg")
@@ -155,6 +210,16 @@ for i : 1 .. 7
     pictures (4, i, 1).pic := Pic.Mirror (pictures (4, i, 2).pic)
     pictures (4, i, 1).hitX := 70 - pictures (4, i, 2).hitX
     pictures (4, i, 1).hitY := pictures (4, i, 2).hitY
+    
+    %hitboxes
+    pictures (4, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (4, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (4, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (4, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (4, i, 1).hBX1 := 70-pictures (4, i, 2).hBX1
+    pictures (4, i, 1).hBY1 := pictures (4, i, 2).hBY1
+    pictures (4, i, 1).hBX2 := 70-pictures (4, i, 2).hBX2
+    pictures (4, i, 1).hBY2 := pictures (4, i, 2).hBY2
 end for
     
 % Roundhouse
@@ -165,6 +230,16 @@ for i : 1 .. 5
     pictures (5, i, 1).pic := Pic.Mirror (pictures (5, i, 2).pic)
     pictures (5, i, 1).hitX := 70 - pictures (5, i, 2).hitX
     pictures (5, i, 1).hitY := pictures (5, i, 2).hitY
+    
+    %hitboxes
+    pictures (5, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (5, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (5, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (5, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (5, i, 1).hBX1 := 70-pictures (5, i, 2).hBX1
+    pictures (5, i, 1).hBY1 := pictures (5, i, 2).hBY1
+    pictures (5, i, 1).hBX2 := 70-pictures (5, i, 2).hBX2
+    pictures (5, i, 1).hBY2 := pictures (5, i, 2).hBY2
 end for
     
 %Punch
@@ -175,6 +250,16 @@ for i : 1 .. 3
     pictures (6, i, 1).pic := Pic.Mirror (pictures (6, i, 2).pic)
     pictures (6, i, 1).hitX := 70 - pictures (6, i, 2).hitX
     pictures (6, i, 1).hitY := pictures (6, i, 2).hitY
+    
+    %hitboxes
+    pictures (6, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (6, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (6, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (6, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (6, i, 1).hBX1 := 70-pictures (6, i, 2).hBX1
+    pictures (6, i, 1).hBY1 := pictures (6, i, 2).hBY1
+    pictures (6, i, 1).hBX2 := 70-pictures (6, i, 2).hBX2
+    pictures (6, i, 1).hBY2 := pictures (6, i, 2).hBY2
 end for
     
 % Kick
@@ -185,6 +270,16 @@ for i : 1 .. 5
     pictures (7, i, 1).pic := Pic.Mirror (pictures (7, i, 2).pic)
     pictures (7, i, 1).hitX := 70 - pictures (7, i, 2).hitX
     pictures (7, i, 1).hitY := pictures (7, i, 2).hitY
+    
+    %hitboxes
+    pictures (7, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (7, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (7, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (7, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (7, i, 1).hBX1 := 70-pictures (7, i, 2).hBX1
+    pictures (7, i, 1).hBY1 := pictures (7, i, 2).hBY1
+    pictures (7, i, 1).hBX2 := 70-pictures (7, i, 2).hBX2
+    pictures (7, i, 1).hBY2 := pictures (7, i, 2).hBY2
 end for
     
 % Tatsumaki
@@ -195,6 +290,16 @@ for i : 1 .. 13
     pictures (8, i, 1).pic := Pic.Mirror (pictures (8, i, 2).pic)
     pictures (8, i, 1).hitX := 70 - pictures (8, i, 2).hitX
     pictures (8, i, 1).hitY := pictures (8, i, 2).hitY
+    
+    %hitboxes
+    pictures (8, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (8, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (8, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (8, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (8, i, 1).hBX1 := 70-pictures (8, i, 2).hBX1
+    pictures (8, i, 1).hBY1 := pictures (8, i, 2).hBY1
+    pictures (8, i, 1).hBX2 := 70-pictures (8, i, 2).hBX2
+    pictures (8, i, 1).hBY2 := pictures (8, i, 2).hBY2
 end for
     
 % Hadoken
@@ -205,6 +310,16 @@ for i : 1 .. 4
     pictures (9, i, 1).pic := Pic.Mirror (pictures (9, i, 2).pic)
     pictures (9, i, 1).hitX := 70 - pictures (9, i, 2).hitX
     pictures (9, i, 1).hitY := pictures (9, i, 2).hitY
+    
+    %hitboxes
+    pictures (9, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (9, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (9, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (9, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (9, i, 1).hBX1 := 70-pictures (9, i, 2).hBX1
+    pictures (9, i, 1).hBY1 := pictures (9, i, 2).hBY1
+    pictures (9, i, 1).hBX2 := 70-pictures (9, i, 2).hBX2
+    pictures (9, i, 1).hBY2 := pictures (9, i, 2).hBY2
 end for
     
 % Shoryuken
@@ -215,6 +330,16 @@ for i : 1 .. 7
     pictures (10, i, 1).pic := Pic.Mirror (pictures (10, i, 2).pic)
     pictures (10, i, 1).hitX := 70 - pictures (10, i, 2).hitX
     pictures (10, i, 1).hitY := pictures (10, i, 2).hitY
+    
+    %hitboxes
+    pictures (10, i, 2).hBX1 := FILLER_VARIABLE
+    pictures (10, i, 2).hBY1 := FILLER_VARIABLE
+    pictures (10, i, 2).hBX2 := FILLER_VARIABLE
+    pictures (10, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (10, i, 1).hBX1 := 70-pictures (10, i, 2).hBX1
+    pictures (10, i, 1).hBY1 := pictures (10, i, 2).hBY1
+    pictures (10, i, 1).hBX2 := 70-pictures (10, i, 2).hBX1
+    pictures (10, i, 1).hBY2 := pictures (10, i, 2).hBY1
 end for
     
 %NOTE HERE'S HOW CHARACTER MOVEMENT WORKS: character has a destination: this is the point his center is moving towards. moving the character with
@@ -222,15 +347,25 @@ end for
 %represents a character in the game
 class Character
     
-    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures
+    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures, gameOver
     
-    export var x, var y, var xDestination, var yDestination, var h, var w, var damage, var charType, update, getHit %exported variables
+    export var x, var y, var xDestination, var yDestination, var h, var w, damage, lives, var charType, update, getHit %exported variables
     
     %Character attributes
     var charType : int  %which character does this class represent?
     var lives : int := 5 %how many lives does this character have?
-    var damage : int %how much damage has the character taken? (damage determines how much the character flies)
-    var hitDamage : int %how much damage does this character deal?
+    var damage : int := 0%how much damage has the character taken? (damage determines how much the character flies)
+    var damageArray : array 1..10 of int %how much damage does this character deal?
+    damageArray(1) :=1
+    damageArray(2) :=2
+    damageArray(3) :=4
+    damageArray(4) :=4
+    damageArray(5) :=20
+    damageArray(6) :=10
+    damageArray(7) :=15
+    damageArray(8) :=35
+    damageArray(9) :=45
+    damageArray(10) :=30
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
     var dir : int %the way the character is facing - 1 indicates left, 2 indicates right
@@ -243,8 +378,9 @@ class Character
     var jumping := false %is player jumping
     var atDestination := true %is player at his destination
     var moveStuff : array 1..10 of Ability %player moves at 1/moveStuff(i) of the distance between him and destination every update
-    var hitX, hitY : int %point relative to bottom left of character that can hit the other player
-    var hitBoxX1, hitBoxX2, hitBoxY1, hitBoxY2 : int
+    var hitX, hitY : int %point IN THE WORLD that can hit the other player
+    var hitBoxX1, hitBoxX2, hitBoxY1, hitBoxY2 : int %box IN THE WORLD that can be hit by the other player
+    var cX, cY : int %center of hitbox/player
     moveStuff(1).speed := 1
     moveStuff(1).xIncrement := 0
     moveStuff(1).yIncrement := 0
@@ -259,7 +395,7 @@ class Character
     moveStuff(3).frames :=1
     moveStuff(4).speed := 15
     moveStuff(4).xIncrement :=0
-    moveStuff(4).yIncrement :=200
+    moveStuff(4).yIncrement :=350
     moveStuff(4).frames :=7
     moveStuff(5).speed := 10
     moveStuff(5).xIncrement :=0
@@ -275,7 +411,7 @@ class Character
     moveStuff(7).frames :=5
     moveStuff(8).speed := 17
     moveStuff(8).xIncrement :=20
-    moveStuff(8).yIncrement :=140
+    moveStuff(8).yIncrement :=300
     moveStuff(8).frames :=13
     moveStuff(9).speed := 1
     moveStuff(9).xIncrement :=10
@@ -283,10 +419,10 @@ class Character
     moveStuff(9).frames :=4
     moveStuff(10).speed := 14
     moveStuff(10).xIncrement :=0
-    moveStuff(10).yIncrement :=170
+    moveStuff(10).yIncrement :=250
     moveStuff(10).frames :=7
     
-    var fallSpeed : int := 2
+    var fallSpeed : int := 4
     
     var isHit := false %did the character get hit?
     
@@ -299,7 +435,7 @@ class Character
     
     %Character abilities stuff
     var ability : int := 1%current ability player is performing
-    var frameNums : int %number of frames an ability lasts for
+    var frameNums : int := 0 %frame number in an ability
 	var abilXIncr : int %how much does the character move horizontally each frame during the ability?
     var abilYIncr : int %same for vertically
     
@@ -314,16 +450,6 @@ class Character
     %Character picture stuff
     var bodyPic, bodyFPic : int
     
-    %initialize damages
-    proc initDamage (uO, dO, sO, uP, dP, sP : int)
-	upOD := uO
-	downOD := dO
-	sideOD := sO
-	upPD := uP
-	downPD := dP
-	sidePD := sP
-    end initDamage
-    
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertX (x_, screenX : real) : int
@@ -337,142 +463,151 @@ class Character
     end convertY
     
     proc knockBack (cX, cY, pX, pY : int) %cX,cY is center of other player, pX, pY is where character was hit
-	var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
-	%calculate new destination
-	%ABRUPT CHANGE OF DIRECTION VERSION
-	xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
-	yDestination := round (y + (pY - cY) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
-	%KEEPS MOMENTUM VERSION
-	%xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-	%yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-	
-	%check if character bounces
-	if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
-	    %character bounces
-	    bounces := true
-	    bounceX := xDestination
-	    bounceY := platY + (platY - yDestination)
-	end if
+        var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
+        %calculate new destination
+        %ABRUPT CHANGE OF DIRECTION VERSION
+        xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+        yDestination := round (y + (pY - cY) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+        %KEEPS MOMENTUM VERSION
+        %xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+        %yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+        
+        %check if character bounces
+        if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
+            %character bounces
+            bounces := true
+            bounceX := xDestination
+            bounceY := platY + (platY - yDestination)
+        end if
     end knockBack
     
     %did current character get hit?
-    proc getHit(hX,hY:int)
-	
+    proc getHit(hX,hY,cX,cY,damageTaken:int) %hX,hY is point that got hit, cX,cY is center of other player
+        %if player did get hit
+        if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
+            damage += Rand.Int(damageTaken-6, damageTaken+6)
+            knockBack(cX,cY,hX,hY)
+            actionLock := false
+        end if
     end getHit
     
     function update (instructions : string, oP:pointer to Character) : string
 	var moveSpeed := moveStuff(ability)
-	if not actionLock then
-	    if (instructions (1) = "2") then
-		xDestination += moveStuff(ability).xIncrement
-		if instructions(2) = "1" then
-		    ability := 3
-		else
-		    ability := 2
-		end if
-		doingAction := true
-		dir := 2
+    
+    %if we can perform an action, look at instructions sent by client
+	if not actionLock then  %if we can perform an action
+	    if (instructions (1) = "2") then  %going right
+            xDestination += moveStuff(ability).xIncrement
+            if instructions(2) = "1" then
+                ability := 3
+            else
+                ability := 2
+            end if
+            doingAction := true
+            dir := 2
 	    end if
-	    if (instructions (1) = "1") then
-		xDestination -= moveStuff(ability).xIncrement
-		if instructions(2) = "1" then
-		    ability := 3
-		else
-		    ability := 2
-		end if
-		doingAction := true
-		dir := 1
+	    if (instructions (1) = "1") then %go left
+            xDestination -= moveStuff(ability).xIncrement
+            if instructions(2) = "1" then
+                ability := 3
+            else
+                ability := 2
+            end if
+            doingAction := true
+            dir := 1
 	    end if
-	    if (instructions (2) = "1") then
-		yDestination -= 10
-		ability := 3
-		doingAction := true
-	    end if
-	    if (instructions (2) = "2") then
-		if not actionLock and canJump then
-		    ability := 4
-		    canJump := false  %can't jump after jumping once
-		    doingAction := true
-		    jumping := true
-		end if
+	    if (instructions (2) = "1") then %crouch
+            yDestination -= 10
+            ability := 3
+            doingAction := true
+        end if
+        if (instructions (2) = "2") then %jump
+            if canJump then
+                ability := 4
+                canJump := false  %can't jump after jumping once
+                doingAction := true
+                jumping := true
+                yDestination += moveStuff(ability).yIncrement
+            end if
 	    end if
 	end if
 	
+    %update destination position
 	if doingAction = false then
 	    ability := 1
 	    
-	elsif doingAction = true and actionLock = false then
+	elsif not actionLock then
 	    if instructions (4) = "q" then
-		if instructions (3) = "0" then
-		    ability := 6
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "1" then
-		    ability := 9
-		    xDestination -= moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "2" then
-		    ability := 9
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "4" then
-		    ability := 10
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		end if
+            if instructions (3) = "0" then
+                ability := 6
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "1" then
+                ability := 9
+                xDestination -= moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "2" then
+                ability := 9
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "4" then
+                ability := 10
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            end if
 	    end if
 	    
 	    if instructions (4) = "w" then
-		if instructions (3) = "0" then
-		    ability := 7
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "1" then
-		    ability := 5
-		    xDestination -= moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "2" then
-		    ability := 5
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		elsif instructions (3) = "4" then
-		    ability := 8
-		    xDestination += moveStuff(ability).xIncrement
-		    yDestination += moveStuff(ability).yIncrement
-		    %actionLock := true
-		end if
+            if instructions (3) = "0" then
+                ability := 7
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "1" then
+                ability := 5
+                xDestination -= moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "2" then
+                ability := 5
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "4" then
+                ability := 8
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            end if
 	    end if
 	end if
-	
+
+    %update how player looks
 	frameNums += 1
 	if frameNums > moveStuff(ability).frames then
-	    frameNums := 0
+	    frameNums := 1
 	    doingAction := false
 	    actionLock := false
-	end if
+        ability := 1
+    end if
 	
-	%see if player hit other player
-	%^(oP).getHit(round(x+hitX),round(y+hitY))
-	
+    %update player position
 	%move x and y towards xDestination and yDestination
 	%character moves differently when he is knocked back than when he is just moving
 	if knockedBack then
-	    x += 1/20*(xDestination-x)
-	    y += 1/20*(yDestination-y)
+	    x += 1/17*(xDestination-x)
+	    y += 1/17*(yDestination-y)
 	    %if character is knocked into the ground, he bounces
 	    if bounces then
-		if x > platX1 and x < platX2 and y < platY then
-		    xDestination := bounceX
-		    yDestination := bounceY
-		    bounces := false
-		end if
+            if x > platX1 and x < platX2 and y < platY then
+                xDestination := bounceX
+                yDestination := bounceY
+                bounces := false
+            end if
 	    end if
 	else
 	    x += 1/moveStuff(ability).speed*(xDestination-x)
@@ -497,8 +632,34 @@ class Character
 		end if
 	    end if
 	end if
+    
+    %update player hit stuff
+    hitX := round(x+pictures(ability,frameNums,dir).hitX)
+    hitY := round(y+pictures(ability,frameNums,dir).hitY)
+    hitBoxX1 := round(x+pictures(ability,frameNums,dir).hBX1)
+    hitBoxY1 := round(y+pictures(ability,frameNums,dir).hBY1)
+    hitBoxX2 := round(x+pictures(ability,frameNums,dir).hBX2)
+    hitBoxY2 := round(y+pictures(ability,frameNums,dir).hBY2)
+    cX := round((hitBoxX2-hitBoxX1)/2)
+    cY := round((hitBoxY2-hitBoxY1)/2)
+    
+    %see if player died
+    if x < 0 or x > worldLength or y < 0 or y > worldHeight then
+        %if player dies, reset stuff and deduct a life
+        lives -= 1
+        damage := 0
+        actionLock := false
+        canJump := true
+        doingAction := false
+    end if
+    
+    %check to see if player is still playing
+    if lives = 0 then
+        gameOver := true
+    end if
 	
-	%check to see if player was hit by other player
+	%see if player hit other player
+	^(oP).getHit(round(hitX),round(hitY),cX,cY,damageArray(ability))
 	
 	result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
 	
@@ -703,8 +864,8 @@ loop
 	    %PLAYER INFO FORM:
 	    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
 	    
-	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2
-	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1
+	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
+	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
 	    
 	    %put intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
 	    %put intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
