@@ -347,9 +347,9 @@ end for
 %represents a character in the game
 class Character
     
-    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures, gameOver
+    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures, gameOver, worldLength, worldHeight
 
-    export var x, var y, var xDestination, var yDestination, var h, var w, var dir, var damage, var charType, update, getHit %exported variables
+    export var x, var y, var xDestination, var yDestination, var h, var w, var dir, var lives, var damage, var charType, update, getHit %exported variables
     
     %Character attributes
     var charType : int  %which character does this class represent?
@@ -463,32 +463,32 @@ class Character
     end convertY
     
     proc knockBack (cX, cY, pX, pY : int) %cX,cY is center of other player, pX, pY is where character was hit
-        var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
-        %calculate new destination
-        %ABRUPT CHANGE OF DIRECTION VERSION
-        xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
-        yDestination := round (y + (pY - cY) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
-        %KEEPS MOMENTUM VERSION
-        %xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-        %yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-        
-        %check if character bounces
-        if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
-            %character bounces
-            bounces := true
-            bounceX := xDestination
-            bounceY := platY + (platY - yDestination)
-        end if
+	var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
+	%calculate new destination
+	%ABRUPT CHANGE OF DIRECTION VERSION
+	xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+	yDestination := round (y + (pY - cY) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+	%KEEPS MOMENTUM VERSION
+	%xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+	%yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+	
+	%check if character bounces
+	if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
+	    %character bounces
+	    bounces := true
+	    bounceX := xDestination
+	    bounceY := platY + (platY - yDestination)
+	end if
     end knockBack
     
     %did current character get hit?
     proc getHit(hX,hY,cX,cY,damageTaken:int) %hX,hY is point that got hit, cX,cY is center of other player
-        %if player did get hit
-        if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
-            damage += Rand.Int(damageTaken-6, damageTaken+6)
-            knockBack(cX,cY,hX,hY)
-            actionLock := false
-        end if
+	%if player did get hit
+	if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
+	    damage += Rand.Int(damageTaken-6, damageTaken+6)
+	    knockBack(cX,cY,hX,hY)
+	    actionLock := false
+	end if
     end getHit
     
     function update (instructions : string, oP:pointer to Character) : string
@@ -497,42 +497,42 @@ class Character
     %if we can perform an action, look at instructions sent by client
 	if not actionLock then  %if we can perform an action
 	    if (instructions (1) = "2") then  %going right
-            xDestination += moveStuff(ability).xIncrement
-            if instructions(2) = "1" then
-                ability := 3
-            else
-                ability := 2
-            end if
-            doingAction := true
-            dir := 2
+	    xDestination += moveStuff(ability).xIncrement
+	    if instructions(2) = "1" then
+		ability := 3
+	    else
+		ability := 2
+	    end if
+	    doingAction := true
+	    dir := 2
 	    end if
 	    if (instructions (1) = "1") then %go left
-            xDestination -= moveStuff(ability).xIncrement
-            if instructions(2) = "1" then
-                ability := 3
-            else
-                ability := 2
-            end if
-            doingAction := true
-            dir := 1
+	    xDestination -= moveStuff(ability).xIncrement
+	    if instructions(2) = "1" then
+		ability := 3
+	    else
+		ability := 2
+	    end if
+	    doingAction := true
+	    dir := 1
 	    end if
 	    if (instructions (2) = "1") then %crouch
-            if yDestination-5 < platY then
-                yDestination := platY
-            else
-                yDestination -= 5
-            end if
-            ability := 3
-            doingAction := true
-        end if
-        if (instructions (2) = "2") then %jump
-            if canJump then
-                ability := 4
-                canJump := false  %can't jump after jumping once
-                doingAction := true
-                jumping := true
-                yDestination += moveStuff(ability).yIncrement
-            end if
+	    if yDestination-5 < platY then
+		yDestination := platY
+	    else
+		yDestination -= 5
+	    end if
+	    ability := 3
+	    doingAction := true
+	end if
+	if (instructions (2) = "2") then %jump
+	    if canJump then
+		ability := 4
+		canJump := false  %can't jump after jumping once
+		doingAction := true
+		jumping := true
+		yDestination += moveStuff(ability).yIncrement
+	    end if
 	    end if
 	end if
 	
@@ -542,51 +542,51 @@ class Character
 	    
 	elsif not actionLock then
 	    if instructions (4) = "q" then
-            if instructions (3) = "0" then
-                ability := 6
-                xDestination += moveStuff(ability).xIncrement
-                yDestination += moveStuff(ability).yIncrement
-                %actionLock := true
-            elsif instructions (3) = "1" then
-                ability := 9
-                xDestination -= moveStuff(ability).xIncrement
-                yDestination += moveStuff(ability).yIncrement
-                %actionLock := true
-            elsif instructions (3) = "2" then
-                ability := 9
-                xDestination += moveStuff(ability).xIncrement
-                yDestination += moveStuff(ability).yIncrement
-                %actionLock := true
-            elsif instructions (3) = "4" then
-                ability := 10
-                xDestination += moveStuff(ability).xIncrement
-                yDestination += moveStuff(ability).yIncrement
-                %actionLock := true
-            end if
+	    if instructions (3) = "0" then
+		ability := 6
+		xDestination += moveStuff(ability).xIncrement
+		yDestination += moveStuff(ability).yIncrement
+		%actionLock := true
+	    elsif instructions (3) = "1" then
+		ability := 9
+		xDestination -= moveStuff(ability).xIncrement
+		yDestination += moveStuff(ability).yIncrement
+		%actionLock := true
+	    elsif instructions (3) = "2" then
+		ability := 9
+		xDestination += moveStuff(ability).xIncrement
+		yDestination += moveStuff(ability).yIncrement
+		%actionLock := true
+	    elsif instructions (3) = "4" then
+		ability := 10
+		xDestination += moveStuff(ability).xIncrement
+		yDestination += moveStuff(ability).yIncrement
+		%actionLock := true
+	    end if
 	    end if
 	    
 	    if instructions (4) = "w" then
-            if instructions (3) = "0" then
-                ability := 7
-                xDestination += moveStuff(ability).xIncrement
-                yDestination += moveStuff(ability).yIncrement
-                %actionLock := true
-            elsif instructions (3) = "1" then
-                ability := 5
-                xDestination -= moveStuff(ability).xIncrement
-                yDestination += moveStuff(ability).yIncrement
-                %actionLock := true
-            elsif instructions (3) = "2" then
-                ability := 5
-                xDestination += moveStuff(ability).xIncrement
-                yDestination += moveStuff(ability).yIncrement
-                %actionLock := true
-            elsif instructions (3) = "4" then
-                ability := 8
-                xDestination += moveStuff(ability).xIncrement
-                yDestination += moveStuff(ability).yIncrement
-                %actionLock := true
-            end if
+	    if instructions (3) = "0" then
+		ability := 7
+		xDestination += moveStuff(ability).xIncrement
+		yDestination += moveStuff(ability).yIncrement
+		%actionLock := true
+	    elsif instructions (3) = "1" then
+		ability := 5
+		xDestination -= moveStuff(ability).xIncrement
+		yDestination += moveStuff(ability).yIncrement
+		%actionLock := true
+	    elsif instructions (3) = "2" then
+		ability := 5
+		xDestination += moveStuff(ability).xIncrement
+		yDestination += moveStuff(ability).yIncrement
+		%actionLock := true
+	    elsif instructions (3) = "4" then
+		ability := 8
+		xDestination += moveStuff(ability).xIncrement
+		yDestination += moveStuff(ability).yIncrement
+		%actionLock := true
+	    end if
 	    end if
 	end if
 
@@ -596,7 +596,7 @@ class Character
 	    frameNums := 1
 	    doingAction := false
 	    actionLock := false
-        ability := 1
+	ability := 1
     end if
 	
     %update player position
@@ -607,11 +607,11 @@ class Character
 	    y += 1/17*(yDestination-y)
 	    %if character is knocked into the ground, he bounces
 	    if bounces then
-            if x > platX1 and x < platX2 and y < platY then
-                xDestination := bounceX
-                yDestination := bounceY
-                bounces := false
-            end if
+	    if x > platX1 and x < platX2 and y < platY then
+		xDestination := bounceX
+		yDestination := bounceY
+		bounces := false
+	    end if
 	    end if
 	else
 	    x += 1/moveStuff(ability).speed*(xDestination-x)
@@ -619,19 +619,19 @@ class Character
 	    
 	    %If player isn't performing an uninteruptable action, he falls if he isn't on the ground
 	    if not actionLock and not jumping then
-            if x > platX1 and x < platX2 then
-                if yDestination > platY then
-                    yDestination -= fallSpeed
-                else
-                    %player is on the ground
-                    canJump := true
-                    jumping := false
-                    canDoAction := true
-                    yDestination := platY
-                end if
-            else
-                yDestination -= fallSpeed
-            end if
+	    if x > platX1 and x < platX2 then
+		if yDestination > platY then
+		    yDestination -= fallSpeed
+		else
+		    %player is on the ground
+		    canJump := true
+		    jumping := false
+		    canDoAction := true
+		    yDestination := platY
+		end if
+	    else
+		yDestination -= fallSpeed
+	    end if
 	    end if
 	end if
     
@@ -647,17 +647,17 @@ class Character
     
     %see if player died
     if x < 0 or x > worldLength or y < 0 or y > worldHeight then
-        %if player dies, reset stuff and deduct a life
-        lives -= 1
-        damage := 0
-        actionLock := false
-        canJump := true
-        doingAction := false
+	%if player dies, reset stuff and deduct a life
+	lives -= 1
+	damage := 0
+	actionLock := false
+	canJump := true
+	doingAction := false
     end if
     
     %check to see if player is still playing
     if lives = 0 then
-        gameOver := true
+	gameOver := true
     end if
 	
 	%see if player hit other player
