@@ -114,6 +114,7 @@ backgroundSprite := Sprite.New(backgroundPic)
 %1 - idle  2 - move  3 - kneel  4 - jump  5 - roundhouse  6 - punch  7 - kick  8 - tatsumaki  9 - hadoken  10 - shoryuken
 %THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
 %THE THIRD INDEX OF PICTURES IS THE SIDE PLAYER IS FACING: 1 - left  2 - right
+
 var pictures : array 1..10,1..13,1..2 of int
 
 % Idle
@@ -212,7 +213,7 @@ if playerNum = 1 then
     otherPlayer.h := 2
     otherPlayer.w := 2
     otherPlayer.sprite := Sprite.New(pictures(1,1,1))
-else
+   else
     serverPort := 5605
     otherPlayer.x := 565
     otherPlayer.y := 365
@@ -355,8 +356,8 @@ procedure updateScreen
     
 end updateScreen
 
-function split(str:string, regex:string):array 1..10 of string
-    var a : array 1..10 of string
+function split(str:string, regex:string):array 1..14 of string
+    var a : array 1..14 of string
     var pastSpace := 0
     var count := 0
     for i:1..length(str)+1
@@ -410,7 +411,7 @@ end KeyHeldDown
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions, positions:string
-var toDoArray : array 1..10 of string
+var toDoArray : array 1..14 of string
 var netLimiter := 0  %
 var mostRecentKey : string := "0"
 
@@ -487,6 +488,7 @@ loop
 
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
+	%positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives
 	    toDoArray := split(positions," ")
 	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
 	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
