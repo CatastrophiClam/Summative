@@ -4,7 +4,7 @@
 % 1). IMPORTANT: 0,0 IS THE BOTTOM LEFT POINT OF THE WORLD
 % 2). Any coordinates that are "IN THE WORLD" must be converted to on-screen coordinates before being displayed
 
-const FILLER_VARIABLE := 2 %if you see this, it means theres some value we haven't decided on yet and we need it declared for the program to run
+const FILLER_VARIABLE : int := 2 %if you see this, it means theres some value we haven't decided on yet and we need it declared for the program to run
 
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -172,14 +172,14 @@ pictures (3, 1, 1).hitX := 70 - pictures (3, 1, 2).hitX
 pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
 
     %hitboxes
-    pictures (3, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (3, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (3, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (3, i, 1).hBY2 := FILLER_VARIABLE
-    pictures (3, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (3, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (3, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (3, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (3, 1, 1).hBX1 := FILLER_VARIABLE
+    pictures (3, 1, 1).hBY1 := FILLER_VARIABLE
+    pictures (3, 1, 1).hBX2 := FILLER_VARIABLE
+    pictures (3, 1, 1).hBY2 := FILLER_VARIABLE
+    pictures (3, 1, 2).hBX1 := FILLER_VARIABLE
+    pictures (3, 1, 2).hBY1 := FILLER_VARIABLE
+    pictures (3, 1, 2).hBX2 := FILLER_VARIABLE
+    pictures (3, 1, 2).hBY2 := FILLER_VARIABLE
 
 % Jump
 for i : 1 .. 7
@@ -328,12 +328,12 @@ class Character
     
     import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures
     
-    export var x, var y, var xDestination, var yDestination, var h, var w, var damage, var charType, update, getHit %exported variables
+    export var x, var y, var xDestination, var yDestination, var h, var w, damage, lives, var charType, update, getHit %exported variables
     
     %Character attributes
     var charType : int  %which character does this class represent?
     var lives : int := 5 %how many lives does this character have?
-    var damage : int %how much damage has the character taken? (damage determines how much the character flies)
+    var damage : int := 0%how much damage has the character taken? (damage determines how much the character flies)
     var damageArray : array 1..10 of int %how much damage does this character deal?
     damageArray(1) :=1
     damageArray(2) :=2
@@ -612,12 +612,12 @@ class Character
 	end if
     
     %update player hit stuff
-    hitX := x+pictures(ability).hitX
-    hitY := y+pictures(ability).hitY
-    hitBoxX1 := x+pictures(ability).hBX1
-    hitBoxY1 := y+pictures(ability).hBY1
-    hitBoxX2 := x+pictures(ability).hBX2
-    hitBoxY2 := y+pictures(ability).hBY2
+    hitX := round(x+pictures(ability,frameNums,dir).hitX)
+    hitY := round(y+pictures(ability,frameNums,dir).hitY)
+    hitBoxX1 := round(x+pictures(ability,frameNums,dir).hBX1)
+    hitBoxY1 := round(y+pictures(ability,frameNums,dir).hBY1)
+    hitBoxX2 := round(x+pictures(ability,frameNums,dir).hBX2)
+    hitBoxY2 := round(y+pictures(ability,frameNums,dir).hBY2)
     cX := round((hitBoxX2-hitBoxX1)/2)
     cY := round((hitBoxY2-hitBoxY1)/2)
 	
@@ -827,8 +827,8 @@ loop
 	    %PLAYER INFO FORM:
 	    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
 	    
-	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2
-	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1
+	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
+	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
 	    
 	    %put intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
 	    %put intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))

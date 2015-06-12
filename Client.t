@@ -207,11 +207,13 @@ if playerNum = 1 then
     selfPlayer.h := 2
     selfPlayer.w := 2
     selfPlayer.sprite := Sprite.New(pictures(1,1,2))
+    selfPlayer.dir := 2
     otherPlayer.x := 1318
     otherPlayer.y := 365
     otherPlayer.h := 2
     otherPlayer.w := 2
     otherPlayer.sprite := Sprite.New(pictures(1,1,1))
+    otherPlayer.dir := 1
 else
     serverPort := 5605
     otherPlayer.x := 565
@@ -219,11 +221,13 @@ else
     otherPlayer.h := 2
     otherPlayer.w := 2
     otherPlayer.sprite := Sprite.New(pictures(1,1,2))
+    otherPlayer.dir := 2
     selfPlayer.x := 1318
     selfPlayer.y := 365
     selfPlayer.h := 2
     selfPlayer.w := 2
     selfPlayer.sprite := Sprite.New(pictures(1,1,1))
+    selfPlayer.dir := 1
 end if
 netStream := Net.OpenConnection(serverAddress,serverPort)
 if not netStream <= 0 then
@@ -355,8 +359,8 @@ procedure updateScreen
     
 end updateScreen
 
-function split(str:string, regex:string):array 1..10 of string
-    var a : array 1..10 of string
+function split(str:string, regex:string):array 1..14 of string
+    var a : array 1..14 of string
     var pastSpace := 0
     var count := 0
     for i:1..length(str)+1
@@ -410,7 +414,7 @@ end KeyHeldDown
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions, positions:string
-var toDoArray : array 1..10 of string
+var toDoArray : array 1..14 of string
 var netLimiter := 0  %
 var mostRecentKey : string := "0"
 
@@ -487,6 +491,7 @@ loop
 
 	if Net.LineAvailable(netStream) then
 	    get:netStream, positions:*
+        %positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives
 	    toDoArray := split(positions," ")
 	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
 	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
