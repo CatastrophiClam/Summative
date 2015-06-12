@@ -481,6 +481,7 @@ class Character
         if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
             damage += damageTaken
             knockBack(cX,cY,hX,hY)
+            actionLock := false
         end if
     end getHit
     

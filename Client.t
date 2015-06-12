@@ -114,6 +114,7 @@ backgroundSprite := Sprite.New(backgroundPic)
 %1 - idle  2 - move  3 - kneel  4 - jump  5 - roundhouse  6 - punch  7 - kick  8 - tatsumaki  9 - hadoken  10 - shoryuken
 %THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
 %THE THIRD INDEX OF PICTURES IS THE SIDE PLAYER IS FACING: 1 - left  2 - right
+
 var pictures : array 1..10,1..13,1..2 of int
 
 % Idle
