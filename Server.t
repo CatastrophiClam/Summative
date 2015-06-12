@@ -49,7 +49,7 @@ worldLength := 1920 %3840
 worldHeight := 1080 %2160
 
 %platform
-var platY := 717
+var platY := 363
 var platX1 := 465
 var platX2 := 1418
 
@@ -147,17 +147,17 @@ var pictures : array 1 .. 10, 1 .. 13, 1 .. 2 of position
 % Idle
 for i : 1 .. 4
     pictures (1, i, 2).pic := Pic.FileNew ("Ken/idle" + intstr (i) + ".jpeg")
-    pictures (1, i, 2).hitX := FILLER_VARIABLE
-    pictures (1, i, 2).hitY := FILLER_VARIABLE
+    get: hitFile, pictures (1, i, 2).hitX
+    get: hitFile, pictures (1, i, 2).hitY
     pictures (1, i, 1).pic := Pic.Mirror (pictures (1, i, 2).pic)
     pictures (1, i, 1).hitX := 70 - pictures (1, i, 2).hitX
     pictures (1, i, 1).hitY := pictures (1, i, 2).hitY
     
     %hitboxes
-    pictures (1, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (1, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (1, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (1, i, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (1, i, 2).hBX1
+    get:boxFile, pictures (1, i, 2).hBY1
+    get:boxFile, pictures (1, i, 2).hBX2
+    get:boxFile, pictures (1, i, 2).hBY2
     pictures (1, i, 1).hBX1 := 70-pictures (1, i, 2).hBX1
     pictures (1, i, 1).hBY1 := pictures (1, i, 2).hBY1
     pictures (1, i, 1).hBX2 := 70-pictures (1, i, 2).hBX2
@@ -167,17 +167,17 @@ end for
 % Move
 for i : 1 .. 5
     pictures (2, i, 2).pic := Pic.FileNew ("Ken/move" + intstr (i) + ".jpeg")
-    pictures (2, i, 2).hitX := FILLER_VARIABLE
-    pictures (2, i, 2).hitY := FILLER_VARIABLE
+    get: hitFile, pictures (2, i, 2).hitX
+    get: hitFile, pictures (2, i, 2).hitY
     pictures (2, i, 1).pic := Pic.Mirror (pictures (2, i, 2).pic)
     pictures (2, i, 1).hitX := 70 - pictures (2, i, 2).hitX
     pictures (2, i, 1).hitY := pictures (2, i, 2).hitY
     
     %hitboxes
-    pictures (2, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (2, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (2, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (2, i, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (2, i, 2).hBX1
+    get:boxFile, pictures (2, i, 2).hBY1
+    get:boxFile, pictures (2, i, 2).hBX2
+    get:boxFile, pictures (2, i, 2).hBY2
     pictures (2, i, 1).hBX1 := 70-pictures (2, i, 2).hBX1
     pictures (2, i, 1).hBY1 := pictures (2, i, 2).hBY1
     pictures (2, i, 1).hBX2 := 70-pictures (2, i, 2).hBX2
@@ -186,17 +186,17 @@ end for
     
 % Kneel
 pictures (3, 1, 2).pic := Pic.FileNew ("Ken/kneel.jpeg")
-pictures (3, 1, 2).hitX := FILLER_VARIABLE
-pictures (3, 1, 2).hitY := FILLER_VARIABLE
+get: hitFile, pictures (3, 1, 2).hitX
+get: hitFile, pictures (3, 1, 2).hitY
 pictures (3, 1, 1).pic := Pic.Mirror (pictures (3, 1, 2).pic)
 pictures (3, 1, 1).hitX := 70 - pictures (3, 1, 2).hitX
 pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
 
     %hitboxes
-    pictures (3, 1, 2).hBX1 := FILLER_VARIABLE
-    pictures (3, 1, 2).hBY1 := FILLER_VARIABLE
-    pictures (3, 1, 2).hBX2 := FILLER_VARIABLE
-    pictures (3, 1, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (3, 1, 2).hBX1
+    get:boxFile, pictures (3, 1, 2).hBY1
+    get:boxFile, pictures (3, 1, 2).hBX2
+    get:boxFile, pictures (3, 1, 2).hBY2
     pictures (3, 1, 1).hBX1 := 70-pictures (3, 1, 2).hBX1
     pictures (3, 1, 1).hBY1 := pictures (3, 1, 2).hBY1
     pictures (3, 1, 1).hBX2 := 70-pictures (3, 1, 2).hBX2
@@ -205,17 +205,17 @@ pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
 % Jump
 for i : 1 .. 7
     pictures (4, i, 2).pic := Pic.FileNew ("Ken/jump" + intstr (i) + ".jpeg")
-    pictures (4, i, 2).hitX := FILLER_VARIABLE
-    pictures (4, i, 2).hitY := FILLER_VARIABLE
+    get: hitFile, pictures (4, i, 2).hitX
+    get: hitFile, pictures (4, i, 2).hitY
     pictures (4, i, 1).pic := Pic.Mirror (pictures (4, i, 2).pic)
     pictures (4, i, 1).hitX := 70 - pictures (4, i, 2).hitX
     pictures (4, i, 1).hitY := pictures (4, i, 2).hitY
     
     %hitboxes
-    pictures (4, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (4, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (4, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (4, i, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (4, i, 2).hBX1
+    get:boxFile, pictures (4, i, 2).hBY1
+    get:boxFile, pictures (4, i, 2).hBX2
+    get:boxFile, pictures (4, i, 2).hBY2
     pictures (4, i, 1).hBX1 := 70-pictures (4, i, 2).hBX1
     pictures (4, i, 1).hBY1 := pictures (4, i, 2).hBY1
     pictures (4, i, 1).hBX2 := 70-pictures (4, i, 2).hBX2
@@ -225,17 +225,17 @@ end for
 % Roundhouse
 for i : 1 .. 5
     pictures (5, i, 2).pic := Pic.FileNew ("Ken/roundhouse" + intstr (i) + ".jpeg")
-    pictures (5, i, 2).hitX := FILLER_VARIABLE
-    pictures (5, i, 2).hitY := FILLER_VARIABLE
+    get: hitFile, pictures (5, i, 2).hitX
+    get: hitFile, pictures (5, i, 2).hitY
     pictures (5, i, 1).pic := Pic.Mirror (pictures (5, i, 2).pic)
     pictures (5, i, 1).hitX := 70 - pictures (5, i, 2).hitX
     pictures (5, i, 1).hitY := pictures (5, i, 2).hitY
     
     %hitboxes
-    pictures (5, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (5, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (5, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (5, i, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (5, i, 2).hBX1
+    get:boxFile, pictures (5, i, 2).hBY1
+    get:boxFile, pictures (5, i, 2).hBX2
+    get:boxFile, pictures (5, i, 2).hBY2
     pictures (5, i, 1).hBX1 := 70-pictures (5, i, 2).hBX1
     pictures (5, i, 1).hBY1 := pictures (5, i, 2).hBY1
     pictures (5, i, 1).hBX2 := 70-pictures (5, i, 2).hBX2
@@ -245,17 +245,17 @@ end for
 %Punch
 for i : 1 .. 3
     pictures (6, i, 2).pic := Pic.FileNew ("Ken/punch" + intstr (i) + ".jpeg")
-    pictures (6, i, 2).hitX := FILLER_VARIABLE
-    pictures (6, i, 2).hitY := FILLER_VARIABLE
+    get: hitFile, pictures (6, i, 2).hitX
+    get: hitFile, pictures (6, i, 2).hitY
     pictures (6, i, 1).pic := Pic.Mirror (pictures (6, i, 2).pic)
     pictures (6, i, 1).hitX := 70 - pictures (6, i, 2).hitX
     pictures (6, i, 1).hitY := pictures (6, i, 2).hitY
     
     %hitboxes
-    pictures (6, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (6, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (6, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (6, i, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (6, i, 2).hBX1
+    get:boxFile, pictures (6, i, 2).hBY1
+    get:boxFile, pictures (6, i, 2).hBX2
+    get:boxFile, pictures (6, i, 2).hBY2
     pictures (6, i, 1).hBX1 := 70-pictures (6, i, 2).hBX1
     pictures (6, i, 1).hBY1 := pictures (6, i, 2).hBY1
     pictures (6, i, 1).hBX2 := 70-pictures (6, i, 2).hBX2
@@ -265,17 +265,17 @@ end for
 % Kick
 for i : 1 .. 5
     pictures (7, i, 2).pic := Pic.FileNew ("Ken/kick" + intstr (i) + ".jpeg")
-    pictures (7, i, 2).hitX := FILLER_VARIABLE
-    pictures (7, i, 2).hitY := FILLER_VARIABLE
+    get: hitFile, pictures (7, i, 2).hitX
+    get: hitFile, pictures (7, i, 2).hitY
     pictures (7, i, 1).pic := Pic.Mirror (pictures (7, i, 2).pic)
     pictures (7, i, 1).hitX := 70 - pictures (7, i, 2).hitX
     pictures (7, i, 1).hitY := pictures (7, i, 2).hitY
     
     %hitboxes
-    pictures (7, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (7, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (7, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (7, i, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (7, i, 2).hBX1
+    get:boxFile, pictures (7, i, 2).hBY1
+    get:boxFile, pictures (7, i, 2).hBX2
+    get:boxFile, pictures (7, i, 2).hBY2
     pictures (7, i, 1).hBX1 := 70-pictures (7, i, 2).hBX1
     pictures (7, i, 1).hBY1 := pictures (7, i, 2).hBY1
     pictures (7, i, 1).hBX2 := 70-pictures (7, i, 2).hBX2
@@ -285,17 +285,17 @@ end for
 % Tatsumaki
 for i : 1 .. 13
     pictures (8, i, 2).pic := Pic.FileNew ("Ken/tatsumaki" + intstr (i) + ".jpeg")
-    pictures (8, i, 2).hitX := FILLER_VARIABLE
-    pictures (8, i, 2).hitY := FILLER_VARIABLE
+    get: hitFile, pictures (8, i, 2).hitX
+    get: hitFile, pictures (8, i, 2).hitY
     pictures (8, i, 1).pic := Pic.Mirror (pictures (8, i, 2).pic)
     pictures (8, i, 1).hitX := 70 - pictures (8, i, 2).hitX
     pictures (8, i, 1).hitY := pictures (8, i, 2).hitY
     
     %hitboxes
-    pictures (8, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (8, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (8, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (8, i, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (8, i, 2).hBX1
+    get:boxFile, pictures (8, i, 2).hBY1
+    get:boxFile, pictures (8, i, 2).hBX2
+    get:boxFile, pictures (8, i, 2).hBY2
     pictures (8, i, 1).hBX1 := 70-pictures (8, i, 2).hBX1
     pictures (8, i, 1).hBY1 := pictures (8, i, 2).hBY1
     pictures (8, i, 1).hBX2 := 70-pictures (8, i, 2).hBX2
@@ -305,17 +305,17 @@ end for
 % Hadoken
 for i : 1 .. 4
     pictures (9, i, 2).pic := Pic.FileNew ("Ken/hadoken" + intstr (i) + ".jpeg")
-    pictures (9, i, 2).hitX := FILLER_VARIABLE
-    pictures (9, i, 2).hitY := FILLER_VARIABLE
+    get: hitFile, pictures (9, i, 2).hitX
+    get: hitFile, pictures (9, i, 2).hitY
     pictures (9, i, 1).pic := Pic.Mirror (pictures (9, i, 2).pic)
     pictures (9, i, 1).hitX := 70 - pictures (9, i, 2).hitX
     pictures (9, i, 1).hitY := pictures (9, i, 2).hitY
     
     %hitboxes
-    pictures (9, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (9, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (9, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (9, i, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (9, i, 2).hBX1
+    get:boxFile, pictures (9, i, 2).hBY1
+    get:boxFile, pictures (9, i, 2).hBX2
+    get:boxFile, pictures (9, i, 2).hBY2
     pictures (9, i, 1).hBX1 := 70-pictures (9, i, 2).hBX1
     pictures (9, i, 1).hBY1 := pictures (9, i, 2).hBY1
     pictures (9, i, 1).hBX2 := 70-pictures (9, i, 2).hBX2
@@ -325,17 +325,17 @@ end for
 % Shoryuken
 for i : 1 .. 7
     pictures (10, i, 2).pic := Pic.FileNew ("Ken/shoryuken" + intstr (i) + ".jpeg")
-    pictures (10, i, 2).hitX := FILLER_VARIABLE
-    pictures (10, i, 2).hitY := FILLER_VARIABLE
+    get: hitFile, pictures (10, i, 2).hitX
+    get: hitFile, pictures (10, i, 2).hitY
     pictures (10, i, 1).pic := Pic.Mirror (pictures (10, i, 2).pic)
     pictures (10, i, 1).hitX := 70 - pictures (10, i, 2).hitX
     pictures (10, i, 1).hitY := pictures (10, i, 2).hitY
     
     %hitboxes
-    pictures (10, i, 2).hBX1 := FILLER_VARIABLE
-    pictures (10, i, 2).hBY1 := FILLER_VARIABLE
-    pictures (10, i, 2).hBX2 := FILLER_VARIABLE
-    pictures (10, i, 2).hBY2 := FILLER_VARIABLE
+    get:boxFile, pictures (10, i, 2).hBX1
+    get:boxFile, pictures (10, i, 2).hBY1
+    get:boxFile, pictures (10, i, 2).hBX2
+    get:boxFile, pictures (10, i, 2).hBY2
     pictures (10, i, 1).hBX1 := 70-pictures (10, i, 2).hBX1
     pictures (10, i, 1).hBY1 := pictures (10, i, 2).hBY1
     pictures (10, i, 1).hBX2 := 70-pictures (10, i, 2).hBX1
@@ -380,22 +380,27 @@ class Character
     var moveStuff : array 1..10 of Ability %player moves at 1/moveStuff(i) of the distance between him and destination every update
     var hitX, hitY : int %point IN THE WORLD that can hit the other player
     var hitBoxX1, hitBoxX2, hitBoxY1, hitBoxY2 : int %box IN THE WORLD that can be hit by the other player
+    hitBoxX1 := pictures(1,1,1).hBX1
+    hitBoxY1 := pictures(1,1,1).hBY1
+    hitBoxX2 := pictures(1,1,1).hBX2
+    hitBoxY2 := pictures(1,1,1).hBY2
+    
     var cX, cY : int %center of hitbox/player
     moveStuff(1).speed := 1
     moveStuff(1).xIncrement := 0
     moveStuff(1).yIncrement := 0
     moveStuff(1).frames := 4
     moveStuff(2).speed := 1
-    moveStuff(2).xIncrement :=10
+    moveStuff(2).xIncrement :=6
     moveStuff(2).yIncrement :=0
     moveStuff(2).frames :=5
     moveStuff(3).speed := 1
-    moveStuff(3).xIncrement :=4
+    moveStuff(3).xIncrement :=1
     moveStuff(3).yIncrement :=0
     moveStuff(3).frames :=1
-    moveStuff(4).speed := 15
+    moveStuff(4).speed := 25
     moveStuff(4).xIncrement :=0
-    moveStuff(4).yIncrement :=350
+    moveStuff(4).yIncrement :=250
     moveStuff(4).frames :=7
     moveStuff(5).speed := 10
     moveStuff(5).xIncrement :=0
@@ -409,20 +414,20 @@ class Character
     moveStuff(7).xIncrement :=0
     moveStuff(7).yIncrement :=0
     moveStuff(7).frames :=5
-    moveStuff(8).speed := 17
+    moveStuff(8).speed := 27
     moveStuff(8).xIncrement :=20
-    moveStuff(8).yIncrement :=300
+    moveStuff(8).yIncrement :=200
     moveStuff(8).frames :=13
     moveStuff(9).speed := 1
     moveStuff(9).xIncrement :=10
     moveStuff(9).yIncrement :=0
     moveStuff(9).frames :=4
-    moveStuff(10).speed := 14
+    moveStuff(10).speed := 24
     moveStuff(10).xIncrement :=0
-    moveStuff(10).yIncrement :=250
+    moveStuff(10).yIncrement :=150
     moveStuff(10).frames :=7
     
-    var fallSpeed : int := 4
+    var fallSpeed : int := 10
     
     var isHit := false %did the character get hit?
     
@@ -546,22 +551,23 @@ class Character
 		ability := 6
 		xDestination += moveStuff(ability).xIncrement
 		yDestination += moveStuff(ability).yIncrement
-		%actionLock := true
+		actionLock := true
+		%canDoAction := false
 	    elsif instructions (3) = "1" then
 		ability := 9
 		xDestination -= moveStuff(ability).xIncrement
 		yDestination += moveStuff(ability).yIncrement
-		%actionLock := true
+		actionLock := true
 	    elsif instructions (3) = "2" then
 		ability := 9
 		xDestination += moveStuff(ability).xIncrement
 		yDestination += moveStuff(ability).yIncrement
-		%actionLock := true
+		actionLock := true
 	    elsif instructions (3) = "4" then
 		ability := 10
 		xDestination += moveStuff(ability).xIncrement
 		yDestination += moveStuff(ability).yIncrement
-		%actionLock := true
+		actionLock := true
 	    end if
 	    end if
 	    
@@ -570,22 +576,22 @@ class Character
 		ability := 7
 		xDestination += moveStuff(ability).xIncrement
 		yDestination += moveStuff(ability).yIncrement
-		%actionLock := true
+		actionLock := true
 	    elsif instructions (3) = "1" then
 		ability := 5
 		xDestination -= moveStuff(ability).xIncrement
 		yDestination += moveStuff(ability).yIncrement
-		%actionLock := true
+		actionLock := true
 	    elsif instructions (3) = "2" then
 		ability := 5
 		xDestination += moveStuff(ability).xIncrement
 		yDestination += moveStuff(ability).yIncrement
-		%actionLock := true
+		actionLock := true
 	    elsif instructions (3) = "4" then
 		ability := 8
 		xDestination += moveStuff(ability).xIncrement
 		yDestination += moveStuff(ability).yIncrement
-		%actionLock := true
+		actionLock := true
 	    end if
 	    end if
 	end if
@@ -596,8 +602,8 @@ class Character
 	    frameNums := 1
 	    doingAction := false
 	    actionLock := false
-	ability := 1
-    end if
+	    ability := 1
+	end if
 	
     %update player position
 	%move x and y towards xDestination and yDestination
@@ -617,8 +623,9 @@ class Character
 	    x += 1/moveStuff(ability).speed*(xDestination-x)
 	    y += 1/moveStuff(ability).speed*(yDestination-y)
 	    
+	    %GRAVITY
 	    %If player isn't performing an uninteruptable action, he falls if he isn't on the ground
-	    if not actionLock and not jumping then
+	    %if not actionLock and not jumping then
 	    if x > platX1 and x < platX2 then
 		if yDestination > platY then
 		    yDestination -= fallSpeed
@@ -632,7 +639,7 @@ class Character
 	    else
 		yDestination -= fallSpeed
 	    end if
-	    end if
+	    %end if
 	end if
     
     %update player hit stuff
@@ -653,6 +660,12 @@ class Character
 	actionLock := false
 	canJump := true
 	doingAction := false
+	
+	%respawn
+	x := round((platX1+platX2)/2)
+	y := platY + 500
+	xDestination := round(x)
+	yDestination := round(y)
     end if
     
     %check to see if player is still playing
@@ -886,6 +899,8 @@ end loop
 %                                                   END GAME SCREEN                                                         %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
+
+
 
 
 
