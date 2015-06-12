@@ -479,7 +479,7 @@ class Character
     proc getHit(hX,hY,cX,cY,damageTaken:int) %hX,hY is point that got hit, cX,cY is center of other player
         %if player did get hit
         if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
-            damage += damageTaken
+            damage += Rand.Int(damageTaken-6, damageTaken+6)
             knockBack(cX,cY,hX,hY)
             actionLock := false
         end if
@@ -579,7 +579,7 @@ class Character
             end if
 	    end if
 	end if
-	
+
     %update how player looks
 	frameNums += 1
 	if frameNums > moveStuff(ability).frames then
@@ -593,15 +593,15 @@ class Character
 	%move x and y towards xDestination and yDestination
 	%character moves differently when he is knocked back than when he is just moving
 	if knockedBack then
-	    x += 1/20*(xDestination-x)
-	    y += 1/20*(yDestination-y)
+	    x += 1/17*(xDestination-x)
+	    y += 1/17*(yDestination-y)
 	    %if character is knocked into the ground, he bounces
 	    if bounces then
-		if x > platX1 and x < platX2 and y < platY then
-		    xDestination := bounceX
-		    yDestination := bounceY
-		    bounces := false
-		end if
+            if x > platX1 and x < platX2 and y < platY then
+                xDestination := bounceX
+                yDestination := bounceY
+                bounces := false
+            end if
 	    end if
 	else
 	    x += 1/moveStuff(ability).speed*(xDestination-x)
