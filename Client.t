@@ -448,8 +448,8 @@ loop
 	    mostRecentKey := "2"
 	end if
     else
-	instructions += "0"
-	mostRecentKey := "0"
+        instructions += "0"
+        mostRecentKey := "0"
     end if
     
     if (chars(KEY_UP_ARROW)) then
