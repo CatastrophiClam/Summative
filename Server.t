@@ -6,7 +6,6 @@
 
 const FILLER_VARIABLE : int := 2 %if you see this, it means theres some value we haven't decided on yet and we need it declared for the program to run
 
-
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                                  NETWORK STUFF                                                            %
@@ -116,6 +115,10 @@ end PlayerStatusDisplay
 
 %---------------------PLAYER PICTURES--------------------%
 
+var hitFile,boxFile:int %hitcoords and hitboxes files
+open:hitFile,"HitCoords.txt",get
+open:boxFile,"HitBoxes.txt",get
+
 %THE FIRST INDEX OF PICTURES IS THE MOVE TYPE:
 %1 - idle  2 - move  3 - kneel  4 - jump  5 - roundhouse  6 - punch  7 - kick  8 - tatsumaki  9 - hadoken  10 - shoryuken
 %THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
@@ -188,10 +191,10 @@ pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
     pictures (3, 1, 2).hBY1 := FILLER_VARIABLE
     pictures (3, 1, 2).hBX2 := FILLER_VARIABLE
     pictures (3, 1, 2).hBY2 := FILLER_VARIABLE
-    pictures (3, 1, 1).hBX1 := 70-pictures (3, i, 2).hBX1
-    pictures (3, 1, 1).hBY1 := pictures (3, i, 2).hBY1
-    pictures (3, 1, 1).hBX2 := 70-pictures (3, i, 2).hBX2
-    pictures (3, 1, 1).hBY2 := pictures (3, i, 2).hBY2
+    pictures (3, 1, 1).hBX1 := 70-pictures (3, 1, 2).hBX1
+    pictures (3, 1, 1).hBY1 := pictures (3, 1, 2).hBY1
+    pictures (3, 1, 1).hBX2 := 70-pictures (3, 1, 2).hBX2
+    pictures (3, 1, 1).hBY2 := pictures (3, 1, 2).hBY2
 
 % Jump
 for i : 1 .. 7
