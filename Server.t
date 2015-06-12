@@ -346,9 +346,9 @@ end for
 %the keyboard changes the destination, and he moves towards it with his movement speed
 %represents a character in the game
 class Character
-    
+
     import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures, gameOver,worldHeight, worldLength
-    
+
     export var x, var y, var xDestination, var yDestination, var h, var w, var dir, var damage, var charType, update, getHit %exported variables
     
     %Character attributes
@@ -492,6 +492,7 @@ class Character
     end getHit
     
     function update (instructions : string, oP:pointer to Character) : string
+
         var moveSpeed := moveStuff(ability)
         
         %if we can perform an action, look at instructions sent by client
@@ -661,7 +662,136 @@ class Character
         ^(oP).getHit(round(hitX),round(hitY),cX,cY,damageArray(ability))
         
         result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
-        
+	
+    %update destination position
+	if doingAction = false then
+	    ability := 1
+	    
+	elsif not actionLock then
+	    if instructions (4) = "q" then
+            if instructions (3) = "0" then
+                ability := 6
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "1" then
+                ability := 9
+                xDestination -= moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "2" then
+                ability := 9
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "4" then
+                ability := 10
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            end if
+	    end if
+	    
+	    if instructions (4) = "w" then
+            if instructions (3) = "0" then
+                ability := 7
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "1" then
+                ability := 5
+                xDestination -= moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "2" then
+                ability := 5
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            elsif instructions (3) = "4" then
+                ability := 8
+                xDestination += moveStuff(ability).xIncrement
+                yDestination += moveStuff(ability).yIncrement
+                %actionLock := true
+            end if
+	    end if
+	end if
+
+    %update how player looks
+	frameNums += 1
+	if frameNums > moveStuff(ability).frames then
+	    frameNums := 1
+	    doingAction := false
+	    actionLock := false
+        ability := 1
+    end if
+	
+    %update player position
+	%move x and y towards xDestination and yDestination
+	%character moves differently when he is knocked back than when he is just moving
+	if knockedBack then
+	    x += 1/17*(xDestination-x)
+	    y += 1/17*(yDestination-y)
+	    %if character is knocked into the ground, he bounces
+	    if bounces then
+            if x > platX1 and x < platX2 and y < platY then
+                xDestination := bounceX
+                yDestination := bounceY
+                bounces := false
+            end if
+	    end if
+	else
+	    x += 1/moveStuff(ability).speed*(xDestination-x)
+	    y += 1/moveStuff(ability).speed*(yDestination-y)
+	    
+	    %If player isn't performing an uninteruptable action, he falls if he isn't on the ground
+	    if not actionLock and not jumping then
+            if x > platX1 and x < platX2 then
+                if yDestination > platY then
+                    yDestination -= fallSpeed
+                else
+                    %player is on the ground
+                    canJump := true
+                    jumping := false
+                    canDoAction := true
+                    yDestination := platY
+                end if
+            else
+                yDestination -= fallSpeed
+            end if
+	    end if
+	end if
+    
+    %update player hit stuff
+    hitX := round(x+pictures(ability,frameNums,dir).hitX)
+    hitY := round(y+pictures(ability,frameNums,dir).hitY)
+    hitBoxX1 := round(x+pictures(ability,frameNums,dir).hBX1)
+    hitBoxY1 := round(y+pictures(ability,frameNums,dir).hBY1)
+    hitBoxX2 := round(x+pictures(ability,frameNums,dir).hBX2)
+    hitBoxY2 := round(y+pictures(ability,frameNums,dir).hBY2)
+    cX := round((hitBoxX2-hitBoxX1)/2)
+    cY := round((hitBoxY2-hitBoxY1)/2)
+    
+    %see if player died
+    if x < 0 or x > worldLength or y < 0 or y > worldHeight then
+        %if player dies, reset stuff and deduct a life
+        lives -= 1
+        damage := 0
+        actionLock := false
+        canJump := true
+        doingAction := false
+    end if
+    
+    %check to see if player is still playing
+    if lives = 0 then
+        gameOver := true
+    end if
+	
+	%see if player hit other player
+	^(oP).getHit(round(hitX),round(hitY),cX,cY,damageArray(ability))
+	
+	result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
+
     end update
     
 end Character
