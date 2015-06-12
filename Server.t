@@ -6,6 +6,10 @@
 
 const FILLER_VARIABLE : int := 2 %if you see this, it means theres some value we haven't decided on yet and we need it declared for the program to run
 
+%--------------------------------------------------------%
+%                DECLARE GLOBAL VARIABLES                %
+%--------------------------------------------------------%
+
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                                  NETWORK STUFF                                                            %
@@ -112,6 +116,8 @@ class PlayerStatusDisplay
     end display
     
 end PlayerStatusDisplay
+
+var gameOver := false
 
 %---------------------PLAYER PICTURES--------------------%
 
@@ -341,7 +347,7 @@ end for
 %represents a character in the game
 class Character
     
-    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures
+    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures, gameOver
     
     export var x, var y, var xDestination, var yDestination, var h, var w, damage, lives, var charType, update, getHit %exported variables
     
@@ -636,6 +642,21 @@ class Character
     hitBoxY2 := round(y+pictures(ability,frameNums,dir).hBY2)
     cX := round((hitBoxX2-hitBoxX1)/2)
     cY := round((hitBoxY2-hitBoxY1)/2)
+    
+    %see if player died
+    if x < 0 or x > worldLength or y < 0 or y > worldHeight then
+        %if player dies, reset stuff and deduct a life
+        lives -= 1
+        damage := 0
+        actionLock := false
+        canJump := true
+        doingAction := false
+    end if
+    
+    %check to see if player is still playing
+    if lives = 0 then
+        gameOver := true
+    end if
 	
 	%see if player hit other player
 	^(oP).getHit(round(hitX),round(hitY),cX,cY,damageArray(ability))
