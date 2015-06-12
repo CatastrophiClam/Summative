@@ -224,7 +224,7 @@ class Character
     
     import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures
     
-    export var x, var y, var xDestination, var yDestination, var h, var w, var damage, var charType, update, getHit %exported variables
+    export var x, var y, var xDestination, var yDestination, var h, var w, var dir, var damage, var charType, update, getHit %exported variables
     
     %Character attributes
     var charType : int  %which character does this class represent?
@@ -299,7 +299,7 @@ class Character
     
     %Character abilities stuff
     var ability : int := 1%current ability player is performing
-    var frameNums : int %number of frames an ability lasts for
+    var frameNums : int := 0%number of frames an ability lasts for
 	var abilXIncr : int %how much does the character move horizontally each frame during the ability?
     var abilYIncr : int %same for vertically
     
@@ -535,12 +535,14 @@ new Character, player2
 ^ (player1).yDestination := 365
 ^ (player1).h := 2
 ^ (player1).w := 2
+^ (player1).dir := 2
 ^ (player2).x := 1318
 ^ (player2).xDestination := 1318
 ^ (player2).y := 365
 ^ (player2).yDestination := 365
 ^ (player2).h := 2
 ^ (player2).w := 2
+^ (player2).dir := 1
 
 %--------------------PLAYER STATUS DISPLAYS------------------------%
 var pSD1, pSD2 : pointer to PlayerStatusDisplay
