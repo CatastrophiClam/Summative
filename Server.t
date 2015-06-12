@@ -121,6 +121,18 @@ end PlayerStatusDisplay
 %THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
 %THE THIRD INDEX OF PICTURES IS THE SIDE PLAYER IS FACING: 1 - left  2 - right
 %NOTE WE'RE PROBABLY GONNA HAVE TO READ THE FILLER_VARIABLES FROM A FILE
+
+%FILE STUFF
+%NOTE HITCOORDS FILE GOES:
+%hitX
+%hitY
+%...
+%HITBOXES FILE GOES:
+%X1
+%Y1
+%X2
+%Y2
+
 var pictures : array 1 .. 10, 1 .. 13, 1 .. 2 of position
 
 % Idle
@@ -133,14 +145,14 @@ for i : 1 .. 4
     pictures (1, i, 1).hitY := pictures (1, i, 2).hitY
     
     %hitboxes
-    pictures (1, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (1, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (1, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (1, i, 1).hBY2 := FILLER_VARIABLE
     pictures (1, i, 2).hBX1 := FILLER_VARIABLE
     pictures (1, i, 2).hBY1 := FILLER_VARIABLE
     pictures (1, i, 2).hBX2 := FILLER_VARIABLE
     pictures (1, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (1, i, 1).hBX1 := 70-pictures (1, i, 2).hBX1
+    pictures (1, i, 1).hBY1 := pictures (1, i, 2).hBY1
+    pictures (1, i, 1).hBX2 := 70-pictures (1, i, 2).hBX2
+    pictures (1, i, 1).hBY2 := pictures (1, i, 2).hBY2
 end for
     
 % Move
@@ -153,14 +165,14 @@ for i : 1 .. 5
     pictures (2, i, 1).hitY := pictures (2, i, 2).hitY
     
     %hitboxes
-    pictures (2, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (2, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (2, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (2, i, 1).hBY2 := FILLER_VARIABLE
     pictures (2, i, 2).hBX1 := FILLER_VARIABLE
     pictures (2, i, 2).hBY1 := FILLER_VARIABLE
     pictures (2, i, 2).hBX2 := FILLER_VARIABLE
     pictures (2, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (2, i, 1).hBX1 := 70-pictures (2, i, 2).hBX1
+    pictures (2, i, 1).hBY1 := pictures (2, i, 2).hBY1
+    pictures (2, i, 1).hBX2 := 70-pictures (2, i, 2).hBX2
+    pictures (2, i, 1).hBY2 := pictures (2, i, 2).hBY2
 end for
     
 % Kneel
@@ -172,14 +184,14 @@ pictures (3, 1, 1).hitX := 70 - pictures (3, 1, 2).hitX
 pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
 
     %hitboxes
-    pictures (3, 1, 1).hBX1 := FILLER_VARIABLE
-    pictures (3, 1, 1).hBY1 := FILLER_VARIABLE
-    pictures (3, 1, 1).hBX2 := FILLER_VARIABLE
-    pictures (3, 1, 1).hBY2 := FILLER_VARIABLE
     pictures (3, 1, 2).hBX1 := FILLER_VARIABLE
     pictures (3, 1, 2).hBY1 := FILLER_VARIABLE
     pictures (3, 1, 2).hBX2 := FILLER_VARIABLE
     pictures (3, 1, 2).hBY2 := FILLER_VARIABLE
+    pictures (3, 1, 1).hBX1 := 70-pictures (3, i, 2).hBX1
+    pictures (3, 1, 1).hBY1 := pictures (3, i, 2).hBY1
+    pictures (3, 1, 1).hBX2 := 70-pictures (3, i, 2).hBX2
+    pictures (3, 1, 1).hBY2 := pictures (3, i, 2).hBY2
 
 % Jump
 for i : 1 .. 7
@@ -191,14 +203,14 @@ for i : 1 .. 7
     pictures (4, i, 1).hitY := pictures (4, i, 2).hitY
     
     %hitboxes
-    pictures (4, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (4, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (4, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (4, i, 1).hBY2 := FILLER_VARIABLE
     pictures (4, i, 2).hBX1 := FILLER_VARIABLE
     pictures (4, i, 2).hBY1 := FILLER_VARIABLE
     pictures (4, i, 2).hBX2 := FILLER_VARIABLE
     pictures (4, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (4, i, 1).hBX1 := 70-pictures (4, i, 2).hBX1
+    pictures (4, i, 1).hBY1 := pictures (4, i, 2).hBY1
+    pictures (4, i, 1).hBX2 := 70-pictures (4, i, 2).hBX2
+    pictures (4, i, 1).hBY2 := pictures (4, i, 2).hBY2
 end for
     
 % Roundhouse
@@ -211,14 +223,14 @@ for i : 1 .. 5
     pictures (5, i, 1).hitY := pictures (5, i, 2).hitY
     
     %hitboxes
-    pictures (5, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (5, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (5, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (5, i, 1).hBY2 := FILLER_VARIABLE
     pictures (5, i, 2).hBX1 := FILLER_VARIABLE
     pictures (5, i, 2).hBY1 := FILLER_VARIABLE
     pictures (5, i, 2).hBX2 := FILLER_VARIABLE
     pictures (5, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (5, i, 1).hBX1 := 70-pictures (5, i, 2).hBX1
+    pictures (5, i, 1).hBY1 := pictures (5, i, 2).hBY1
+    pictures (5, i, 1).hBX2 := 70-pictures (5, i, 2).hBX2
+    pictures (5, i, 1).hBY2 := pictures (5, i, 2).hBY2
 end for
     
 %Punch
@@ -231,14 +243,14 @@ for i : 1 .. 3
     pictures (6, i, 1).hitY := pictures (6, i, 2).hitY
     
     %hitboxes
-    pictures (6, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (6, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (6, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (6, i, 1).hBY2 := FILLER_VARIABLE
     pictures (6, i, 2).hBX1 := FILLER_VARIABLE
     pictures (6, i, 2).hBY1 := FILLER_VARIABLE
     pictures (6, i, 2).hBX2 := FILLER_VARIABLE
     pictures (6, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (6, i, 1).hBX1 := 70-pictures (6, i, 2).hBX1
+    pictures (6, i, 1).hBY1 := pictures (6, i, 2).hBY1
+    pictures (6, i, 1).hBX2 := 70-pictures (6, i, 2).hBX2
+    pictures (6, i, 1).hBY2 := pictures (6, i, 2).hBY2
 end for
     
 % Kick
@@ -251,14 +263,14 @@ for i : 1 .. 5
     pictures (7, i, 1).hitY := pictures (7, i, 2).hitY
     
     %hitboxes
-    pictures (7, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (7, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (7, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (7, i, 1).hBY2 := FILLER_VARIABLE
     pictures (7, i, 2).hBX1 := FILLER_VARIABLE
     pictures (7, i, 2).hBY1 := FILLER_VARIABLE
     pictures (7, i, 2).hBX2 := FILLER_VARIABLE
     pictures (7, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (7, i, 1).hBX1 := 70-pictures (7, i, 2).hBX1
+    pictures (7, i, 1).hBY1 := pictures (7, i, 2).hBY1
+    pictures (7, i, 1).hBX2 := 70-pictures (7, i, 2).hBX2
+    pictures (7, i, 1).hBY2 := pictures (7, i, 2).hBY2
 end for
     
 % Tatsumaki
@@ -271,14 +283,14 @@ for i : 1 .. 13
     pictures (8, i, 1).hitY := pictures (8, i, 2).hitY
     
     %hitboxes
-    pictures (8, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (8, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (8, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (8, i, 1).hBY2 := FILLER_VARIABLE
     pictures (8, i, 2).hBX1 := FILLER_VARIABLE
     pictures (8, i, 2).hBY1 := FILLER_VARIABLE
     pictures (8, i, 2).hBX2 := FILLER_VARIABLE
     pictures (8, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (8, i, 1).hBX1 := 70-pictures (8, i, 2).hBX1
+    pictures (8, i, 1).hBY1 := pictures (8, i, 2).hBY1
+    pictures (8, i, 1).hBX2 := 70-pictures (8, i, 2).hBX2
+    pictures (8, i, 1).hBY2 := pictures (8, i, 2).hBY2
 end for
     
 % Hadoken
@@ -291,14 +303,14 @@ for i : 1 .. 4
     pictures (9, i, 1).hitY := pictures (9, i, 2).hitY
     
     %hitboxes
-    pictures (9, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (9, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (9, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (9, i, 1).hBY2 := FILLER_VARIABLE
     pictures (9, i, 2).hBX1 := FILLER_VARIABLE
     pictures (9, i, 2).hBY1 := FILLER_VARIABLE
     pictures (9, i, 2).hBX2 := FILLER_VARIABLE
     pictures (9, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (9, i, 1).hBX1 := 70-pictures (9, i, 2).hBX1
+    pictures (9, i, 1).hBY1 := pictures (9, i, 2).hBY1
+    pictures (9, i, 1).hBX2 := 70-pictures (9, i, 2).hBX2
+    pictures (9, i, 1).hBY2 := pictures (9, i, 2).hBY2
 end for
     
 % Shoryuken
@@ -311,14 +323,14 @@ for i : 1 .. 7
     pictures (10, i, 1).hitY := pictures (10, i, 2).hitY
     
     %hitboxes
-    pictures (10, i, 1).hBX1 := FILLER_VARIABLE
-    pictures (10, i, 1).hBY1 := FILLER_VARIABLE
-    pictures (10, i, 1).hBX2 := FILLER_VARIABLE
-    pictures (10, i, 1).hBY2 := FILLER_VARIABLE
     pictures (10, i, 2).hBX1 := FILLER_VARIABLE
     pictures (10, i, 2).hBY1 := FILLER_VARIABLE
     pictures (10, i, 2).hBX2 := FILLER_VARIABLE
     pictures (10, i, 2).hBY2 := FILLER_VARIABLE
+    pictures (10, i, 1).hBX1 := 70-pictures (10, i, 2).hBX1
+    pictures (10, i, 1).hBY1 := pictures (10, i, 2).hBY1
+    pictures (10, i, 1).hBX2 := 70-pictures (10, i, 2).hBX1
+    pictures (10, i, 1).hBY2 := pictures (10, i, 2).hBY1
 end for
     
 %NOTE HERE'S HOW CHARACTER MOVEMENT WORKS: character has a destination: this is the point his center is moving towards. moving the character with
@@ -343,7 +355,7 @@ class Character
     damageArray(6) :=10
     damageArray(7) :=15
     damageArray(8) :=35
-    damageArray(9) :=30
+    damageArray(9) :=45
     damageArray(10) :=30
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
@@ -374,7 +386,7 @@ class Character
     moveStuff(3).frames :=1
     moveStuff(4).speed := 15
     moveStuff(4).xIncrement :=0
-    moveStuff(4).yIncrement :=200
+    moveStuff(4).yIncrement :=350
     moveStuff(4).frames :=7
     moveStuff(5).speed := 10
     moveStuff(5).xIncrement :=0
@@ -390,7 +402,7 @@ class Character
     moveStuff(7).frames :=5
     moveStuff(8).speed := 17
     moveStuff(8).xIncrement :=20
-    moveStuff(8).yIncrement :=140
+    moveStuff(8).yIncrement :=300
     moveStuff(8).frames :=13
     moveStuff(9).speed := 1
     moveStuff(9).xIncrement :=10
@@ -398,10 +410,10 @@ class Character
     moveStuff(9).frames :=4
     moveStuff(10).speed := 14
     moveStuff(10).xIncrement :=0
-    moveStuff(10).yIncrement :=170
+    moveStuff(10).yIncrement :=250
     moveStuff(10).frames :=7
     
-    var fallSpeed : int := 2
+    var fallSpeed : int := 4
     
     var isHit := false %did the character get hit?
     
@@ -442,22 +454,22 @@ class Character
     end convertY
     
     proc knockBack (cX, cY, pX, pY : int) %cX,cY is center of other player, pX, pY is where character was hit
-	var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
-	%calculate new destination
-	%ABRUPT CHANGE OF DIRECTION VERSION
-	xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
-	yDestination := round (y + (pY - cY) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
-	%KEEPS MOMENTUM VERSION
-	%xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-	%yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
-	
-	%check if character bounces
-	if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
-	    %character bounces
-	    bounces := true
-	    bounceX := xDestination
-	    bounceY := platY + (platY - yDestination)
-	end if
+        var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
+        %calculate new destination
+        %ABRUPT CHANGE OF DIRECTION VERSION
+        xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+        yDestination := round (y + (pY - cY) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+        %KEEPS MOMENTUM VERSION
+        %xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+        %yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
+        
+        %check if character bounces
+        if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
+            %character bounces
+            bounces := true
+            bounceX := xDestination
+            bounceY := platY + (platY - yDestination)
+        end if
     end knockBack
     
     %did current character get hit?
