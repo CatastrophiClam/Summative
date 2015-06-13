@@ -355,7 +355,7 @@ class Character
     var charType : int  %which character does this class represent?
     var lives : int := 5 %how many lives does this character have?
     var damage : int := 0%how much damage has the character taken? (damage determines how much the character flies)
-    var damageArray : array 1..10 of int %how much damage does this character deal?
+    var damageArray : array 1..10 of int %how much damage does each ability deal?
     damageArray(1) :=1
     damageArray(2) :=2
     damageArray(3) :=4
@@ -366,6 +366,17 @@ class Character
     damageArray(8) :=35
     damageArray(9) :=45
     damageArray(10) :=30
+    var powerArray : array 1..10 of real %involved in knockback calculation
+    powerArray(1) := 0.03
+    powerArray(2) := 0.03
+    powerArray(3) := 0.03
+    powerArray(4) := 0.09
+    powerArray(5) := 0.4
+    powerArray(6) := 0.25
+    powerArray(7) := 0.3
+    powerArray(8) := 0.6
+    powerArray(9) := 1
+    powerArray(10) := 0.5
     var x, y : real %coordinates of CENTER of character IN THE WORLD
     var h, w : int %current height and width of character
     var dir : int %the way the character is facing - 1 indicates left, 2 indicates right
@@ -419,7 +430,7 @@ class Character
     moveStuff(8).yIncrement :=200
     moveStuff(8).frames :=13
     moveStuff(9).speed := 1
-    moveStuff(9).xIncrement :=10
+    moveStuff(9).xIncrement :=40
     moveStuff(9).yIncrement :=0
     moveStuff(9).frames :=4
     moveStuff(10).speed := 24
@@ -467,8 +478,8 @@ class Character
 	result round (y_ - screenY)
     end convertY
     
-    proc knockBack (cX, cY, pX, pY : int) %cX,cY is center of other player, pX, pY is where character was hit
-        var kbD : real := kbDistance * damage / 100 %distance character gets knocked back
+    proc knockBack (cX, cY, pX, pY, power : int) %cX,cY is center of other player, pX, pY is where character was hit
+        var kbD : real := kbDistance * damage / 100 * power %distance character gets knocked back
         %calculate new destination
         %ABRUPT CHANGE OF DIRECTION VERSION
         xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
@@ -487,11 +498,12 @@ class Character
     end knockBack
     
     %did current character get hit?
-    proc getHit(hX,hY,cX,cY,damageTaken:int) %hX,hY is point that got hit, cX,cY is center of other player
+    proc getHit(hX,hY,cX,cY,damageType:int) %hX,hY is point that got hit, cX,cY is center of other player, damageType is abiliy that caused the damage
+        var damageTaken := damageArray(damageType)
         %if player did get hit
         if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
             damage += Rand.Int(damageTaken-6, damageTaken+6)
-            knockBack(cX,cY,hX,hY)
+            knockBack(cX,cY,hX,hY,powerArray(damageType))
             actionLock := false
         end if
     end getHit
@@ -545,6 +557,7 @@ class Character
         %update destination position
         if doingAction = false then
             ability := 1
+            
         %UPDATE PLAYER ABILITIES
         elsif not actionLock and canDoAction then
             if instructions (4) = "q" then
@@ -573,9 +586,7 @@ class Character
                     actionLock := true
                     canDoAction := false
                 end if
-            end if
-            
-            if instructions (4) = "w" then
+            elsif instructions (4) = "w" then
                 if instructions (3) = "0" then
                     ability := 7
                     xDestination += moveStuff(ability).xIncrement
@@ -683,7 +694,7 @@ class Character
         end if
         
         %see if player hit other player
-        ^(oP).getHit(round(hitX),round(hitY),cX,cY,damageArray(ability))
+        ^(oP).getHit(round(hitX),round(hitY),cX,cY,ability)
         
         result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
 	
