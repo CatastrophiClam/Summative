@@ -87,7 +87,9 @@ var endGame := false %should we stop the program?
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
-var serverAddress : string := "192.168.5.60"
+
+var serverAddress : string := "76.10.165.5"
+
 var serverPort : int
 var playerNum : int
 
@@ -367,7 +369,9 @@ function split(str:string, regex:string):array 1..14 of string
     var pastSpace := 0
     var count := 0
     for i:1..length(str)+1
+
 	if i = length(str)+1 or str(i) = regex then
+
 	    count += 1
 	    a(count) := str(pastSpace+1..i-1)
 	    pastSpace := i
@@ -555,14 +559,16 @@ loop
 	updateBackground
 	Sprite.Show(otherPlayer.sprite)
 	Sprite.Show(selfPlayer.sprite)
-	delay(10)
+    
+    delay (10)
+
     end loop
     playEndScreen
     if not playAgain then
-        put: netStream, "no"
-        exit
+	put: netStream, "no"
+	exit
     else
-        put: netStream, "yes"
+	put: netStream, "yes"
     end if
 end loop
 
