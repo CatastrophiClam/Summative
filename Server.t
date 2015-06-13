@@ -505,8 +505,9 @@ class Character
         %if player did get hit
         if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
             damage += Rand.Int(damageTaken-6, damageTaken+6)
-            knockBack(cX,cY,hX,hY,powerArray(damageType))
             actionLock := false
+            knockedBack := true
+            knockBack(cX,cY,hX,hY,powerArray(damageType))
         end if
     end getHit
     
@@ -537,7 +538,7 @@ class Character
                 dir := 1
             end if
             if (instructions (2) = "1") then %crouch
-                if yDestination-5 < platY then
+                if yDestination-5 < platY and x > platX1 and x < platX2 then
                     yDestination := platY
                 else
                     yDestination -= 5
@@ -630,8 +631,8 @@ class Character
         %move x and y towards xDestination and yDestination
         %character moves differently when he is knocked back than when he is just moving
         if knockedBack then
-            x += 1/17*(xDestination-x)
-            y += 1/17*(yDestination-y)
+            x += 1/25*(xDestination-x)
+            y += 1/25*(yDestination-y)
             %if character is knocked into the ground, he bounces
             if bounces then
                 if x > platX1 and x < platX2 and y < platY then
@@ -640,6 +641,10 @@ class Character
                 bounces := false
                 canDoAction := true
                 end if
+            end if
+            %see if knocked back is finished
+            if abs(xDestination-x) < 10 and abs(yDestination-y) < 10 then
+                knockedBack := false
             end if
         else
             x += 1/moveStuff(ability).speed*(xDestination-x)

@@ -87,9 +87,7 @@ var endGame := false %should we stop the program?
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
-
-var serverAddress : string := "76.10.165.5"
-
+var serverAddress : string := "192.168.5.60"
 var serverPort : int
 var playerNum : int
 
@@ -191,8 +189,10 @@ var youLosePic : int
 youLosePic := Pic.FileNew ("Pictures/YouLose.bmp")
 Pic.SetTransparentColor (youLosePic, 0)
 var youWinPic : int
-youWinPic := Pic.FileNew ("Pictures/YouLose.bmp")
-Pic.SetTransparentColor (youWinPic, 0)
+
+youWinPic := Pic.FileNew("Pictures/YouWin.bmp")
+Pic.SetTransparentColor(youWinPic,0)
+
 var playNowPic : int
 playNowPic := Pic.FileNew ("Pictures/playNow.bmp")
 var playAgainPic : int
@@ -368,6 +368,7 @@ function split (str : string, regex : string) : array 1 .. 14 of string
     var a : array 1 .. 14 of string
     var pastSpace := 0
     var count := 0
+
     for i : 1 .. length (str) + 1
 
 	if i = length (str) + 1 or str (i) = regex then
@@ -397,18 +398,32 @@ procedure playEndScreen
     playAgainButton := Sprite.New (playAgainPic)
     exitButton := Sprite.New (exitPic)
     %show stuff
-    Sprite.Animate (winDisplay, chosenWinPic, round (maxx / 2 - Pic.Width (chosenWinPic) / 2), round (maxy / 2), false)
-    Sprite.Animate (playAgainButton, playAgainPic, round (maxx / 4 - Pic.Width (playAgainPic) / 2), round (maxy / 4 - Pic.Height (playAgainPic) / 2), false)
-    Sprite.Animate (exitButton, exitPic, round (3 * maxx / 4 - Pic.Width (exitPic) / 2), round (maxy / 4 - Pic.Height (exitPic) / 2), false)
-    Sprite.Show (winDisplay)
-    Sprite.Show (playAgainButton)
-    Sprite.Show (exitButton)
-    delay (5000)
-    playAgain := true
 
-    Sprite.Hide (winDisplay)
-    Sprite.Hide (playAgainButton)
-    Sprite.Hide (exitButton)
+    Sprite.Animate(winDisplay,chosenWinPic,round(maxx/2-Pic.Width(chosenWinPic)/2),round(maxy/2),false)
+    Sprite.Animate(playAgainButton,playAgainPic,round(maxx/4-Pic.Width(playAgainPic)/2),round(maxy/4-Pic.Height(playAgainPic)/2),false)
+    Sprite.Animate(exitButton,exitPic,round(3*maxx/4-Pic.Width(exitPic)/2),round(maxy/4-Pic.Height(exitPic)/2),false)
+    Sprite.Show(winDisplay)
+    Sprite.Show(playAgainButton)
+    Sprite.Show(exitButton)
+    loop
+	%wait for player to choose option
+	Mouse.Where(x,y,button)
+	if button =1 then
+	    %play again is clicked
+	    if x > round(maxx/4-Pic.Width(playAgainPic)/2) and x < maxx/4+Pic.Width(playAgainPic)/2 and y > round(maxy/4-Pic.Height(playAgainPic)/2) and y < round(maxy/4-Pic.Height(playAgainPic)/2)+Pic.Height(playAgainPic) then
+		playAgain := true
+		exit
+	    %exit is clicked
+	    elsif x > round(3*maxx/4-Pic.Width(exitPic)/2) and x < round(3*maxx/4+Pic.Width(exitPic)/2) and y > round(maxy/4-Pic.Height(exitPic)/2) and y < round(maxy/4+Pic.Height(exitPic)/2) then
+		playAgain := false
+		exit
+	    end if
+	end if
+    end loop
+    Sprite.Hide(winDisplay)
+    Sprite.Hide(playAgainButton)
+    Sprite.Hide(exitButton)
+>>>>>>> 79471a6aea0d69c17408a0ceaa2f320ca2647844
 end playEndScreen
 
 %For keypress detection
@@ -563,6 +578,7 @@ loop
 	end if
 
 	updateBackground
+<<<<<<< HEAD
 	Sprite.Show (otherPlayer.sprite)
 	Sprite.Show (selfPlayer.sprite)
 
@@ -575,6 +591,18 @@ loop
 	exit
     else
 	put : netStream, "yes"
+=======
+	Sprite.Show(otherPlayer.sprite)
+	Sprite.Show(selfPlayer.sprite)
+	delay(10)
+    end loop
+    playEndScreen
+    if not playAgain then
+	put: netStream, "no"
+	exit
+    else
+	put: netStream, "yes"
+>>>>>>> 79471a6aea0d69c17408a0ceaa2f320ca2647844
     end if
 end loop
 
