@@ -87,9 +87,7 @@ var endGame := false %should we stop the program?
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
-
-var serverAddress : string := "76.10.165.5"
-
+var serverAddress : string := "192.168.5.60"
 var serverPort : int
 var playerNum : int
 
@@ -191,7 +189,7 @@ var youLosePic : int
 youLosePic := Pic.FileNew("Pictures/YouLose.bmp")
 Pic.SetTransparentColor(youLosePic,0)
 var youWinPic : int
-youWinPic := Pic.FileNew("Pictures/YouLose.bmp")
+youWinPic := Pic.FileNew("Pictures/YouWin.bmp")
 Pic.SetTransparentColor(youWinPic,0)
 var playNowPic : int
 playNowPic := Pic.FileNew("Pictures/playNow.bmp")
@@ -369,9 +367,7 @@ function split(str:string, regex:string):array 1..14 of string
     var pastSpace := 0
     var count := 0
     for i:1..length(str)+1
-
 	if i = length(str)+1 or str(i) = regex then
-
 	    count += 1
 	    a(count) := str(pastSpace+1..i-1)
 	    pastSpace := i
@@ -403,8 +399,24 @@ procedure playEndScreen
     Sprite.Show(winDisplay)
     Sprite.Show(playAgainButton)
     Sprite.Show(exitButton)
-    delay(5000)
-    playAgain := true
+    loop
+        %wait for player to choose option
+        Mouse.Where(x,y,button)
+        if button =1 then
+            %play again is clicked
+            if x > round(maxx/4-Pic.Width(playAgainPic)/2) and x < maxx/4+Pic.Width(playAgainPic)/2 and y > round(maxy/4-Pic.Height(playAgainPic)/2) and y < round(maxy/4-Pic.Height(playAgainPic)/2)+Pic.Height(playAgainPic) then
+                playAgain := true
+                exit
+            %exit is clicked
+            elsif x > round(3*maxx/4-Pic.Width(exitPic)/2) and x < round(3*maxx/4+Pic.Width(exitPic)/2) and y > round(maxy/4-Pic.Height(exitPic)/2) and y < round(maxy/4+Pic.Height(exitPic)/2) then
+                playAgain := false
+                exit
+            end if
+        end if
+    end loop
+    Sprite.Hide(winDisplay)
+    Sprite.Hide(playAgainButton)
+    Sprite.Hide(exitButton)
 end playEndScreen
 
 %For keypress detection
@@ -559,16 +571,14 @@ loop
 	updateBackground
 	Sprite.Show(otherPlayer.sprite)
 	Sprite.Show(selfPlayer.sprite)
-    
-    delay (10)
-
+	delay(10)
     end loop
     playEndScreen
     if not playAgain then
-	put: netStream, "no"
-	exit
+        put: netStream, "no"
+        exit
     else
-	put: netStream, "yes"
+        put: netStream, "yes"
     end if
 end loop
 
