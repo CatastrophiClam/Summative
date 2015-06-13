@@ -76,9 +76,9 @@ for i : 1 .. 4
     get:boxFile, pictures (1, i, 2).hBY1
     get:boxFile, pictures (1, i, 2).hBX2
     get:boxFile, pictures (1, i, 2).hBY2
-    pictures (1, i, 1).hBX1 := 70-pictures (1, i, 2).hBX1
+    pictures (1, i, 1).hBX2 := 70-pictures (1, i, 2).hBX1
     pictures (1, i, 1).hBY1 := pictures (1, i, 2).hBY1
-    pictures (1, i, 1).hBX2 := 70-pictures (1, i, 2).hBX2
+    pictures (1, i, 1).hBX1 := 70-pictures (1, i, 2).hBX2
     pictures (1, i, 1).hBY2 := pictures (1, i, 2).hBY2
 end for
     
@@ -96,9 +96,9 @@ for i : 1 .. 5
     get:boxFile, pictures (2, i, 2).hBY1
     get:boxFile, pictures (2, i, 2).hBX2
     get:boxFile, pictures (2, i, 2).hBY2
-    pictures (2, i, 1).hBX1 := 70-pictures (2, i, 2).hBX1
+    pictures (2, i, 1).hBX2 := 70-pictures (2, i, 2).hBX1
     pictures (2, i, 1).hBY1 := pictures (2, i, 2).hBY1
-    pictures (2, i, 1).hBX2 := 70-pictures (2, i, 2).hBX2
+    pictures (2, i, 1).hBX1 := 70-pictures (2, i, 2).hBX2
     pictures (2, i, 1).hBY2 := pictures (2, i, 2).hBY2
 end for
     
@@ -115,9 +115,9 @@ pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
     get:boxFile, pictures (3, 1, 2).hBY1
     get:boxFile, pictures (3, 1, 2).hBX2
     get:boxFile, pictures (3, 1, 2).hBY2
-    pictures (3, 1, 1).hBX1 := 70-pictures (3, 1, 2).hBX1
+    pictures (3, 1, 1).hBX2 := 70-pictures (3, 1, 2).hBX1
     pictures (3, 1, 1).hBY1 := pictures (3, 1, 2).hBY1
-    pictures (3, 1, 1).hBX2 := 70-pictures (3, 1, 2).hBX2
+    pictures (3, 1, 1).hBX1 := 70-pictures (3, 1, 2).hBX2
     pictures (3, 1, 1).hBY2 := pictures (3, 1, 2).hBY2
 
 % Jump
@@ -134,9 +134,9 @@ for i : 1 .. 7
     get:boxFile, pictures (4, i, 2).hBY1
     get:boxFile, pictures (4, i, 2).hBX2
     get:boxFile, pictures (4, i, 2).hBY2
-    pictures (4, i, 1).hBX1 := 70-pictures (4, i, 2).hBX1
+    pictures (4, i, 1).hBX2 := 70-pictures (4, i, 2).hBX1
     pictures (4, i, 1).hBY1 := pictures (4, i, 2).hBY1
-    pictures (4, i, 1).hBX2 := 70-pictures (4, i, 2).hBX2
+    pictures (4, i, 1).hBX1 := 70-pictures (4, i, 2).hBX2
     pictures (4, i, 1).hBY2 := pictures (4, i, 2).hBY2
 end for
     
@@ -154,9 +154,9 @@ for i : 1 .. 5
     get:boxFile, pictures (5, i, 2).hBY1
     get:boxFile, pictures (5, i, 2).hBX2
     get:boxFile, pictures (5, i, 2).hBY2
-    pictures (5, i, 1).hBX1 := 70-pictures (5, i, 2).hBX1
+    pictures (5, i, 1).hBX2 := 70-pictures (5, i, 2).hBX1
     pictures (5, i, 1).hBY1 := pictures (5, i, 2).hBY1
-    pictures (5, i, 1).hBX2 := 70-pictures (5, i, 2).hBX2
+    pictures (5, i, 1).hBX1 := 70-pictures (5, i, 2).hBX2
     pictures (5, i, 1).hBY2 := pictures (5, i, 2).hBY2
 end for
     
@@ -174,9 +174,9 @@ for i : 1 .. 3
     get:boxFile, pictures (6, i, 2).hBY1
     get:boxFile, pictures (6, i, 2).hBX2
     get:boxFile, pictures (6, i, 2).hBY2
-    pictures (6, i, 1).hBX1 := 70-pictures (6, i, 2).hBX1
+    pictures (6, i, 1).hBX2 := 70-pictures (6, i, 2).hBX1
     pictures (6, i, 1).hBY1 := pictures (6, i, 2).hBY1
-    pictures (6, i, 1).hBX2 := 70-pictures (6, i, 2).hBX2
+    pictures (6, i, 1).hBX1 := 70-pictures (6, i, 2).hBX2
     pictures (6, i, 1).hBY2 := pictures (6, i, 2).hBY2
 end for
     
@@ -194,9 +194,9 @@ for i : 1 .. 5
     get:boxFile, pictures (7, i, 2).hBY1
     get:boxFile, pictures (7, i, 2).hBX2
     get:boxFile, pictures (7, i, 2).hBY2
-    pictures (7, i, 1).hBX1 := 70-pictures (7, i, 2).hBX1
+    pictures (7, i, 1).hBX2 := 70-pictures (7, i, 2).hBX1
     pictures (7, i, 1).hBY1 := pictures (7, i, 2).hBY1
-    pictures (7, i, 1).hBX2 := 70-pictures (7, i, 2).hBX2
+    pictures (7, i, 1).hBX1 := 70-pictures (7, i, 2).hBX2
     pictures (7, i, 1).hBY2 := pictures (7, i, 2).hBY2
 end for
     
@@ -214,9 +214,9 @@ for i : 1 .. 13
     get:boxFile, pictures (8, i, 2).hBY1
     get:boxFile, pictures (8, i, 2).hBX2
     get:boxFile, pictures (8, i, 2).hBY2
-    pictures (8, i, 1).hBX1 := 70-pictures (8, i, 2).hBX1
+    pictures (8, i, 1).hBX2 := 70-pictures (8, i, 2).hBX1
     pictures (8, i, 1).hBY1 := pictures (8, i, 2).hBY1
-    pictures (8, i, 1).hBX2 := 70-pictures (8, i, 2).hBX2
+    pictures (8, i, 1).hBX1 := 70-pictures (8, i, 2).hBX2
     pictures (8, i, 1).hBY2 := pictures (8, i, 2).hBY2
 end for
     
@@ -234,9 +234,9 @@ for i : 1 .. 4
     get:boxFile, pictures (9, i, 2).hBY1
     get:boxFile, pictures (9, i, 2).hBX2
     get:boxFile, pictures (9, i, 2).hBY2
-    pictures (9, i, 1).hBX1 := 70-pictures (9, i, 2).hBX1
+    pictures (9, i, 1).hBX2 := 70-pictures (9, i, 2).hBX1
     pictures (9, i, 1).hBY1 := pictures (9, i, 2).hBY1
-    pictures (9, i, 1).hBX2 := 70-pictures (9, i, 2).hBX2
+    pictures (9, i, 1).hBX1 := 70-pictures (9, i, 2).hBX2
     pictures (9, i, 1).hBY2 := pictures (9, i, 2).hBY2
 end for
     
@@ -254,9 +254,9 @@ for i : 1 .. 7
     get:boxFile, pictures (10, i, 2).hBY1
     get:boxFile, pictures (10, i, 2).hBX2
     get:boxFile, pictures (10, i, 2).hBY2
-    pictures (10, i, 1).hBX1 := 70-pictures (10, i, 2).hBX1
-    pictures (10, i, 1).hBY1 := pictures (10, i, 2).hBY1
     pictures (10, i, 1).hBX2 := 70-pictures (10, i, 2).hBX1
+    pictures (10, i, 1).hBY1 := pictures (10, i, 2).hBY1
+    pictures (10, i, 1).hBX1 := 70-pictures (10, i, 2).hBX1
     pictures (10, i, 1).hBY2 := pictures (10, i, 2).hBY1
 end for
 
@@ -484,14 +484,18 @@ class Character
         var kbD : real := kbDistance * damage / 100 * power %distance character gets knocked back
         %calculate new destination
         %ABRUPT CHANGE OF DIRECTION VERSION
-        xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+        if pX-cX > 0 then
+            xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+        else
+            xDestination := round (x + (pX - cX) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
+        end if
         yDestination := round (y + (pY - cY) * kbD / sqrt ((pX - cX) ** 2 + (pY - cY) ** 2))
         %KEEPS MOMENTUM VERSION
         %xDestination += (pX-cX)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
         %yDestination += (pY-cY)*kbD/sqrt( (pX-cX)**2 + (pY-cY)**2)
         
         %check if character bounces
-        if xDestination > platX1 and xDestination < platX2 and yDestination < platY then
+        if yDestination < platY then
             %character bounces
             bounces := true
             bounceX := xDestination
@@ -631,8 +635,8 @@ class Character
         %move x and y towards xDestination and yDestination
         %character moves differently when he is knocked back than when he is just moving
         if knockedBack then
-            x += 1/25*(xDestination-x)
-            y += 1/25*(yDestination-y)
+            x += 1/10*(xDestination-x)
+            y += 1/10*(yDestination-y)
             %if character is knocked into the ground, he bounces
             if bounces then
                 if x > platX1 and x < platX2 and y < platY then
@@ -676,8 +680,8 @@ class Character
         hitBoxY1 := round(y+pictures(ability,frameNums,dir).hBY1)
         hitBoxX2 := round(x+pictures(ability,frameNums,dir).hBX2)
         hitBoxY2 := round(y+pictures(ability,frameNums,dir).hBY2)
-        cX := round((hitBoxX2-hitBoxX1)/2)
-        cY := round((hitBoxY2-hitBoxY1)/2)
+        cX := round((hitBoxX1+hitBoxX2)/2)
+        cY := round((hitBoxY1+hitBoxY2)/2)
         
         %see if player died
         if x < 0 or x > worldLength or y < 0 or y > worldHeight then
@@ -878,26 +882,31 @@ end updateScreen
 %                                                     GAME LOOP                                                             %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
-var instructions1, instructions2 : string := "00n" %instructions sent by client
+var instructions1, instructions2 : string := "000n" %instructions sent by client
 var picStuff1, picStuff2 : string
 
 loop
     new Character, player1
-new Character, player2
-^ (player1).x := 565
-^ (player1).xDestination := 565
-^ (player1).y := 365
-^ (player1).yDestination := 365
-^ (player1).h := 2
-^ (player1).w := 2
-^ (player1).dir := 2
-^ (player2).x := 1318
-^ (player2).xDestination := 1318
-^ (player2).y := 365
-^ (player2).yDestination := 365
-^ (player2).h := 2
-^ (player2).w := 2
-^ (player2).dir := 1
+    new Character, player2
+    ^ (player1).x := 565
+    ^ (player1).xDestination := 565
+    ^ (player1).y := 365
+    ^ (player1).yDestination := 365
+    ^ (player1).h := 2
+    ^ (player1).w := 2
+    ^ (player1).lives := 5
+    ^ (player1).damage := 0
+    ^ (player1).dir := 2
+    ^ (player2).x := 1318
+    ^ (player2).xDestination := 1318
+    ^ (player2).y := 365
+    ^ (player2).yDestination := 365
+    ^ (player2).h := 2
+    ^ (player2).w := 2
+    ^ (player2).dir := 1
+    ^ (player2).lives := 5
+    ^ (player2).damage := 0
+    gameOver := false
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
     loop
