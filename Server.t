@@ -6,58 +6,7 @@
 
 const FILLER_VARIABLE : int := 2 %if you see this, it means theres some value we haven't decided on yet and we need it declared for the program to run
 
-%--------------------------------------------------------%
-%                DECLARE GLOBAL VARIABLES                %
-%--------------------------------------------------------%
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                  NETWORK STUFF                                                            %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-%--------------------------------------------------------%
-%                   DECLARE VARIABLES                    %
-%--------------------------------------------------------%
-
-var port1 := 5600
-var port2 := 5605
-
-var stream1, stream2 : int
-
-var address1, address2 : string
-
-stream1 := Net.WaitForConnection (port1, address1)
-put "Player 1 Connected"
-stream2 := Net.WaitForConnection (port2, address2)
-put "Player 2 Connected"
-put : stream1, "go"
-put : stream2, "go"
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                END NETWORK STUFF                                                          %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-
-
-%---------------------------------WORLD STUFF-----------------------------------%
-
-var worldLength, worldHeight : int  %actual width and height of world
-worldLength := 1920 %3840
-worldHeight := 1080 %2160
-
-%platform
-var platY := 363
-var platX1 := 465
-var platX2 := 1418
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                 CLASSES AND TYPES                                                         %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
+%DECLARE TYPES
 
 %THIS IS ONE FRAME OF FIGHTER
 type position :
@@ -81,43 +30,12 @@ record
     frames : int  %number of frames ability lasts for
 end record
 
-%Display thingy at bottom of screen with character lives and damage
-class PlayerStatusDisplay
-    
-    import Pic, Sprite
-    
-    export var numLives, var damage, display, _init
-    
-    %stats
-    var numLives : int
-    var damage : int := 0
-    
-    %picture stuff
-    %bascically, in order for the display to be drawn over the background, it has to be a sprite
-    %to make the picture for the sprite, we draw everything that is needed outside of the display, and
-	%we take a picture of that and put it into the sprite
-    var picSprite : int
-    var spritePic : int
-    var offScreenX := 0
-    var offScreenY := -600
-    spritePic := Pic.New (offScreenX, offScreenY, offScreenX + 150, offScreenY + 250)
-    picSprite := Sprite.New (spritePic)
-    
-    proc _init (lives : int)
-	numLives := lives
-    end _init
-    
-    proc updatePic ()
-	
-    end updatePic
-    
-    proc display ()
-	
-    end display
-    
-end PlayerStatusDisplay
+%--------------------------------------------------------%
+%                DECLARE GLOBAL VARIABLES                %
+%--------------------------------------------------------%
 
 var gameOver := false
+var winner : int %the winner
 
 %---------------------PLAYER PICTURES--------------------%
 
@@ -341,6 +259,90 @@ for i : 1 .. 7
     pictures (10, i, 1).hBX2 := 70-pictures (10, i, 2).hBX1
     pictures (10, i, 1).hBY2 := pictures (10, i, 2).hBY1
 end for
+
+%---------------------------------WORLD STUFF-----------------------------------%
+
+var worldLength, worldHeight : int  %actual width and height of world
+worldLength := 1920 
+worldHeight := 1080 
+
+%platform
+var platY := 363
+var platX1 := 465
+var platX2 := 1418
+
+%---------------------------------------------------------------------------------------------------------------------------%
+%                                                                                                                           %
+%                                                  NETWORK STUFF                                                            %
+%                                                                                                                           %
+%---------------------------------------------------------------------------------------------------------------------------%
+
+%--------------------------------------------------------%
+%                   DECLARE VARIABLES                    %
+%--------------------------------------------------------%
+
+var port1 := 5600
+var port2 := 5605
+
+var stream1, stream2 : int
+
+var address1, address2 : string
+
+stream1 := Net.WaitForConnection (port1, address1)
+put "Player 1 Connected"
+stream2 := Net.WaitForConnection (port2, address2)
+put "Player 2 Connected"
+put : stream1, "go"
+put : stream2, "go"
+
+%---------------------------------------------------------------------------------------------------------------------------%
+%                                                                                                                           %
+%                                                END NETWORK STUFF                                                          %
+%                                                                                                                           %
+%---------------------------------------------------------------------------------------------------------------------------%
+
+
+%---------------------------------------------------------------------------------------------------------------------------%
+%                                                                                                                           %
+%                                                     CLASSES                                                               %
+%                                                                                                                           %
+%---------------------------------------------------------------------------------------------------------------------------%
+
+%Display thingy at bottom of screen with character lives and damage
+class PlayerStatusDisplay
+    
+    import Pic, Sprite
+    
+    export var numLives, var damage, display, _init
+    
+    %stats
+    var numLives : int
+    var damage : int := 0
+    
+    %picture stuff
+    %bascically, in order for the display to be drawn over the background, it has to be a sprite
+    %to make the picture for the sprite, we draw everything that is needed outside of the display, and
+	%we take a picture of that and put it into the sprite
+    var picSprite : int
+    var spritePic : int
+    var offScreenX := 0
+    var offScreenY := -600
+    spritePic := Pic.New (offScreenX, offScreenY, offScreenX + 150, offScreenY + 250)
+    picSprite := Sprite.New (spritePic)
+    
+    proc _init (lives : int)
+	numLives := lives
+    end _init
+    
+    proc updatePic ()
+	
+    end updatePic
+    
+    proc display ()
+	
+    end display
+    
+end PlayerStatusDisplay
     
 %NOTE HERE'S HOW CHARACTER MOVEMENT WORKS: character has a destination: this is the point his center is moving towards. moving the character with
 %the keyboard changes the destination, and he moves towards it with his movement speed
@@ -478,7 +480,7 @@ class Character
 	result round (y_ - screenY)
     end convertY
     
-    proc knockBack (cX, cY, pX, pY, power : int) %cX,cY is center of other player, pX, pY is where character was hit
+    proc knockBack (cX, cY, pX, pY : int, power: real) %cX,cY is center of other player, pX, pY is where character was hit
         var kbD : real := kbDistance * damage / 100 * power %distance character gets knocked back
         %calculate new destination
         %ABRUPT CHANGE OF DIRECTION VERSION
@@ -879,39 +881,68 @@ loop
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
     loop
-
-	if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
-	    
-	    %update player 1's stuff
-	    get : stream1, instructions1
-	    
-	    
-	    
-	    %update player 2's stuff
-	    get : stream2, instructions2
-	    
-	    updateScreen
-	    
-	else
-	    put instructions1
-	    put instructions2
-	    picStuff1 := ^ (player1).update (instructions1,player2)
-	    picStuff2 := ^ (player2).update (instructions2,player1)
-	    %send player info back
-	    %PLAYER INFO FORM:
-	    %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
-	    
-	    put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
-	    put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
-	    
-	    %put intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))
-	    %put intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))
-	    
-	    exit
-	end if
-
+        if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
+            %update player 1's stuff
+            get : stream1, instructions1
+            
+            %update player 2's stuff
+            get : stream2, instructions2
+            
+            updateScreen
+        else
+            picStuff1 := ^ (player1).update (instructions1,player2)
+            picStuff2 := ^ (player2).update (instructions2,player1)
+            %send player info back
+            
+            %if gameOver then tell clients and exit
+            if gameOver then
+                if ^(player1).lives = 0 then
+                    winner := 2
+                else
+                    winner := 1
+                end if
+                %game is over, flush all input from clients so the next instructions can be read
+                loop
+                    if Net.LineAvailable (stream1) then
+                        get:stream1,instructions1
+                    else
+                        exit
+                    end if
+                end loop
+                loop
+                    if Net.LineAvailable (stream2) then
+                        get:stream2,instructions2
+                    else
+                        exit
+                    end if
+                end loop
+                %update clients
+                put: stream1, "G"+intstr(winner)
+                put: stream2, "G"+intstr(winner)
+                exit
+            end if
+            
+            %PLAYER INFO FORM:
+            %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
+            
+            put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
+            put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
+            
+        end if
     end loop
-    
+    %check client input on playing again
+    if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
+        get:stream1,instructions1
+        get:stream2,instructions2
+        if instructions1 = "yes" and instructions2 = "yes" then
+            put:stream1, "go"
+            put:stream2, "go"
+        else
+            put:stream1, "no"
+            put:stream2, "no"
+            exit
+        end if
+    end if
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%

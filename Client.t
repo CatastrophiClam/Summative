@@ -8,7 +8,7 @@ View.Set("graphics:max;max,position:center;center")
 
 const FILLER_VARIABLE := 2 %if you see this, it means theres some value we haven't decided on yet and we need it declared for the program to run
 
-%---------------------------------WORLD STUFF-----------------------------------%
+%---------------------------------WORLD/GLOBAL STUFF-----------------------------------%
 
 var worldLength, worldHeight : int  %actual width and height of world
 worldLength := 1920%3840
@@ -42,7 +42,7 @@ class PlayerStatusDisplay
 
     import Pic, Sprite
 
-    export var numLives, var damage, display, _init
+    export var numLives, var damage, display
     
     %stats
     var numLives : int
@@ -58,14 +58,6 @@ class PlayerStatusDisplay
     var offScreenY := -600
     spritePic := Pic.New(offScreenX,offScreenY,offScreenX+150,offScreenY+250)
     picSprite := Sprite.New(spritePic)
-    
-    proc _init(lives:int)
-	numLives := lives
-    end _init
-    
-    proc updatePic()
-    
-    end updatePic
     
     proc display()
     
@@ -87,6 +79,8 @@ end PlayerStatusDisplay
 %---------------------------------------------------------------------------------------------------------------------------%
 
 var chars, charsLast : array char of boolean 
+var startStr : string  %prompt by server to start
+var endGame := false %should we stop the program?
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
@@ -184,7 +178,8 @@ var pSD1, pSD2 : pointer to PlayerStatusDisplay
 new PlayerStatusDisplay,pSD1
 new PlayerStatusDisplay,pSD2
 
-
+var winner : int %the winner
+var playAgain : boolean %are we playing again?
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -232,15 +227,6 @@ if not netStream <= 0 then
 else
     put "not connected"
 end if
-
-var startStr : string
-%wait for all players to be connected
-loop
-    if Net.LineAvailable(netStream) then
-	get: netStream, startStr
-	exit
-    end if
-end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -370,6 +356,10 @@ function split(str:string, regex:string):array 1..14 of string
     result a
 end split
 
+procedure playEndScreen
+    
+end playEndScreen
+
 %For keypress detection
 
 function KeyPushedDown (c : char) : boolean
@@ -428,79 +418,109 @@ Input.KeyDown (chars)
 %C is either 0,1,2,3 or 4 - 0 indicates no arrow, 1 indicates left, 2 indicates right, 3 indicates down, 4 indicates up
 %D is either q, w, or n - kick or punch, or no action
 
+%This loop is whole program
 loop
-    instructions := ""
-    charsLast := chars
-    Input.KeyDown(chars)
-    updateScreen
-    
-    %Movement instructions
-    if (chars(KEY_LEFT_ARROW)) then
-        instructions += "1"
-        %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
-        %chooses the last pressed key for attack
-        if KeyPushedDown(KEY_LEFT_ARROW) then
-            mostRecentKey := "1"
+    %wait for all players to be connected
+    loop
+        if Net.LineAvailable(netStream) then
+            get: netStream, startStr
+            if startStr = "go" then
+                endGame := false
+                exit
+            else
+                endGame := true
+                exit
+            end if
         end if
-    elsif (chars(KEY_RIGHT_ARROW)) then
-        instructions += "2"
-        if KeyPushedDown(KEY_RIGHT_ARROW) then
-            mostRecentKey := "2"
-        end if
-    else
-        instructions += "0"
-        mostRecentKey := "0"
+    end loop
+    if endGame then
+        exit
     end if
-    
-    if (chars(KEY_UP_ARROW)) then
-        instructions += "2"
-        if KeyPushedDown(KEY_UP_ARROW) then
-            mostRecentKey := "4"
+    %This loop is one game
+    loop
+        instructions := ""
+        charsLast := chars
+        Input.KeyDown(chars)
+        updateScreen
+        
+        %Movement instructions
+        if (chars(KEY_LEFT_ARROW)) then
+            instructions += "1"
+            %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
+            %chooses the last pressed key for attack
+            if KeyPushedDown(KEY_LEFT_ARROW) then
+                mostRecentKey := "1"
+            end if
+        elsif (chars(KEY_RIGHT_ARROW)) then
+            instructions += "2"
+            if KeyPushedDown(KEY_RIGHT_ARROW) then
+                mostRecentKey := "2"
+            end if
+        else
+            instructions += "0"
+            mostRecentKey := "0"
         end if
-    elsif (chars(KEY_DOWN_ARROW)) then
-        instructions += "1"
-        if KeyPushedDown(KEY_DOWN_ARROW) then
-            mostRecentKey := "3"
+        
+        if (chars(KEY_UP_ARROW)) then
+            instructions += "2"
+            if KeyPushedDown(KEY_UP_ARROW) then
+                mostRecentKey := "4"
+            end if
+        elsif (chars(KEY_DOWN_ARROW)) then
+            instructions += "1"
+            if KeyPushedDown(KEY_DOWN_ARROW) then
+                mostRecentKey := "3"
+            end if
+        else
+            instructions += "0"
         end if
-    else
-        instructions += "0"
-    end if
-    
-    instructions += mostRecentKey
-    
-    %attack instructions
-    if not chars(KEY_DOWN_ARROW) then
-        if chars('q') then
-            instructions += "q"
-        elsif chars ('w') then
-            instructions += "w"
+        
+        instructions += mostRecentKey
+        
+        %attack instructions
+        if not chars(KEY_DOWN_ARROW) then
+            if chars('q') then
+                instructions += "q"
+            elsif chars ('w') then
+                instructions += "w"
+            else
+                instructions += "n"
+            end if
         else
             instructions += "n"
         end if
+        
+        if netLimiter < 5 then
+            put: netStream,instructions
+            netLimiter += 1
+        end if
+
+        if Net.LineAvailable(netStream) then
+            get:netStream, positions:*
+            %First, check if it's game over
+            if positions(1) = "G" then
+                winner := strint(positions(2))
+                exit
+            end if
+            %positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives
+            toDoArray := split(positions," ")
+            Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
+            Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
+            netLimiter -= 1
+        end if
+
+        updateBackground
+        Sprite.Show(otherPlayer.sprite)
+        Sprite.Show(selfPlayer.sprite)
+        %delay(1)
+    end loop
+    playEndScreen
+    if not playAgain then
+        put: netStream, "no"
+        exit
     else
-        instructions += "n"
+        put: netStream, "yes"
     end if
-    
-    if netLimiter < 5 then
-        put: netStream,instructions
-        netLimiter += 1
-    end if
-
-	if Net.LineAvailable(netStream) then
-	    get:netStream, positions:*
-	%positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives
-	    toDoArray := split(positions," ")
-	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
-	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
-	    netLimiter -= 1
-	    %Draw.FillOval(strint(toDoArray(1))+screenXS,strint(toDoArray(2))+screenY,5,5,black)
-	    %Draw.FillOval(strint(toDoArray(3))+screenX,strint(toDoArray(4))+screenY,5,5,black)
-	end if
-
-    updateBackground
-    Sprite.Show(otherPlayer.sprite)
-    Sprite.Show(selfPlayer.sprite)
-    %delay(1)
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
