@@ -322,7 +322,7 @@ class PlayerStatusDisplay
     %picture stuff
     %bascically, in order for the display to be drawn over the background, it has to be a sprite
     %to make the picture for the sprite, we draw everything that is needed outside of the display, and
-	%we take a picture of that and put it into the sprite
+        %we take a picture of that and put it into the sprite
     var picSprite : int
     var spritePic : int
     var offScreenX := 0
@@ -331,15 +331,15 @@ class PlayerStatusDisplay
     picSprite := Sprite.New (spritePic)
     
     proc _init (lives : int)
-	numLives := lives
+        numLives := lives
     end _init
     
     proc updatePic ()
-	
+        
     end updatePic
     
     proc display ()
-	
+        
     end display
     
 end PlayerStatusDisplay
@@ -454,7 +454,7 @@ class Character
     %Character abilities stuff
     var ability : int := 1%current ability player is performing
     var frameNums : int := 0 %frame number in an ability
-	var abilXIncr : int %how much does the character move horizontally each frame during the ability?
+        var abilXIncr : int %how much does the character move horizontally each frame during the ability?
     var abilYIncr : int %same for vertically
     
     %Character movement stuff
@@ -471,13 +471,13 @@ class Character
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertX (x_, screenX : real) : int
-	result round (x_ - screenX)
+        result round (x_ - screenX)
     end convertX
     
     %converts world coordinates to screen coordintes
     %screenX is the location of the BOTTOM LEFT of the screen IN THE WORLD
     function convertY (y_, screenY : real) : int
-	result round (y_ - screenY)
+        result round (y_ - screenY)
     end convertY
     
     proc knockBack (cX, cY, pX, pY : int, power: real) %cX,cY is center of other player, pX, pY is where character was hit
@@ -704,7 +704,7 @@ class Character
         ^(oP).getHit(round(hitX),round(hitY),cX,cY,ability)
         
         result intstr(ability) + " " + intstr(frameNums) + " " + intstr(dir)
-	
+        
     end update
     
 end Character
@@ -773,90 +773,90 @@ procedure updateScreen
     
     %find leftMost and rightMost
     if ^ (player1).x < ^ (player2).x then
-	%if player 1 is to the left of player 2 and inside the world boundaries
-	if ^ (player1).x - ^ (player1).w / 2 > 0 then
-	    %player 1's x is leftmost
-	    leftMost := round ( ^ (player1).x - ^ (player1).w / 2)
-	else
-	    leftMost := 0
-	end if
-	
-	%This means that player 2 is to the right of player 1
-	if ^ (player2).x + ^ (player2).w / 2 < worldLength then
-	    %player 2's x is rightmost
-	    rightMost := round ( ^ (player2).x + ^ (player2).w / 2)
-	else
-	    rightMost := worldLength
-	end if
+        %if player 1 is to the left of player 2 and inside the world boundaries
+        if ^ (player1).x - ^ (player1).w / 2 > 0 then
+            %player 1's x is leftmost
+            leftMost := round ( ^ (player1).x - ^ (player1).w / 2)
+        else
+            leftMost := 0
+        end if
+        
+        %This means that player 2 is to the right of player 1
+        if ^ (player2).x + ^ (player2).w / 2 < worldLength then
+            %player 2's x is rightmost
+            rightMost := round ( ^ (player2).x + ^ (player2).w / 2)
+        else
+            rightMost := worldLength
+        end if
     else
-	%player 2 is to the left of player 1
-	if ^ (player2).x - ^ (player2).w / 2 > 0 then
-	    %player 1's x is leftmost
-	    leftMost := round ( ^ (player2).x - ^ (player2).w / 2)
-	else
-	    leftMost := 0
-	end if
-	
-	%This means that player 1 is to the right of player 2
-	if ^ (player1).x + ^ (player1).w / 2 < worldLength then
-	    %player 1's x is leftmost
-	    rightMost := round ( ^ (player1).x + ^ (player1).w / 2)
-	else
-	    rightMost := worldLength
-	end if
+        %player 2 is to the left of player 1
+        if ^ (player2).x - ^ (player2).w / 2 > 0 then
+            %player 1's x is leftmost
+            leftMost := round ( ^ (player2).x - ^ (player2).w / 2)
+        else
+            leftMost := 0
+        end if
+        
+        %This means that player 1 is to the right of player 2
+        if ^ (player1).x + ^ (player1).w / 2 < worldLength then
+            %player 1's x is leftmost
+            rightMost := round ( ^ (player1).x + ^ (player1).w / 2)
+        else
+            rightMost := worldLength
+        end if
     end if
     
     %find topmost and bottomMost
     if ^ (player1).y < ^ (player2).y then
-	%if player 1 is under player 2 and inside the world boundaries
-	if ^ (player1).y - ^ (player1).h / 2 > 0 then
-	    %player 1's y is bottommost
-	    bottomMost := round ( ^ (player1).y - ^ (player1).h / 2)
-	else
-	    bottomMost := 0
-	end if
-	
-	%This means that player 2 above player 1
-	if ^ (player2).y + ^ (player2).h / 2 < worldHeight then
-	    %player 1's x is topmost
-	    topMost := round ( ^ (player2).y + ^ (player2).h / 2)
-	else
-	    topMost := worldHeight
-	end if
+        %if player 1 is under player 2 and inside the world boundaries
+        if ^ (player1).y - ^ (player1).h / 2 > 0 then
+            %player 1's y is bottommost
+            bottomMost := round ( ^ (player1).y - ^ (player1).h / 2)
+        else
+            bottomMost := 0
+        end if
+        
+        %This means that player 2 above player 1
+        if ^ (player2).y + ^ (player2).h / 2 < worldHeight then
+            %player 1's x is topmost
+            topMost := round ( ^ (player2).y + ^ (player2).h / 2)
+        else
+            topMost := worldHeight
+        end if
     else
-	%if player 2 is under player 1 and inside the world boundaries
-	if ^ (player2).y - ^ (player2).h / 2 > 0 then
-	    %player 1's y is bottommost
-	    bottomMost := round ( ^ (player2).y - ^ (player2).h / 2)
-	else
-	    bottomMost := 0
-	end if
-	
-	%This means that player 1 above player 2
-	if ^ (player1).y + ^ (player1).h / 2 < worldHeight then
-	    %player 1's x is topmost
-	    topMost := round ( ^ (player1).y + ^ (player1).h / 2)
-	else
-	    topMost := worldHeight
-	end if
+        %if player 2 is under player 1 and inside the world boundaries
+        if ^ (player2).y - ^ (player2).h / 2 > 0 then
+            %player 1's y is bottommost
+            bottomMost := round ( ^ (player2).y - ^ (player2).h / 2)
+        else
+            bottomMost := 0
+        end if
+        
+        %This means that player 1 above player 2
+        if ^ (player1).y + ^ (player1).h / 2 < worldHeight then
+            %player 1's x is topmost
+            topMost := round ( ^ (player1).y + ^ (player1).h / 2)
+        else
+            topMost := worldHeight
+        end if
     end if
     
     
     %update screenX and screenY
     screenX := round ((rightMost + leftMost) / 2 - maxx / 2)
     if screenX < 0 then
-	screenX := 0
+        screenX := 0
     end if
     if screenX > worldLength - maxx then
-	screenX := worldLength - maxx
+        screenX := worldLength - maxx
     end if
     
     screenY := round ((bottomMost + topMost) / 2 - maxy / 2)
     if screenY < 0 then
-	screenY := 0
+        screenY := 0
     end if
     if screenY > worldHeight - maxy then
-	screenY := worldHeight - maxy
+        screenY := worldHeight - maxy
     end if
     
     %put maxx
@@ -882,7 +882,22 @@ var instructions1, instructions2 : string := "00n" %instructions sent by client
 var picStuff1, picStuff2 : string
 
 loop
-    
+    new Character, player1
+new Character, player2
+^ (player1).x := 565
+^ (player1).xDestination := 565
+^ (player1).y := 365
+^ (player1).yDestination := 365
+^ (player1).h := 2
+^ (player1).w := 2
+^ (player1).dir := 2
+^ (player2).x := 1318
+^ (player2).xDestination := 1318
+^ (player2).y := 365
+^ (player2).yDestination := 365
+^ (player2).h := 2
+^ (player2).w := 2
+^ (player2).dir := 1
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
     loop
@@ -933,24 +948,36 @@ loop
             put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
             put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
             
+            put  intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
+            put  intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
         end if
+        delay(5)
     end loop
     %check client input on playing again
     loop
-        if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
+        if Net.LineAvailable (stream1) then
             get:stream1,instructions1
-            get:stream2,instructions2
-            if instructions1 = "yes" and instructions2 = "yes" then
-                put:stream1, "go"
-                put:stream2, "go"
-                exit
-            elsif instructions1 = "no" or instructions2 = "no" then
-                put:stream1, "no"
-                put:stream2, "no"
+            if instructions1 = "yes" or instructions1 = "no" then
                 exit
             end if
         end if
     end loop
+    loop
+        if Net.LineAvailable (stream2) then
+            get:stream2,instructions2
+            if instructions2 = "yes" or instructions2 = "no" then
+                exit
+            end if
+        end if
+    end loop
+    if instructions1 = "yes" and instructions2 = "yes" then
+        put:stream1, "go"
+        put:stream2, "go"
+    elsif instructions1 = "no" or instructions2 = "no" then
+        put:stream1, "no"
+        put:stream2, "no"
+        exit
+    end if
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
