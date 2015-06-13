@@ -931,18 +931,21 @@ loop
         end if
     end loop
     %check client input on playing again
-    if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
-        get:stream1,instructions1
-        get:stream2,instructions2
-        if instructions1 = "yes" and instructions2 = "yes" then
-            put:stream1, "go"
-            put:stream2, "go"
-        else
-            put:stream1, "no"
-            put:stream2, "no"
-            exit
+    loop
+        if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
+            get:stream1,instructions1
+            get:stream2,instructions2
+            if instructions1 = "yes" and instructions2 = "yes" then
+                put:stream1, "go"
+                put:stream2, "go"
+                exit
+            elsif instructions1 = "no" or instructions2 = "no" then
+                put:stream1, "no"
+                put:stream2, "no"
+                exit
+            end if
         end if
-    end if
+    end loop
 end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
