@@ -181,6 +181,23 @@ new PlayerStatusDisplay,pSD2
 var winner : int %the winner
 var playAgain : boolean %are we playing again?
 
+%--------------------------MORE PICTURES---------------------------%
+var youLosePic : int
+youLosePic := Pic.FileNew("Pictures/YouLose.bmp")
+Pic.SetTransparentColor(youLosePic,0)
+var youWinPic : int
+youWinPic := Pic.FileNew("Pictures/YouLose.bmp")
+Pic.SetTransparentColor(youWinPic,0)
+var playNowPic : int
+playNowPic := Pic.FileNew("Pictures/playNow.bmp")
+var playAgainPic : int
+playAgainPic := Pic.FileNew("Pictures/playAgain.bmp")
+Pic.SetTransparentColor(playAgainPic,0)
+var exitPic : int
+exitPic := Pic.FileNew("Pictures/Exit.bmp")
+Pic.SetTransparentColor(exitPic,0)
+
+
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                                  END VARIABLES                                                            %
@@ -347,17 +364,36 @@ function split(str:string, regex:string):array 1..14 of string
     var pastSpace := 0
     var count := 0
     for i:1..length(str)+1
-	if i = length(str)+1 or str(i) = " " then
-	    count += 1
-	    a(count) := str(pastSpace+1..i-1)
-	    pastSpace := i
-	end if
+        if i = length(str)+1 or str(i) = " " then
+            count += 1
+            a(count) := str(pastSpace+1..i-1)
+            pastSpace := i
+        end if
     end for
     result a
 end split
 
 procedure playEndScreen
-    
+    %init sprites
+    var winDisplay : int
+    var chosenWinPic : int
+    var playAgainButton : int
+    var exitButton : int
+    %choose which winning picture to display
+    if winner = playerNum then
+        chosenWinPic := youWinPic
+    else
+        chosenWinPic := youLosePic
+    end if
+    %make sprites
+    winDisplay := Sprite.New(chosenWinPic)
+    playAgainButton := Sprite.New(playAgainPic)
+    exitButton := Sprite.New(exitPic)
+    %show stuff
+    Sprite.Animate(winDisplay,chosenWinPic,round(maxx/2-Pic.Width(chosenWinPic)/2),round(maxy/2),false)
+    Sprite.Animate(playAgainButton,playAgainPic,round(maxx/4-Pic.Width(playAgainPic)/2),round(maxy/4-Pic.Height(playAgainPic)/2),false)
+    Sprite.Animate(exitButton,exitPic,round(3*maxx/4-Pic.Width(exitPic)/2),round(maxy/4-Pic.Height(exitPic)/2),false)
+    playAgain := true
 end playEndScreen
 
 %For keypress detection
