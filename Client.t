@@ -30,6 +30,9 @@ type Character:
 	pic:int
 	sprite:int
     end record
+    
+%mouse buttons
+var x,y,button :int
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -393,6 +396,9 @@ procedure playEndScreen
     Sprite.Animate(winDisplay,chosenWinPic,round(maxx/2-Pic.Width(chosenWinPic)/2),round(maxy/2),false)
     Sprite.Animate(playAgainButton,playAgainPic,round(maxx/4-Pic.Width(playAgainPic)/2),round(maxy/4-Pic.Height(playAgainPic)/2),false)
     Sprite.Animate(exitButton,exitPic,round(3*maxx/4-Pic.Width(exitPic)/2),round(maxy/4-Pic.Height(exitPic)/2),false)
+    Sprite.Show(winDisplay)
+    Sprite.Show(playAgainButton)
+    Sprite.Show(exitButton)
     delay(5000)
     playAgain := true
 end playEndScreen
