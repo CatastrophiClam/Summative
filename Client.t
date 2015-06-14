@@ -86,7 +86,7 @@ var startStr : string  %prompt by server to start
 var endGame := false %should we stop the program?
 
 %Timer stuff
-var gameTime := "" %time passed
+var gameTime := 0 %time passed
 var timeString := ""  %display time
 var font : int
 font := Font.New("Arial:20")
@@ -115,6 +115,8 @@ var backgroundPic : int
 backgroundPic := Pic.FileNew ("Background.jpg")
 var backgroundSprite : int
 backgroundSprite := Sprite.New (backgroundPic)
+
+%----------------SOUNDS STUFF-------------------%
 
 %---------------------------------PLAYER STUFF----------------------------------%
 
@@ -440,9 +442,10 @@ procedure playEndScreen
 end playEndScreen
 
 procedure displayTime
-    %var minutes := floor(gameTime/60)
-    %var seconds := gameTime mod 60
-    timeString := gameTime %intstr(minutes)+":"+intstr(seconds)
+
+    var minutes := floor(gameTime/60)
+    var seconds := gameTime mod 60
+    timeString := intstr(minutes)+":"+intstr(seconds)
     Draw.FillBox(timeDrawX-10,timeDrawY-10,timeDrawX+200,timeDrawY+100,white)
     Font.Draw(timeString,timeDrawX,timeDrawY,font,black)
     timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
@@ -479,6 +482,9 @@ end KeyHeldDown
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
+%Super Bash Bros?
+%Fire Bros?
+%Street Brawl?
 
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -512,6 +518,7 @@ Input.KeyDown (chars)
 
 %This loop is whole program
 loop
+    netLimiter := 0
     %wait for all players to be connected
     loop
 	if Net.LineAvailable (netStream) then
@@ -530,6 +537,7 @@ loop
     end if
     %This loop is one game
     loop
+
 	instructions := ""
 	charsLast := chars
 	Input.KeyDown (chars)
@@ -594,12 +602,12 @@ loop
 		winner := strint (positions (2))
 		exit
 	    end if
-	    %positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives
+	    %positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives, time
 
 	    toDoArray := split(positions," ")
 	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
 	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
-	    gameTime := positions(15)
+	    gameTime := strint(toDoArray(15))
 	    netLimiter -= 1
 	end if
 
@@ -609,6 +617,7 @@ loop
 	Sprite.Show(otherPlayer.sprite)
 	Sprite.Show(selfPlayer.sprite)
 	delay(10)
+
     end loop
     playEndScreen
     if not playAgain then
