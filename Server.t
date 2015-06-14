@@ -690,8 +690,8 @@ class Character
         %see if player died
         if x < 0 or x > worldLength or y < 0 or y > worldHeight then
             %if player dies, reset stuff and deduct a life
-            %lives -= 1
-            %damage := 0
+            lives -= 1
+            damage := 0
             actionLock := false
             canJump := true
             doingAction := false
@@ -893,6 +893,7 @@ var instructions1, instructions2 : string := "000n" %instructions sent by client
 var picStuff1, picStuff2 : string
 
 loop
+    %reset stuff for new game
     new Character, player1
     new Character, player2
     ^ (player1).x := 565
