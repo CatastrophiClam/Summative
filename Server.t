@@ -915,7 +915,7 @@ loop
     ^ (player2).lives := 5
     ^ (player2).damage := 0
     gameOver := false
-    startTime := Time.Sec
+    startTime := Time.Sec()
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
     loop
@@ -927,9 +927,7 @@ loop
             get : stream2, instructions2
             
             updateScreen
-        else
-            %put instructions1
-            %put instructions2
+        elsif length(instructions1) = 4 and length(instructions2) = 4 then
             picStuff1 := ^ (player1).update (instructions1,player2)
             picStuff2 := ^ (player2).update (instructions2,player1)
             %send player info back
@@ -963,8 +961,7 @@ loop
             end if
             
             %update time
-            gameTime := Time.Sec-startTime
-            put gameTime
+            gameTime := Time.Sec()-startTime
             
             %PLAYER INFO FORM:
             %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
@@ -972,8 +969,8 @@ loop
             put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " " + intstr(gameTime)
             put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)+ " " + intstr(gameTime)
             
-            %put  intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
-            %put  intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
+            put  intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
+            put  intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
         end if
         delay(5)
     end loop
@@ -997,6 +994,7 @@ loop
     if instructions1 = "yes" and instructions2 = "yes" then
         put:stream1, "go"
         put:stream2, "go"
+        put "go"
     elsif instructions1 = "no" or instructions2 = "no" then
         put:stream1, "no"
         put:stream2, "no"
