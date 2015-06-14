@@ -428,11 +428,11 @@ class Character
     moveStuff(7).yIncrement :=0
     moveStuff(7).frames :=5
     moveStuff(8).speed := 27
-    moveStuff(8).xIncrement :=20
+    moveStuff(8).xIncrement :=10
     moveStuff(8).yIncrement :=200
     moveStuff(8).frames :=13
-    moveStuff(9).speed := 1
-    moveStuff(9).xIncrement :=40
+    moveStuff(9).speed := 100
+    moveStuff(9).xIncrement :=60
     moveStuff(9).yIncrement :=0
     moveStuff(9).frames :=4
     moveStuff(10).speed := 24
@@ -629,10 +629,15 @@ class Character
         %update how player looks
         frameNums += 1
         if frameNums > moveStuff(ability).frames then
-            frameNums := 1
+            frameNums := moveStuff(ability).frames
+            
+        end if
+        
+        if abs(xDestination-x) < 10 and abs(yDestination-y) < 10 then
             doingAction := false
             actionLock := false
             ability := 1
+            frameNums := 1
         end if
         
         %update player position
@@ -655,6 +660,7 @@ class Character
                 knockedBack := false
             end if
         else
+            put moveStuff(ability).speed
             x += 1/moveStuff(ability).speed*(xDestination-x)
             y += 1/moveStuff(ability).speed*(yDestination-y)
             
@@ -961,7 +967,7 @@ loop
             end if
             
             %update time
-            gameTime := Time.Sec()-startTime
+            gameTime := 300-(Time.Sec()-startTime)
             
             %PLAYER INFO FORM:
             %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y

@@ -90,13 +90,6 @@ var gameTime := 0 %time passed
 var timeString := ""  %display time
 var font : int
 font := Font.New("Arial:20")
-var timeDrawX := 0
-var timeDrawY := 300
-var timeSprite : int
-var timePic : int
-timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
-timeSprite := Sprite.New(timePic)
-Sprite.SetHeight(timeSprite,10)
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
@@ -445,13 +438,7 @@ procedure displayTime
     var minutes := floor(gameTime/60)
     var seconds := gameTime mod 60
     timeString := intstr(minutes)+":"+intstr(seconds)
-    %Draw.FillBox(timeDrawX-10,timeDrawY-10,timeDrawX+200,timeDrawY+100,white)
-    %Font.Draw(timeString,timeDrawX,timeDrawY,font,black)
-    %timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
-    %Pic.SetTransparentColor(timePic,0)
     Font.Draw(timeString,round(maxx/2)-Font.Width(timeString,font), maxy - 40,font,black)
-    %Sprite.Show(timeSprite)
-    %Pic.Free(timePic)
 end displayTime
 
 %For keypress detection
