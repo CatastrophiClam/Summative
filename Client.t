@@ -96,10 +96,11 @@ var timeSprite : int
 var timePic : int
 timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
 timeSprite := Sprite.New(timePic)
+Sprite.SetHeight(timeSprite,10)
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
-var serverAddress : string := "76.10.165.5"
+var serverAddress : string := "192.168.5.60"
 var serverPort : int
 var playerNum : int
 
@@ -139,7 +140,7 @@ for i : 1 .. 5
 end for
 
 % Kneel
-pictures (3, 1, 2) := Pic.FileNew ("Ken/Crouch.gif")
+pictures (3, 1, 2) := Pic.FileNew ("Ken/Crouch1.gif")
 pictures (3, 1, 1) := Pic.Mirror (pictures (3, 1, 2))
 
 % Jump
@@ -162,7 +163,7 @@ end for
 
 % Kick - kick
 for i : 1 .. 5
-    pictures (7, i, 2) := Pic.FileNew ("Ken/Kick" + intstr (i) + ".gif")
+    pictures (7, i, 2) := Pic.FileNew ("Ken/LightMediumKick" + intstr (i) + ".gif")
     pictures (7, i, 1) := Pic.Mirror (pictures (7, i, 2))
 end for
 
@@ -444,11 +445,11 @@ procedure displayTime
     timeString := intstr(minutes)+":"+intstr(seconds)
     Draw.FillBox(timeDrawX-10,timeDrawY-10,timeDrawX+200,timeDrawY+100,white)
     Font.Draw(timeString,timeDrawX,timeDrawY,font,black)
-    timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
+    timePic := pictures (6, 1, 2)%Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
     Pic.SetTransparentColor(timePic,0)
     Sprite.Animate(timeSprite,timePic, round(maxx/2), maxy - 40,true)
     Sprite.Show(timeSprite)
-    Pic.Free(timePic)
+    %Pic.Free(timePic)
 end displayTime
 
 %For keypress detection
@@ -566,7 +567,7 @@ loop
 	    instructions += "0"
 	end if
 
-	instructions += "9"%mostRecentKey
+	instructions += mostRecentKey
 
 	%attack instructions
 	if not chars (KEY_DOWN_ARROW) then
@@ -598,12 +599,12 @@ loop
 	    toDoArray := split(positions," ")
 	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
 	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
-        gameTime := strint(positions(15))
+	    gameTime := strint(positions(15))
 	    netLimiter -= 1
 	end if
 
 	updateBackground
-    displayTime
+	displayTime
 
 	Sprite.Show(otherPlayer.sprite)
 	Sprite.Show(selfPlayer.sprite)
