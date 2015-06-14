@@ -87,7 +87,7 @@ var endGame := false %should we stop the program?
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
-var serverAddress : string := "192.168.5.60"
+var serverAddress : string := "76.10.165.5"
 var serverPort : int
 var playerNum : int
 
@@ -116,59 +116,59 @@ var pictures : array 1 .. 10, 1 .. 13, 1 .. 2 of int
 
 % Idle
 for i : 1 .. 4
-    pictures (1, i, 2) := Pic.FileNew ("Ken/idle" + intstr (i) + ".jpeg")
+    pictures (1, i, 2) := Pic.FileNew ("Ken/Idle" + intstr (i) + ".gif")
     pictures (1, i, 1) := Pic.Mirror (pictures (1, i, 2))
 end for
 
 % Move
 for i : 1 .. 5
-    pictures (2, i, 2) := Pic.FileNew ("Ken/move" + intstr (i) + ".jpeg")
+    pictures (2, i, 2) := Pic.FileNew ("Ken/Walk" + intstr (i) + ".gif")
     pictures (2, i, 1) := Pic.Mirror (pictures (2, i, 2))
 end for
 
 % Kneel
-pictures (3, 1, 2) := Pic.FileNew ("Ken/kneel.jpeg")
+pictures (3, 1, 2) := Pic.FileNew ("Ken/Crouch.gif")
 pictures (3, 1, 1) := Pic.Mirror (pictures (3, 1, 2))
 
 % Jump
 for i : 1 .. 7
-    pictures (4, i, 2) := Pic.FileNew ("Ken/jump" + intstr (i) + ".jpeg")
+    pictures (4, i, 2) := Pic.FileNew ("Ken/Jump" + intstr (i) + ".gif")
     pictures (4, i, 1) := Pic.Mirror (pictures (4, i, 2))
 end for
 
 % Roundhouse - side kick
 for i : 1 .. 5
-    pictures (5, i, 2) := Pic.FileNew ("Ken/roundhouse" + intstr (i) + ".jpeg")
+    pictures (5, i, 2) := Pic.FileNew ("Ken/HardKick" + intstr (i) + ".gif")
     pictures (5, i, 1) := Pic.Mirror (pictures (5, i, 2))
 end for
 
 %Punch - punch
 for i : 1 .. 3
-    pictures (6, i, 2) := Pic.FileNew ("Ken/punch" + intstr (i) + ".jpeg")
+    pictures (6, i, 2) := Pic.FileNew ("Ken/LightPunch" + intstr (i) + ".gif")
     pictures (6, i, 1) := Pic.Mirror (pictures (6, i, 2))
 end for
 
 % Kick - kick
 for i : 1 .. 5
-    pictures (7, i, 2) := Pic.FileNew ("Ken/kick" + intstr (i) + ".jpeg")
+    pictures (7, i, 2) := Pic.FileNew ("Ken/Kick" + intstr (i) + ".gif")
     pictures (7, i, 1) := Pic.Mirror (pictures (7, i, 2))
 end for
 
 % Tatsumaki  - up kick
 for i : 1 .. 13
-    pictures (8, i, 2) := Pic.FileNew ("Ken/tatsumaki" + intstr (i) + ".jpeg")
+    pictures (8, i, 2) := Pic.FileNew ("Ken/Tatsumaki" + intstr (i) + ".gif")
     pictures (8, i, 1) := Pic.Mirror (pictures (8, i, 2))
 end for
 
 % Hadoken - side punch
 for i : 1 .. 4
-    pictures (9, i, 2) := Pic.FileNew ("Ken/hadoken" + intstr (i) + ".jpeg")
+    pictures (9, i, 2) := Pic.FileNew ("Ken/Hadoken" + intstr (i) + ".gif")
     pictures (9, i, 1) := Pic.Mirror (pictures (9, i, 2))
 end for
 
 % Shoryuken - up punch
 for i : 1 .. 7
-    pictures (10, i, 2) := Pic.FileNew ("Ken/shoryuken" + intstr (i) + ".jpeg")
+    pictures (10, i, 2) := Pic.FileNew ("Ken/FieryShoryuken" + intstr (i) + ".gif")
     pictures (10, i, 1) := Pic.Mirror (pictures (10, i, 2))
 end for
 
@@ -423,7 +423,7 @@ procedure playEndScreen
     Sprite.Hide(winDisplay)
     Sprite.Hide(playAgainButton)
     Sprite.Hide(exitButton)
->>>>>>> 79471a6aea0d69c17408a0ceaa2f320ca2647844
+
 end playEndScreen
 
 %For keypress detection
@@ -578,20 +578,7 @@ loop
 	end if
 
 	updateBackground
-<<<<<<< HEAD
-	Sprite.Show (otherPlayer.sprite)
-	Sprite.Show (selfPlayer.sprite)
 
-	delay (10)
-
-    end loop
-    playEndScreen
-    if not playAgain then
-	put : netStream, "no"
-	exit
-    else
-	put : netStream, "yes"
-=======
 	Sprite.Show(otherPlayer.sprite)
 	Sprite.Show(selfPlayer.sprite)
 	delay(10)
@@ -602,7 +589,7 @@ loop
 	exit
     else
 	put: netStream, "yes"
->>>>>>> 79471a6aea0d69c17408a0ceaa2f320ca2647844
+
     end if
 end loop
 
