@@ -566,7 +566,7 @@ loop
 	    instructions += "0"
 	end if
 
-	instructions += 9%mostRecentKey
+	instructions += "9"%mostRecentKey
 
 	%attack instructions
 	if not chars (KEY_DOWN_ARROW) then
