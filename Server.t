@@ -110,15 +110,15 @@ pictures (3, 1, 1).pic := Pic.Mirror (pictures (3, 1, 2).pic)
 pictures (3, 1, 1).hitX := 70 - pictures (3, 1, 2).hitX
 pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
 
-    %hitboxes
-    get:boxFile, pictures (3, 1, 2).hBX1
-    get:boxFile, pictures (3, 1, 2).hBY1
-    get:boxFile, pictures (3, 1, 2).hBX2
-    get:boxFile, pictures (3, 1, 2).hBY2
-    pictures (3, 1, 1).hBX2 := 70-pictures (3, 1, 2).hBX1
-    pictures (3, 1, 1).hBY1 := pictures (3, 1, 2).hBY1
-    pictures (3, 1, 1).hBX1 := 70-pictures (3, 1, 2).hBX2
-    pictures (3, 1, 1).hBY2 := pictures (3, 1, 2).hBY2
+%hitboxes
+get:boxFile, pictures (3, 1, 2).hBX1
+get:boxFile, pictures (3, 1, 2).hBY1
+get:boxFile, pictures (3, 1, 2).hBX2
+get:boxFile, pictures (3, 1, 2).hBY2
+pictures (3, 1, 1).hBX2 := 70-pictures (3, 1, 2).hBX1
+pictures (3, 1, 1).hBY1 := pictures (3, 1, 2).hBY1
+pictures (3, 1, 1).hBX1 := 70-pictures (3, 1, 2).hBX2
+pictures (3, 1, 1).hBY2 := pictures (3, 1, 2).hBY2
 
 % Jump
 for i : 1 .. 7
@@ -259,7 +259,7 @@ for i : 1 .. 7
     pictures (10, i, 1).hBX1 := 70-pictures (10, i, 2).hBX1
     pictures (10, i, 1).hBY2 := pictures (10, i, 2).hBY1
 end for
-
+    
 %---------------------------------WORLD STUFF-----------------------------------%
 
 var worldLength, worldHeight : int  %actual width and height of world
@@ -343,14 +343,14 @@ class PlayerStatusDisplay
     end display
     
 end PlayerStatusDisplay
-    
+
 %NOTE HERE'S HOW CHARACTER MOVEMENT WORKS: character has a destination: this is the point his center is moving towards. moving the character with
 %the keyboard changes the destination, and he moves towards it with his movement speed
 %represents a character in the game
 class Character
     
     import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures, gameOver, worldLength, worldHeight
-
+    
     export var x, var y, var xDestination, var yDestination, var h, var w, var dir, var lives, var damage, var charType, update, getHit %exported variables
     
     %Character attributes
@@ -454,7 +454,7 @@ class Character
     %Character abilities stuff
     var ability : int := 1%current ability player is performing
     var frameNums : int := 0 %frame number in an ability
-        var abilXIncr : int %how much does the character move horizontally each frame during the ability?
+    var abilXIncr : int %how much does the character move horizontally each frame during the ability?
     var abilYIncr : int %same for vertically
     
     %Character movement stuff
@@ -552,11 +552,11 @@ class Character
             end if
             if (instructions (2) = "2") then %jump
                 if canJump then
-                ability := 4
-                canJump := false  %can't jump after jumping once
-                doingAction := true
-                jumping := true
-                yDestination += moveStuff(ability).yIncrement
+                    ability := 4
+                    canJump := false  %can't jump after jumping once
+                    doingAction := true
+                    jumping := true
+                    yDestination += moveStuff(ability).yIncrement
                 end if
             end if
         end if
@@ -565,10 +565,10 @@ class Character
         if doingAction = false then
             ability := 1
             
-        %UPDATE PLAYER ABILITIES
+            %UPDATE PLAYER ABILITIES
         elsif not actionLock and canDoAction then
             if instructions (4) = "q" then
-                    
+                
                 if instructions (3) = "1" then
                     ability := 9
                     xDestination -= moveStuff(ability).xIncrement
@@ -625,7 +625,7 @@ class Character
                 end if
             end if
         end if
-
+        
         %update how player looks
         frameNums += 1
         if frameNums > moveStuff(ability).frames then
@@ -644,10 +644,10 @@ class Character
             %if character is knocked into the ground, he bounces
             if bounces then
                 if x > platX1 and x < platX2 and y < platY then
-                xDestination := bounceX
-                yDestination := bounceY
-                bounces := false
-                canDoAction := true
+                    xDestination := bounceX
+                    yDestination := bounceY
+                    bounces := false
+                    canDoAction := true
                 end if
             end if
             %see if knocked back is finished
@@ -671,7 +671,7 @@ class Character
                     canDoAction := true
                     yDestination := platY
                 end if
-            %Player isn't over platform, make him fall
+                %Player isn't over platform, make him fall
             else
                 yDestination -= fallSpeed
             end if

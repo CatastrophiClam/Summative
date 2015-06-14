@@ -196,10 +196,17 @@ new PlayerStatusDisplay, pSD2
 var winner : int %the winner
 var playAgain : boolean %are we playing again?
 
-var statusLives : int
+var statusLives : array 1 .. 5 of int
 for i : 1 .. 5
-    statusLives := Pic.FileNew ("Pictures/Lives" + instr (i) + ".gif")
+    statusLives (i) := Pic.FileNew ("Pictures/Lives" + intstr (i) + ".gif")
 end for
+
+var lifeIndicator1 := Sprite.New (statusLives(5))
+var Sprite.Animate (lifeIndicator1, statusLives(^ (pSD1).numLives), 100, 100, false)
+
+var lifeIndicator2 := Sprite.New (statusLives(^ (pSD2).numLives))
+Sprite.Animate (lifeIndicator1, statusLives(^ (pSD2).numLives), 300, 100, false)
+    
 
 
 %--------------------------MORE PICTURES---------------------------%
@@ -572,7 +579,7 @@ loop
 	    instructions += "0"
 	end if
 
-	instructions += "9"%mostRecentKey
+	instructions += "9" %mostRecentKey
 
 	%attack instructions
 	if not chars (KEY_DOWN_ARROW) then
@@ -604,7 +611,7 @@ loop
 	    toDoArray := split(positions," ")
 	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
 	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
-        gameTime := strint(positions(15))
+	gameTime := strint(positions(15))
 	    netLimiter -= 1
 	end if
 
