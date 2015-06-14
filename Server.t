@@ -64,7 +64,7 @@ var pictures : array 1 .. 10, 1 .. 13, 1 .. 2 of position
 
 % Idle
 for i : 1 .. 4
-    pictures (1, i, 2).pic := Pic.FileNew ("Ken/Idle" + intstr (i) + ".gif")
+    pictures (1, i, 2).pic := Pic.FileNew ("Ken/idle" + intstr (i) + ".jpeg")
     get: hitFile, pictures (1, i, 2).hitX
     get: hitFile, pictures (1, i, 2).hitY
     pictures (1, i, 1).pic := Pic.Mirror (pictures (1, i, 2).pic)
@@ -82,9 +82,9 @@ for i : 1 .. 4
     pictures (1, i, 1).hBY2 := pictures (1, i, 2).hBY2
 end for
     
-% Walk
+% Move
 for i : 1 .. 5
-    pictures (2, i, 2).pic := Pic.FileNew ("Ken/Walk" + intstr (i) + ".gif")
+    pictures (2, i, 2).pic := Pic.FileNew ("Ken/move" + intstr (i) + ".jpeg")
     get: hitFile, pictures (2, i, 2).hitX
     get: hitFile, pictures (2, i, 2).hitY
     pictures (2, i, 1).pic := Pic.Mirror (pictures (2, i, 2).pic)
@@ -102,8 +102,8 @@ for i : 1 .. 5
     pictures (2, i, 1).hBY2 := pictures (2, i, 2).hBY2
 end for
     
-% Crouch
-pictures (3, 1, 2).pic := Pic.FileNew ("Ken/Crouch1.gif")
+% Kneel
+pictures (3, 1, 2).pic := Pic.FileNew ("Ken/kneel.jpeg")
 get: hitFile, pictures (3, 1, 2).hitX
 get: hitFile, pictures (3, 1, 2).hitY
 pictures (3, 1, 1).pic := Pic.Mirror (pictures (3, 1, 2).pic)
@@ -122,7 +122,7 @@ pictures (3, 1, 1).hitY := pictures (3, 1, 2).hitY
 
 % Jump
 for i : 1 .. 7
-    pictures (4, i, 2).pic := Pic.FileNew ("Ken/Jump" + intstr (i) + ".gif")
+    pictures (4, i, 2).pic := Pic.FileNew ("Ken/jump" + intstr (i) + ".jpeg")
     get: hitFile, pictures (4, i, 2).hitX
     get: hitFile, pictures (4, i, 2).hitY
     pictures (4, i, 1).pic := Pic.Mirror (pictures (4, i, 2).pic)
@@ -140,9 +140,9 @@ for i : 1 .. 7
     pictures (4, i, 1).hBY2 := pictures (4, i, 2).hBY2
 end for
     
-% Hard Kick
+% Roundhouse
 for i : 1 .. 5
-    pictures (5, i, 2).pic := Pic.FileNew ("Ken/HardKick" + intstr (i) + ".gif")
+    pictures (5, i, 2).pic := Pic.FileNew ("Ken/roundhouse" + intstr (i) + ".jpeg")
     get: hitFile, pictures (5, i, 2).hitX
     get: hitFile, pictures (5, i, 2).hitY
     pictures (5, i, 1).pic := Pic.Mirror (pictures (5, i, 2).pic)
@@ -160,9 +160,9 @@ for i : 1 .. 5
     pictures (5, i, 1).hBY2 := pictures (5, i, 2).hBY2
 end for
     
-% Punch
+%Punch
 for i : 1 .. 3
-    pictures (6, i, 2).pic := Pic.FileNew ("Ken/LightPunch" + intstr (i) + ".gif")
+    pictures (6, i, 2).pic := Pic.FileNew ("Ken/punch" + intstr (i) + ".jpeg")
     get: hitFile, pictures (6, i, 2).hitX
     get: hitFile, pictures (6, i, 2).hitY
     pictures (6, i, 1).pic := Pic.Mirror (pictures (6, i, 2).pic)
@@ -182,7 +182,7 @@ end for
     
 % Kick
 for i : 1 .. 5
-    pictures (7, i, 2).pic := Pic.FileNew ("Ken/LightMediumKick" + intstr (i) + ".gif")
+    pictures (7, i, 2).pic := Pic.FileNew ("Ken/kick" + intstr (i) + ".jpeg")
     get: hitFile, pictures (7, i, 2).hitX
     get: hitFile, pictures (7, i, 2).hitY
     pictures (7, i, 1).pic := Pic.Mirror (pictures (7, i, 2).pic)
@@ -202,7 +202,7 @@ end for
     
 % Tatsumaki
 for i : 1 .. 13
-    pictures (8, i, 2).pic := Pic.FileNew ("Ken/Tatsumaki" + intstr (i) + ".gif")
+    pictures (8, i, 2).pic := Pic.FileNew ("Ken/tatsumaki" + intstr (i) + ".jpeg")
     get: hitFile, pictures (8, i, 2).hitX
     get: hitFile, pictures (8, i, 2).hitY
     pictures (8, i, 1).pic := Pic.Mirror (pictures (8, i, 2).pic)
@@ -222,7 +222,7 @@ end for
     
 % Hadoken
 for i : 1 .. 4
-    pictures (9, i, 2).pic := Pic.FileNew ("Ken/Hadoken" + intstr (i) + ".gif")
+    pictures (9, i, 2).pic := Pic.FileNew ("Ken/hadoken" + intstr (i) + ".jpeg")
     get: hitFile, pictures (9, i, 2).hitX
     get: hitFile, pictures (9, i, 2).hitY
     pictures (9, i, 1).pic := Pic.Mirror (pictures (9, i, 2).pic)
@@ -241,8 +241,8 @@ for i : 1 .. 4
 end for
     
 % Shoryuken
-for i : 1 .. 9
-    pictures (10, i, 2).pic := Pic.FileNew ("Ken/FieryShoryuken" + intstr (i) + ".gif")
+for i : 1 .. 7
+    pictures (10, i, 2).pic := Pic.FileNew ("Ken/shoryuken" + intstr (i) + ".jpeg")
     get: hitFile, pictures (10, i, 2).hitX
     get: hitFile, pictures (10, i, 2).hitY
     pictures (10, i, 1).pic := Pic.Mirror (pictures (10, i, 2).pic)
@@ -593,10 +593,7 @@ class Character
                     yDestination += moveStuff(ability).yIncrement
                     actionLock := true
                     canDoAction := false
-<<<<<<< HEAD
                     put "DOING"
-=======
->>>>>>> 069fa0efe34eeadd8d52d70ec9cde7a698bbf58d
                 end if
             elsif instructions (4) = "w" then
                 
@@ -624,10 +621,7 @@ class Character
                     yDestination += moveStuff(ability).yIncrement
                     actionLock := true
                     canDoAction := false
-<<<<<<< HEAD
                     put "DOING"
-=======
->>>>>>> 069fa0efe34eeadd8d52d70ec9cde7a698bbf58d
                 end if
             end if
         end if
@@ -1010,8 +1004,6 @@ end loop
 %                                                   END GAME SCREEN                                                         %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
-
-
 
 
 
