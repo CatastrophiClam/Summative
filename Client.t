@@ -127,7 +127,7 @@ for i : 1 .. 5
 end for
 
 % Kneel
-pictures (3, 1, 2) := Pic.FileNew ("Ken/Crouch.gif")
+pictures (3, 1, 2) := Pic.FileNew ("Ken/Crouch1.gif")
 pictures (3, 1, 1) := Pic.Mirror (pictures (3, 1, 2))
 
 % Jump
@@ -150,7 +150,7 @@ end for
 
 % Kick - kick
 for i : 1 .. 5
-    pictures (7, i, 2) := Pic.FileNew ("Ken/Kick" + intstr (i) + ".gif")
+    pictures (7, i, 2) := Pic.FileNew ("Ken/LightMediumKick" + intstr (i) + ".gif")
     pictures (7, i, 1) := Pic.Mirror (pictures (7, i, 2))
 end for
 
@@ -183,6 +183,12 @@ new PlayerStatusDisplay, pSD2
 
 var winner : int %the winner
 var playAgain : boolean %are we playing again?
+
+var statusLives : int
+for i : 1 .. 5
+    statusLives := Pic.FileNew ("Pictures/Lives" + instr (i) + ".gif")
+end for
+
 
 %--------------------------MORE PICTURES---------------------------%
 var youLosePic : int
