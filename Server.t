@@ -567,6 +567,7 @@ class Character
             
             %UPDATE PLAYER ABILITIES
         elsif not actionLock and canDoAction then
+
             if instructions (4) = "q" then
                 
                 if instructions (3) = "1" then
@@ -690,8 +691,8 @@ class Character
         %see if player died
         if x < 0 or x > worldLength or y < 0 or y > worldHeight then
             %if player dies, reset stuff and deduct a life
-            lives -= 1
-            damage := 0
+            %lives -= 1
+            %damage := 0
             actionLock := false
             canJump := true
             doingAction := false
@@ -927,8 +928,8 @@ loop
             
             updateScreen
         else
-            put instructions1
-            put instructions2
+            %put instructions1
+            %put instructions2
             picStuff1 := ^ (player1).update (instructions1,player2)
             picStuff2 := ^ (player2).update (instructions2,player1)
             %send player info back
@@ -961,11 +962,15 @@ loop
                 exit
             end if
             
+            %update time
+            gameTime := Time.Sec - startTime
+            put gameTime
+            
             %PLAYER INFO FORM:
             %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
-            
-            put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " " + intstr(Time.Sec-startTime)
-            put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)+ " " + intstr(Time.Sec-startTime)
+            %put Time.Sec-startTime
+            put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " " + intstr(gameTime)
+            put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)+ " " + intstr(gameTime)
             
             %put  intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
             %put  intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)

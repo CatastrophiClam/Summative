@@ -96,10 +96,13 @@ var timeSprite : int
 var timePic : int
 timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
 timeSprite := Sprite.New(timePic)
+Sprite.SetHeight(timeSprite,10)
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
 var serverAddress : string := "76.10.165.5"
+% 192.168.5.60
+% 76.10.165.5
 var serverPort : int
 var playerNum : int
 
@@ -201,11 +204,11 @@ for i : 1 .. 5
     statusLives (i) := Pic.FileNew ("Pictures/Lives" + intstr (i) + ".gif")
 end for
 
-var lifeIndicator1 := Sprite.New (statusLives(5))
-var Sprite.Animate (lifeIndicator1, statusLives(^ (pSD1).numLives), 100, 100, false)
+%var lifeIndicator1 := Sprite.New (statusLives(5))
+%var Sprite.Animate (lifeIndicator1, statusLives(^ (pSD1).numLives), 100, 100, false)
 
-var lifeIndicator2 := Sprite.New (statusLives(^ (pSD2).numLives))
-Sprite.Animate (lifeIndicator1, statusLives(^ (pSD2).numLives), 300, 100, false)
+%var lifeIndicator2 := Sprite.New (statusLives(^ (pSD2).numLives))
+%Sprite.Animate (lifeIndicator1, statusLives(^ (pSD2).numLives), 300, 100, false)
     
 
 
@@ -457,11 +460,11 @@ procedure displayTime
     timeString := intstr(minutes)+":"+intstr(seconds)
     Draw.FillBox(timeDrawX-10,timeDrawY-10,timeDrawX+200,timeDrawY+100,white)
     Font.Draw(timeString,timeDrawX,timeDrawY,font,black)
-    timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
+    timePic := pictures (6, 1, 2)%Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
     Pic.SetTransparentColor(timePic,0)
     Sprite.Animate(timeSprite,timePic, round(maxx/2), maxy - 40,true)
     Sprite.Show(timeSprite)
-    Pic.Free(timePic)
+    %Pic.Free(timePic)
 end displayTime
 
 %For keypress detection
@@ -579,7 +582,7 @@ loop
 	    instructions += "0"
 	end if
 
-	instructions += "9" %mostRecentKey
+	instructions += mostRecentKey
 
 	%attack instructions
 	if not chars (KEY_DOWN_ARROW) then
@@ -611,12 +614,13 @@ loop
 	    toDoArray := split(positions," ")
 	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
 	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
-	gameTime := strint(positions(15))
+	
+	    gameTime := strint(positions(15))
 	    netLimiter -= 1
 	end if
 
 	updateBackground
-    displayTime
+	displayTime
 
 	Sprite.Show(otherPlayer.sprite)
 	Sprite.Show(selfPlayer.sprite)
