@@ -460,7 +460,7 @@ procedure displayTime
     timeString := gameTime %intstr(minutes)+":"+intstr(seconds)
     Draw.FillBox(timeDrawX-10,timeDrawY-10,timeDrawX+200,timeDrawY+100,white)
     Font.Draw(timeString,timeDrawX,timeDrawY,font,black)
-    timePic := pictures (6, 1, 2)%Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
+    timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
     Pic.SetTransparentColor(timePic,0)
     Sprite.Animate(timeSprite,timePic, round(maxx/2), maxy - 40,true)
     Sprite.Show(timeSprite)
