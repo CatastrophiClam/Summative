@@ -962,12 +962,8 @@ loop
             end if
             
             %update time
-<<<<<<< HEAD
-            gameTime := Time.Sec - startTime
-            put gameTime
-=======
+
             gameTime := Time.Sec()-startTime
->>>>>>> 01956ca0d1f5ef2c82c481384ecbc922a3270b25
             
             %PLAYER INFO FORM:
             %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
