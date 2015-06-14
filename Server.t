@@ -507,7 +507,7 @@ class Character
     proc getHit(hX,hY,cX,cY,damageType:int) %hX,hY is point that got hit, cX,cY is center of other player, damageType is abiliy that caused the damage
         var damageTaken := damageArray(damageType)
         %if player did get hit
-        if hX > hitBoxX1 and hX < hitBoxX2 and hY > hitBoxY1 and hY < hitBoxY2 then
+        if hX > x and hX < x+Pic.Width(pictures(ability,frameNums,dir).pic) and hY > y and hY < y+Pic.Height(pictures(ability,frameNums,dir).pic) then
             damage += Rand.Int(damageTaken-6, damageTaken+6)
             actionLock := false
             knockedBack := true
@@ -568,13 +568,8 @@ class Character
         %UPDATE PLAYER ABILITIES
         elsif not actionLock and canDoAction then
             if instructions (4) = "q" then
-                if instructions (3) = "0" then
-                    ability := 6
-                    xDestination += moveStuff(ability).xIncrement
-                    yDestination += moveStuff(ability).yIncrement
-                    actionLock := true
-                    canDoAction := false
-                elsif instructions (3) = "1" then
+                    
+                if instructions (3) = "1" then
                     ability := 9
                     xDestination -= moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
@@ -592,15 +587,17 @@ class Character
                     yDestination += moveStuff(ability).yIncrement
                     actionLock := true
                     canDoAction := false
-                end if
-            elsif instructions (4) = "w" then
-                if instructions (3) = "0" then
-                    ability := 7
+                else
+                    ability := 6
                     xDestination += moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
                     actionLock := true
                     canDoAction := false
-                elsif instructions (3) = "1" then
+                    put "DOING"
+                end if
+            elsif instructions (4) = "w" then
+                
+                if instructions (3) = "1" then
                     ability := 5
                     xDestination -= moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
@@ -618,6 +615,13 @@ class Character
                     yDestination += moveStuff(ability).yIncrement
                     actionLock := true
                     canDoAction := false
+                else
+                    ability := 7
+                    xDestination += moveStuff(ability).xIncrement
+                    yDestination += moveStuff(ability).yIncrement
+                    actionLock := true
+                    canDoAction := false
+                    put "DOING"
                 end if
             end if
         end if
@@ -680,8 +684,8 @@ class Character
         hitBoxY1 := round(y+pictures(ability,frameNums,dir).hBY1)
         hitBoxX2 := round(x+pictures(ability,frameNums,dir).hBX2)
         hitBoxY2 := round(y+pictures(ability,frameNums,dir).hBY2)
-        cX := round((hitBoxX1+hitBoxX2)/2)
-        cY := round((hitBoxY1+hitBoxY2)/2)
+        cX := round((x+x+Pic.Width(pictures(ability,frameNums,dir).pic))/2)
+        cY := round((y+y+Pic.Height(pictures(ability,frameNums,dir).pic))/2)
         
         %see if player died
         if x < 0 or x > worldLength or y < 0 or y > worldHeight then
@@ -756,6 +760,9 @@ var pSD1, pSD2 : pointer to PlayerStatusDisplay
 new PlayerStatusDisplay, pSD1
 new PlayerStatusDisplay, pSD2
 
+%---------------Time Stuff----------------%
+var startTime : int  %time game started
+var gameTime := 0    %time passed
 
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -907,6 +914,7 @@ loop
     ^ (player2).lives := 5
     ^ (player2).damage := 0
     gameOver := false
+    startTime := Time.Sec
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
     loop
@@ -919,6 +927,8 @@ loop
             
             updateScreen
         else
+            put instructions1
+            put instructions2
             picStuff1 := ^ (player1).update (instructions1,player2)
             picStuff2 := ^ (player2).update (instructions2,player1)
             %send player info back
@@ -954,11 +964,11 @@ loop
             %PLAYER INFO FORM:
             %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
             
-            put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
-            put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
+            put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " " + intstr(Time.Sec-startTime)
+            put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)+ " " + intstr(Time.Sec-startTime)
             
-            put  intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
-            put  intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
+            %put  intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
+            %put  intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
         end if
         delay(5)
     end loop

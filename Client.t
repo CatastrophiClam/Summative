@@ -85,6 +85,18 @@ var chars, charsLast : array char of boolean
 var startStr : string  %prompt by server to start
 var endGame := false %should we stop the program?
 
+%Timer stuff
+var gameTime := 0 %time passed
+var timeString := ""  %display time
+var font : int
+font := Font.New("Arial:20")
+var timeDrawX := 0
+var timeDrawY := 3000
+var timeSprite : int
+var timePic : int
+timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
+timeSprite := Sprite.New(timePic)
+
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
 var serverAddress : string := "192.168.5.60"
@@ -117,58 +129,68 @@ var pictures : array 1..10,1..13,1..2 of int
 % Idle
 for i : 1 .. 4
     pictures (1,i,2) := Pic.FileNew ("Ken/idle" + intstr(i) + ".jpeg")
+    Pic.SetTransparentColor(pictures (1,i,2),0)
     pictures (1,i,1) := Pic.Mirror (pictures (1,i,2))
 end for
 
 % Move
 for i : 1 .. 5
     pictures (2,i,2) := Pic.FileNew ("Ken/move" + intstr(i) + ".jpeg")
+    Pic.SetTransparentColor(pictures (2,i,2),0)
     pictures (2,i,1) := Pic.Mirror (pictures (2,i,2))
 end for
 
 % Kneel
 pictures(3,1,2) := Pic.FileNew ("Ken/kneel.jpeg")
+Pic.SetTransparentColor(pictures(3,1,2),0)
 pictures(3,1,1) := Pic.Mirror (pictures(3,1,2))
 
 % Jump
 for i : 1 .. 7
     pictures (4,i,2) := Pic.FileNew ("Ken/jump" + intstr(i) + ".jpeg")
+    Pic.SetTransparentColor(pictures (4,i,2),0)
     pictures (4,i,1) := Pic.Mirror (pictures (4,i,2))
 end for
 
 % Roundhouse - side kick
 for i : 1 .. 5
     pictures (5,i,2) := Pic.FileNew ("Ken/roundhouse" + intstr(i) + ".jpeg")
+    Pic.SetTransparentColor(pictures (5,i,2),0)
     pictures (5,i,1) := Pic.Mirror (pictures (5,i,2))
 end for
     
 %Punch - punch
 for i : 1 .. 3
     pictures (6,i,2) := Pic.FileNew ("Ken/punch" + intstr(i) + ".jpeg")
+    Pic.SetTransparentColor(pictures (6,i,2),0)
     pictures (6,i,1) := Pic.Mirror (pictures (6,i,2))
 end for
     
 % Kick - kick
 for i : 1 .. 5
     pictures (7,i,2) := Pic.FileNew ("Ken/kick" + intstr(i) + ".jpeg")
+    Pic.SetTransparentColor(pictures (7,i,2),0)
     pictures (7,i,1) := Pic.Mirror (pictures (7,i,2))
 end for
     
 % Tatsumaki  - up kick
 for i : 1 .. 13
     pictures (8,i,2) := Pic.FileNew ("Ken/tatsumaki" + intstr(i) + ".jpeg")
+    Pic.SetTransparentColor(pictures (8,i,2),0)
     pictures (8,i,1) := Pic.Mirror (pictures (8,i,2))
 end for
     
 % Hadoken - side punch
 for i : 1 .. 4
     pictures (9,i,2) := Pic.FileNew ("Ken/hadoken" + intstr(i) + ".jpeg")
+    Pic.SetTransparentColor(pictures (9,i,2),0)
     pictures (9,i,1) := Pic.Mirror (pictures (9,i,2))
 end for
     
 % Shoryuken - up punch
 for i : 1 .. 7    
     pictures (10,i,2) := Pic.FileNew ("Ken/shoryuken" + intstr(i) + ".jpeg")
+    Pic.SetTransparentColor(pictures (10,i,2),0)
     pictures (10,i,1) := Pic.Mirror (pictures (10,i,2))
 end for
 
@@ -362,8 +384,8 @@ procedure updateScreen
     
 end updateScreen
 
-function split(str:string, regex:string):array 1..14 of string
-    var a : array 1..14 of string
+function split(str:string, regex:string):array 1..15 of string
+    var a : array 1..15 of string
     var pastSpace := 0
     var count := 0
     for i:1..length(str)+1
@@ -400,24 +422,37 @@ procedure playEndScreen
     Sprite.Show(playAgainButton)
     Sprite.Show(exitButton)
     loop
-        %wait for player to choose option
-        Mouse.Where(x,y,button)
-        if button =1 then
-            %play again is clicked
-            if x > round(maxx/4-Pic.Width(playAgainPic)/2) and x < maxx/4+Pic.Width(playAgainPic)/2 and y > round(maxy/4-Pic.Height(playAgainPic)/2) and y < round(maxy/4-Pic.Height(playAgainPic)/2)+Pic.Height(playAgainPic) then
-                playAgain := true
-                exit
-            %exit is clicked
-            elsif x > round(3*maxx/4-Pic.Width(exitPic)/2) and x < round(3*maxx/4+Pic.Width(exitPic)/2) and y > round(maxy/4-Pic.Height(exitPic)/2) and y < round(maxy/4+Pic.Height(exitPic)/2) then
-                playAgain := false
-                exit
-            end if
-        end if
+	%wait for player to choose option
+	Mouse.Where(x,y,button)
+	if button =1 then
+	    %play again is clicked
+	    if x > round(maxx/4-Pic.Width(playAgainPic)/2) and x < maxx/4+Pic.Width(playAgainPic)/2 and y > round(maxy/4-Pic.Height(playAgainPic)/2) and y < round(maxy/4-Pic.Height(playAgainPic)/2)+Pic.Height(playAgainPic) then
+		playAgain := true
+		exit
+	    %exit is clicked
+	    elsif x > round(3*maxx/4-Pic.Width(exitPic)/2) and x < round(3*maxx/4+Pic.Width(exitPic)/2) and y > round(maxy/4-Pic.Height(exitPic)/2) and y < round(maxy/4+Pic.Height(exitPic)/2) then
+		playAgain := false
+		exit
+	    end if
+	end if
     end loop
     Sprite.Hide(winDisplay)
     Sprite.Hide(playAgainButton)
     Sprite.Hide(exitButton)
 end playEndScreen
+
+procedure displayTime
+    var minutes := floor(gameTime/60)
+    var seconds := gameTime mod 60
+    timeString := intstr(minutes)+":"+intstr(seconds)
+    Draw.FillBox(timeDrawX-10,timeDrawY-10,timeDrawX+200,timeDrawY+100,white)
+    Font.Draw(timeString,timeDrawX,timeDrawY,font,black)
+    timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
+    Pic.SetTransparentColor(timePic,0)
+    Sprite.Animate(timeSprite,timePic, round(maxx/2), maxy - 40,true)
+    Sprite.Show(timeSprite)
+    Pic.Free(timePic)
+end displayTime
 
 %For keypress detection
 
@@ -460,7 +495,7 @@ end KeyHeldDown
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions, positions:string
-var toDoArray : array 1..14 of string
+var toDoArray : array 1..15 of string
 var netLimiter := 0  %
 var mostRecentKey : string := "0"
 
@@ -534,7 +569,7 @@ loop
 	    instructions += "0"
 	end if
 	
-	instructions += mostRecentKey
+	instructions += 9%mostRecentKey
 	
 	%attack instructions
 	if not chars(KEY_DOWN_ARROW) then
@@ -565,20 +600,22 @@ loop
 	    toDoArray := split(positions," ")
 	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
 	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
+	gameTime := strint(positions(15))
 	    netLimiter -= 1
 	end if
 
 	updateBackground
+    displayTime
 	Sprite.Show(otherPlayer.sprite)
 	Sprite.Show(selfPlayer.sprite)
 	delay(10)
     end loop
     playEndScreen
     if not playAgain then
-        put: netStream, "no"
-        exit
+	put: netStream, "no"
+	exit
     else
-        put: netStream, "yes"
+	put: netStream, "yes"
     end if
 end loop
 
