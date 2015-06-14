@@ -85,6 +85,18 @@ var chars, charsLast : array char of boolean
 var startStr : string  %prompt by server to start
 var endGame := false %should we stop the program?
 
+%Timer stuff
+var gameTime := 0 %time passed
+var timeString := ""  %display time
+var font : int
+font := Font.New("Arial:20")
+var timeDrawX := 0
+var timeDrawY := 3000
+var timeSprite : int
+var timePic : int
+timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
+timeSprite := Sprite.New(timePic)
+
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
 var serverAddress : string := "76.10.165.5"
@@ -370,8 +382,8 @@ procedure updateScreen
 
 end updateScreen
 
-function split (str : string, regex : string) : array 1 .. 14 of string
-    var a : array 1 .. 14 of string
+function split(str:string, regex:string):array 1..15 of string
+    var a : array 1..15 of string
     var pastSpace := 0
     var count := 0
 
@@ -432,6 +444,19 @@ procedure playEndScreen
 
 end playEndScreen
 
+procedure displayTime
+    var minutes := floor(gameTime/60)
+    var seconds := gameTime mod 60
+    timeString := intstr(minutes)+":"+intstr(seconds)
+    Draw.FillBox(timeDrawX-10,timeDrawY-10,timeDrawX+200,timeDrawY+100,white)
+    Font.Draw(timeString,timeDrawX,timeDrawY,font,black)
+    timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
+    Pic.SetTransparentColor(timePic,0)
+    Sprite.Animate(timeSprite,timePic, round(maxx/2), maxy - 40,true)
+    Sprite.Show(timeSprite)
+    Pic.Free(timePic)
+end displayTime
+
 %For keypress detection
 
 function KeyPushedDown (c : char) : boolean
@@ -472,8 +497,8 @@ end KeyHeldDown
 %                                                    GAME SCREEN                                                            %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
-var instructions, positions : string
-var toDoArray : array 1 .. 14 of string
+var instructions, positions:string
+var toDoArray : array 1..15 of string
 var netLimiter := 0  %
 var mostRecentKey : string := "0"
 
@@ -547,7 +572,7 @@ loop
 	    instructions += "0"
 	end if
 
-	instructions += mostRecentKey
+	instructions += 9%mostRecentKey
 
 	%attack instructions
 	if not chars (KEY_DOWN_ARROW) then
@@ -575,15 +600,16 @@ loop
 		exit
 	    end if
 	    %positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives
-	    toDoArray := split (positions, " ")
-	    Sprite.Animate (selfPlayer.sprite, pictures (strint (toDoArray (5)), strint (toDoArray (6)), strint (toDoArray (7))), strint (toDoArray (1)) - screenX, strint (toDoArray (2)) - screenY,
-		false)
-	    Sprite.Animate (otherPlayer.sprite, pictures (strint (toDoArray (8)), strint (toDoArray (9)), strint (toDoArray (10))), strint (toDoArray (3)) - screenX, strint (toDoArray (4)) - screenY,
-		false)
+
+	    toDoArray := split(positions," ")
+	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
+	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
+        gameTime := strint(positions(15))
 	    netLimiter -= 1
 	end if
 
 	updateBackground
+    displayTime
 
 	Sprite.Show(otherPlayer.sprite)
 	Sprite.Show(selfPlayer.sprite)
@@ -595,7 +621,6 @@ loop
 	exit
     else
 	put: netStream, "yes"
-
     end if
 end loop
 
