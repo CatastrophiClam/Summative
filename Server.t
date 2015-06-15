@@ -523,30 +523,40 @@ class Character
         %if we can perform an action, look at instructions sent by client
         
             if (instructions (1) = "2") then  %going right
+                if not abilityLock then
                 %are we crouching?
-                if instructions(2) = "1" then
-                    ability := 3
+                    if instructions(2) = "1" then
+                        ability := 3
+                    else
+                        ability := 2
+                    end if
+                    xDestination += moveStuff(ability).xIncrement
+                    if knockedBack then 
+                        x+= moveStuff(ability).xIncrement
+                    end if
                 else
-                    ability := 2
-                end if
-                xDestination += moveStuff(ability).xIncrement
-                if knockedBack then 
-                    x+= moveStuff(ability).xIncrement
+                    xDestination += moveStuff(2).xIncrement
+                    x+= moveStuff(2).xIncrement
                 end if
                 doingAction := true
                 staticAction := true
                 dir := 2
             end if
             if (instructions (1) = "1") then %go left
+                if not abilityLock then
                 %are we crouching?
-                if instructions(2) = "1" then
-                    ability := 3
+                    if instructions(2) = "1" then
+                        ability := 3
+                    else
+                        ability := 2
+                    end if
+                    xDestination -= moveStuff(ability).xIncrement
+                    if knockedBack then 
+                        x-= moveStuff(ability).xIncrement
+                    end if
                 else
-                    ability := 2
-                end if
-                xDestination -= moveStuff(ability).xIncrement
-                if knockedBack then 
-                    x-= moveStuff(ability).xIncrement
+                    xDestination -= moveStuff(2).xIncrement
+                    x-= moveStuff(2).xIncrement
                 end if
                 doingAction := true
                 staticAction := true
@@ -672,7 +682,7 @@ class Character
                 knockedBack := false
             end if
         else
-            put moveStuff(ability).speed
+            %put moveStuff(ability).speed
             x += 1/moveStuff(ability).speed*(xDestination-x)
             y += 1/moveStuff(ability).speed*(yDestination-y)
             
@@ -930,6 +940,7 @@ end updateScreen
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions1, instructions2 : string := "000n" %instructions sent by client
 var picStuff1, picStuff2 : string
+var netLimiter := 1
 
 loop
     %reset stuff for new game
@@ -955,6 +966,7 @@ loop
     ^ (player2).damage := 0
     gameOver := false
     startTime := Time.Sec()
+    netLimiter := 1
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
     loop
@@ -967,12 +979,13 @@ loop
         if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
             %update player 1's stuff
             get : stream1, instructions1
-            
+            %put instructions1
             %update player 2's stuff
             get : stream2, instructions2
-            
+            netLimiter -= 1
             updateScreen
-        elsif length(instructions1) = 4 and length(instructions2) = 4 then
+        elsif length(instructions1) = 4 and length(instructions2) = 4 and netLimiter < 5 then
+            netLimiter += 1
             picStuff1 := ^ (player1).update (instructions1,player2)
             picStuff2 := ^ (player2).update (instructions2,player1)
             %send player info back
@@ -1011,8 +1024,8 @@ loop
             put : stream1, intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " " + intstr(gameTime)
             put : stream2, intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)+ " " + intstr(gameTime)
             
-            put  intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
-            put  intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
+            %put  intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y)) + " " + intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y))+ " "+picStuff1+" " + picStuff2 + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives) + " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives)
+            %put  intstr (round ( ^ (player2).x)) + " " + intstr (round ( ^ (player2).y)) + " " + intstr (round ( ^ (player1).x)) + " " + intstr (round ( ^ (player1).y))+ " "+picStuff2+" "+picStuff1+ " "+intstr(^(player2).damage) + " "+intstr(^(player2).lives) + " "+intstr(^(player1).damage) + " "+intstr(^(player1).lives)
         end if
         delay(5)
     end loop

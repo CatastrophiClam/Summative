@@ -455,6 +455,10 @@ function KeyHeldDown (c : char) : boolean
     result charsLast (c) and chars (c)
 end KeyHeldDown
 
+proc buttonClick
+    
+end buttonClick
+
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                             END FUNCTIONS AND PROCESSES                                                   %
@@ -535,25 +539,21 @@ loop
 
         %Movement instructions
         if (chars (KEY_LEFT_ARROW)) then
-            key := "1"
             %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
             %chooses the last pressed key for attack
             if KeyPushedDown (KEY_LEFT_ARROW) then
                 mostRecentKey := "1"
             elsif KeyPushedDown (KEY_RIGHT_ARROW) then
                 mostRecentKey := "2"
-                key := "2"
             end if
-            instructions += key
         elsif (chars (KEY_RIGHT_ARROW)) then
-            instructions += "2"
             if KeyPushedDown (KEY_RIGHT_ARROW) then
                 mostRecentKey := "2"
             end if
         else
-            instructions += "0"
             mostRecentKey := "0"
         end if
+        instructions += mostRecentKey
 
         if (chars (KEY_UP_ARROW)) then
             instructions += "2"
@@ -584,7 +584,7 @@ loop
             instructions += "n"
         end if
 
-        if netLimiter < 5 then
+        if netLimiter < 10 then
             put : netStream, instructions
             netLimiter += 1
         end if
