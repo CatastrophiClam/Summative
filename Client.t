@@ -185,9 +185,9 @@ var selfPlayer, otherPlayer : Character
 var animationCounter : int
 
 %--------------------PLAYER STATUS DISPLAYS------------------------%
-var pSD1, pSD2 : pointer to PlayerStatusDisplay
-new PlayerStatusDisplay, pSD1
-new PlayerStatusDisplay, pSD2
+
+
+%--------------------END SCREEN STUFF-----------------------%
 
 var winner : int %the winner
 var playAgain : boolean %are we playing again?
@@ -468,9 +468,13 @@ end KeyHeldDown
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
-%Super Bash Bros?
-%Fire Bros?
-%Street Brawl?
+%KEN V.S. KEN
+
+%-------------------------VARIABLES---------------------------%
+var soundOn := false
+var titlePic : int  %title screen (contains play and instructions)
+var choiceScreen : int %screen with choices (player1/2, sounds on/off, play button)
+
 
 
 %---------------------------------------------------------------------------------------------------------------------------%

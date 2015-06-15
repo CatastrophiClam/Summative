@@ -366,13 +366,13 @@ class Character
     damageArray(6) :=10
     damageArray(7) :=15
     damageArray(8) :=35
-    damageArray(9) :=45
+    damageArray(9) :=40
     damageArray(10) :=30
     var powerArray : array 1..10 of real %involved in knockback calculation
     powerArray(1) := 0.03
     powerArray(2) := 0.03
     powerArray(3) := 0.03
-    powerArray(4) := 0.09
+    powerArray(4) := 0.075
     powerArray(5) := 0.4
     powerArray(6) := 0.25
     powerArray(7) := 0.3
@@ -384,7 +384,7 @@ class Character
     var dir : int %the way the character is facing - 1 indicates left, 2 indicates right
     var kbDistance : int := 700 %base distance character gets knocked back
     var knockedBack := false %is player traveling because he got knocked back?
-    var actionLock := false % is the player currently performing an action that can't be switched until its finished?
+    var abilityLock := false % is the player currently performing an action that can't be switched until its finished?
     var canDoAction := true % can the player perform an ability?
     var doingAction := false % is the player already performing an action?
     var canJump := true %can player jump?
@@ -404,16 +404,16 @@ class Character
     moveStuff(1).yIncrement := 0
     moveStuff(1).frames := 4
     moveStuff(2).speed := 1
-    moveStuff(2).xIncrement :=6
+    moveStuff(2).xIncrement :=7
     moveStuff(2).yIncrement :=0
     moveStuff(2).frames :=5
     moveStuff(3).speed := 1
     moveStuff(3).xIncrement :=1
     moveStuff(3).yIncrement :=0
     moveStuff(3).frames :=1
-    moveStuff(4).speed := 25
+    moveStuff(4).speed := 15
     moveStuff(4).xIncrement :=0
-    moveStuff(4).yIncrement :=250
+    moveStuff(4).yIncrement :=300
     moveStuff(4).frames :=7
     moveStuff(5).speed := 10
     moveStuff(5).xIncrement :=0
@@ -427,15 +427,15 @@ class Character
     moveStuff(7).xIncrement :=0
     moveStuff(7).yIncrement :=0
     moveStuff(7).frames :=5
-    moveStuff(8).speed := 27
+    moveStuff(8).speed := 20
     moveStuff(8).xIncrement :=10
     moveStuff(8).yIncrement :=200
     moveStuff(8).frames :=13
-    moveStuff(9).speed := 100
+    moveStuff(9).speed := 30
     moveStuff(9).xIncrement :=60
     moveStuff(9).yIncrement :=0
     moveStuff(9).frames :=4
-    moveStuff(10).speed := 24
+    moveStuff(10).speed := 18
     moveStuff(10).xIncrement :=0
     moveStuff(10).yIncrement :=150
     moveStuff(10).frames :=7
@@ -447,15 +447,12 @@ class Character
     %different skills deal different amounts of damage
     var upOD, downOD, sideOD, upPD, downPD, sidePD : int
     
-    %status display stuff
-    var pSD : pointer to PlayerStatusDisplay
-    %^(pSD)._init(lives)
-    
     %Character abilities stuff
     var ability : int := 1%current ability player is performing
     var frameNums : int := 0 %frame number in an ability
         var abilXIncr : int %how much does the character move horizontally each frame during the ability?
     var abilYIncr : int %same for vertically
+    var staticAction := false %is there an action being done that doesn't require movement?
     
     %Character movement stuff
     var xDir := 0  %-1 indicates to the left, 0 indicates stopped, 1 indicates to the right
@@ -509,7 +506,7 @@ class Character
         %if player did get hit
         if hX > x and hX < x+Pic.Width(pictures(ability,frameNums,dir).pic) and hY > y and hY < y+Pic.Height(pictures(ability,frameNums,dir).pic) then
             damage += Rand.Int(damageTaken-6, damageTaken+6)
-            actionLock := false
+            abilityLock := false
             knockedBack := true
             knockBack(cX,cY,hX,hY,powerArray(damageType))
         end if
@@ -520,43 +517,57 @@ class Character
         
         %PLAYER BASIC MOVEMENT
         %if we can perform an action, look at instructions sent by client
-        if not actionLock then  %if we can perform an action
             if (instructions (1) = "2") then  %going right
-                xDestination += moveStuff(ability).xIncrement
+                %which ability are we using?
                 if instructions(2) = "1" then
                     ability := 3
                 else
                     ability := 2
                 end if
+                xDestination += moveStuff(ability).xIncrement
+                if knockedBack then 
+                    x+= moveStuff(ability).xIncrement
+                end if
                 doingAction := true
+                staticAction := false
                 dir := 2
             end if
             if (instructions (1) = "1") then %go left
-                xDestination -= moveStuff(ability).xIncrement
                 if instructions(2) = "1" then
                     ability := 3
                 else
                     ability := 2
                 end if
+                xDestination -= moveStuff(ability).xIncrement
+                if knockedBack then 
+                    x-= moveStuff(ability).xIncrement
+                end if
                 doingAction := true
+                staticAction := false
                 dir := 1
             end if
+        if not abilityLock then
             if (instructions (2) = "1") then %crouch
+                ability := 3
                 if yDestination-5 < platY and x > platX1 and x < platX2 then
                     yDestination := platY
                 else
-                    yDestination -= 5
+                    yDestination -= moveStuff(ability).yIncrement
+                    if knockedBack then 
+                        y-= moveStuff(ability).yIncrement
+                    end if
                 end if
-                ability := 3
                 doingAction := true
+                staticAction := true
             end if
             if (instructions (2) = "2") then %jump
                 if canJump then
-                ability := 4
-                canJump := false  %can't jump after jumping once
-                doingAction := true
-                jumping := true
-                yDestination += moveStuff(ability).yIncrement
+                    ability := 4
+                    canJump := false  %can't jump after jumping once
+                    doingAction := true
+                    jumping := true
+                    yDestination += moveStuff(ability).yIncrement
+                    staticAction := false
                 end if
             end if
         end if
@@ -564,64 +575,72 @@ class Character
         %update destination position
         if doingAction = false then
             ability := 1
+            staticAction := true
         end if    
         %UPDATE PLAYER ABILITIES
-        if not actionLock and canDoAction then
-            if instructions (4) = "q" then
-                    
+        if not abilityLock and canDoAction then
+            if instructions (4) = "q" then   %left q
                 if instructions (3) = "1" then
                     ability := 9
                     xDestination -= moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
-                    actionLock := true
+                    abilityLock := true
+                    staticAction := false
                     canDoAction := false
-                elsif instructions (3) = "2" then
+                elsif instructions (3) = "2" then  %right q
                     ability := 9
                     xDestination += moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
-                    actionLock := true
+                    abilityLock := true
+                    staticAction := false
                     canDoAction := false
                 elsif instructions (3) = "4" then
                     ability := 10
                     xDestination += moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
-                    actionLock := true
+                    abilityLock := true
+                    staticAction := false
                     canDoAction := false
                 else
                     ability := 6
                     xDestination += moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
-                    actionLock := true
+                    abilityLock := false
                     canDoAction := false
-                    put "DOING"
+                    staticAction := true
+                    put "PUNCH"
                 end if
             elsif instructions (4) = "w" then
-                
                 if instructions (3) = "1" then
                     ability := 5
                     xDestination -= moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
-                    actionLock := true
+                    abilityLock := true
+                    staticAction := false
                     canDoAction := false
                 elsif instructions (3) = "2" then
                     ability := 5
                     xDestination += moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
-                    actionLock := true
+                    abilityLock := true
+                    staticAction := false
                     canDoAction := false
                 elsif instructions (3) = "4" then
                     ability := 8
                     xDestination += moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
-                    actionLock := true
+                    abilityLock := true
+                    staticAction := false
+                    staticAction := false
                     canDoAction := false
                 else
                     ability := 7
                     xDestination += moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
-                    actionLock := true
+                    abilityLock := false
                     canDoAction := false
-                    put "DOING"
+                    staticAction := true
+                    put "KICK"
                 end if
             end if
         end if
@@ -630,22 +649,29 @@ class Character
         frameNums += 1
         if frameNums > moveStuff(ability).frames then
             frameNums := moveStuff(ability).frames
-            
+            if not doingAction then 
+                frameNums := 1
+            end if
         end if
         
-        if abs(xDestination-x) < 10 and abs(yDestination-y) < 10 then
-            doingAction := false
-            actionLock := false
-            ability := 1
-            frameNums := 1
+        %determine if current action ends
+        %if player has arrived at destination
+        if abs(xDestination-x) < 5 and abs(yDestination-y) < 5 then
+            if not staticAction then
+                %action ended
+                doingAction := false
+                abilityLock := false
+                ability := 1
+                frameNums := 1
+            end if
         end if
         
         %update player position
         %move x and y towards xDestination and yDestination
         %character moves differently when he is knocked back than when he is just moving
         if knockedBack then
-            x += 1/10*(xDestination-x)
-            y += 1/10*(yDestination-y)
+            x += 1/9*(xDestination-x)
+            y += 1/9*(yDestination-y)
             %if character is knocked into the ground, he bounces
             if bounces then
                 if x > platX1 and x < platX2 and y < platY then
@@ -698,7 +724,7 @@ class Character
             %if player dies, reset stuff and deduct a life
             lives -= 1
             damage := 0
-            actionLock := false
+            abilityLock := false
             canJump := true
             doingAction := false
             
@@ -925,6 +951,12 @@ loop
     %INSTRUCTIONS: FIRST DIGIT IS EITHER 1,0,or 2, indicating left, no, or right arrow was pressed
     %SECOND DIGIT is similar for down, no, or up arrow pressed
     loop
+        %update time
+        gameTime := 300-(Time.Sec()-startTime)
+        
+        if gameTime = 0 then 
+            gameOver := true
+        end if
         if Net.LineAvailable (stream1) and Net.LineAvailable (stream2) then
             %update player 1's stuff
             get : stream1, instructions1
@@ -940,7 +972,7 @@ loop
             
             %if gameOver then tell clients and exit
             if gameOver then
-                if ^(player1).lives = 0 then
+                if ^(player1).lives < ^(player2).lives then
                     winner := 2
                 else
                     winner := 1
@@ -965,9 +997,6 @@ loop
                 put: stream2, "G"+intstr(winner)
                 exit
             end if
-            
-            %update time
-            gameTime := 300-(Time.Sec()-startTime)
             
             %PLAYER INFO FORM:
             %PLAYER.X PLAYER.Y OTHERPLAYER.X OTHERPLAYER.Y
