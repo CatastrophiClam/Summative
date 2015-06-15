@@ -34,46 +34,6 @@ type Character :
 %mouse buttons
 var x, y, button : int
 
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                     CLASSES                                                               %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-%Display thingy at bottom of screen with character lives and damage
-class PlayerStatusDisplay
-
-    import Pic, Sprite
-
-    export var numLives, var damage, display
-
-    %stats
-    var numLives : int
-    var damage : int := 0
-
-    %picture stuff
-    %bascically, in order for the display to be drawn over the background, it has to be a sprite
-    %to make the picture for the sprite, we draw everything that is needed outside of the display, and
-    %we take a picture of that and put it into the sprite
-    var picSprite : int
-    var spritePic : int
-    var offScreenX := 0
-    var offScreenY := -600
-    spritePic := Pic.New (offScreenX, offScreenY, offScreenX + 150, offScreenY + 250)
-    picSprite := Sprite.New (spritePic)
-
-    proc display ()
-
-    end display
-
-end PlayerStatusDisplay
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                   END CLASSES                                                             %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -89,14 +49,10 @@ var endGame := false %should we stop the program?
 var gameTime := 0 %time passed
 var timeString := ""  %display time
 var font : int
-font := Font.New("Arial:20")
-var timeDrawX := 0
-var timeDrawY := 300
-var timeSprite : int
-var timePic : int
-timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
-timeSprite := Sprite.New(timePic)
-Sprite.SetHeight(timeSprite,10)
+font := Font.New ("Arial:20")
+
+var font1 : int
+font1 := Font.New ("sans serif:100")
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
@@ -192,9 +148,50 @@ var selfPlayer, otherPlayer : Character
 var animationCounter : int
 
 %--------------------PLAYER STATUS DISPLAYS------------------------%
-var pSD1, pSD2 : pointer to PlayerStatusDisplay
-new PlayerStatusDisplay, pSD1
-new PlayerStatusDisplay, pSD2
+var numLives1 : int
+var numLives2 : int
+var damage1 : int
+var damage2 : int
+var damageString1 := "" %display players damage
+var damageString2 := "" %display opponents damage
+
+var livesPic1, livesPic2 : array 1 .. 5 of int
+for i : 1 .. 5
+    livesPic1 (i) := Pic.FileNew ("Pictures/Lives" + intstr (i) + ".gif")
+    livesPic2 (i) := Pic.Mirror (livesPic1(i))
+end for
+
+var percentSymbol : int
+percentSymbol := Pic.FileNew ("Pictures/PercentSign.gif")
+
+var youText : int
+youText := Pic.FileNew ("Pictures/you.gif")
+
+var challengerText : int
+challengerText := Pic.FileNew ("Pictures/challenger.gif")
+
+var youIndicator : int
+youIndicator := Sprite.New (youText)
+var challengerIndicator : int
+challengerIndicator := Sprite.New (challengerText)
+
+var percentText1, percentText2 : int
+percentText1 := Sprite.New (percentSymbol)
+percentText2 := Sprite.New (percentSymbol)
+
+var kenPortrait1, kenPortrait2 : int
+kenPortrait1 := Pic.FileNew ("Ken/KenPortrait.gif")
+kenPortrait2 := Pic.Mirror (kenPortrait1)
+
+var lifeIndicator1, lifeIndicator2 : int
+lifeIndicator1 := Sprite.New (livesPic1 (5))
+lifeIndicator2 := Sprite.New (livesPic2 (5))
+
+var portrait1, portrait2 : int
+portrait1 := Sprite.New (kenPortrait1)
+portrait2 := Sprite.New (kenPortrait2)
+
+%--------------------END SCREEN DISPLAY------------------------%
 
 var winner : int %the winner
 var playAgain : boolean %are we playing again?
@@ -205,8 +202,8 @@ youLosePic := Pic.FileNew ("Pictures/YouLose.bmp")
 Pic.SetTransparentColor (youLosePic, 0)
 var youWinPic : int
 
-youWinPic := Pic.FileNew("Pictures/YouWin.bmp")
-Pic.SetTransparentColor(youWinPic,0)
+youWinPic := Pic.FileNew ("Pictures/YouWin.bmp")
+Pic.SetTransparentColor (youWinPic, 0)
 
 var playNowPic : int
 playNowPic := Pic.FileNew ("Pictures/playNow.bmp")
@@ -274,7 +271,7 @@ end if
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
-%                                               FUNCTIONS AND PROCESSES                                                     %
+%                                               FUNCTIONS AND PROCEDURES                                                    %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
@@ -379,8 +376,8 @@ procedure updateScreen
 
 end updateScreen
 
-function split(str:string, regex:string):array 1..15 of string
-    var a : array 1..15 of string
+function split (str : string, regex : string) : array 1 .. 15 of string
+    var a : array 1 .. 15 of string
     var pastSpace := 0
     var count := 0
 
@@ -414,46 +411,74 @@ procedure playEndScreen
     exitButton := Sprite.New (exitPic)
     %show stuff
 
-    Sprite.Animate(winDisplay,chosenWinPic,round(maxx/2-Pic.Width(chosenWinPic)/2),round(maxy/2),false)
-    Sprite.Animate(playAgainButton,playAgainPic,round(maxx/4-Pic.Width(playAgainPic)/2),round(maxy/4-Pic.Height(playAgainPic)/2),false)
-    Sprite.Animate(exitButton,exitPic,round(3*maxx/4-Pic.Width(exitPic)/2),round(maxy/4-Pic.Height(exitPic)/2),false)
-    Sprite.Show(winDisplay)
-    Sprite.Show(playAgainButton)
-    Sprite.Show(exitButton)
+    Sprite.Animate (winDisplay, chosenWinPic, round (maxx / 2 - Pic.Width (chosenWinPic) / 2), round (maxy / 2), false)
+    Sprite.Animate (playAgainButton, playAgainPic, round (maxx / 4 - Pic.Width (playAgainPic) / 2), round (maxy / 4 - Pic.Height (playAgainPic) / 2), false)
+    Sprite.Animate (exitButton, exitPic, round (3 * maxx / 4 - Pic.Width (exitPic) / 2), round (maxy / 4 - Pic.Height (exitPic) / 2), false)
+    Sprite.Show (winDisplay)
+    Sprite.Show (playAgainButton)
+    Sprite.Show (exitButton)
     loop
 	%wait for player to choose option
-	Mouse.Where(x,y,button)
-	if button =1 then
+	Mouse.Where (x, y, button)
+	if button = 1 then
 	    %play again is clicked
-	    if x > round(maxx/4-Pic.Width(playAgainPic)/2) and x < maxx/4+Pic.Width(playAgainPic)/2 and y > round(maxy/4-Pic.Height(playAgainPic)/2) and y < round(maxy/4-Pic.Height(playAgainPic)/2)+Pic.Height(playAgainPic) then
+	    if x > round (maxx / 4 - Pic.Width (playAgainPic) / 2) and x < maxx / 4 + Pic.Width (playAgainPic) / 2 and y > round (maxy / 4 - Pic.Height (playAgainPic) / 2) and y < round (maxy / 4 - 
+		Pic.Height (playAgainPic) / 2) + Pic.Height (playAgainPic) then
 		playAgain := true
 		exit
-	    %exit is clicked
-	    elsif x > round(3*maxx/4-Pic.Width(exitPic)/2) and x < round(3*maxx/4+Pic.Width(exitPic)/2) and y > round(maxy/4-Pic.Height(exitPic)/2) and y < round(maxy/4+Pic.Height(exitPic)/2) then
+		%exit is clicked
+	    elsif x > round (3 * maxx / 4 - Pic.Width (exitPic) / 2) and x < round (3 * maxx / 4 + Pic.Width (exitPic) / 2) and y > round (maxy / 4 - Pic.Height (exitPic) / 2) and y < round (maxy / 4 
+		+ Pic.Height (exitPic) / 2) then
 		playAgain := false
 		exit
 	    end if
 	end if
     end loop
-    Sprite.Hide(winDisplay)
-    Sprite.Hide(playAgainButton)
-    Sprite.Hide(exitButton)
+    Sprite.Hide (winDisplay)
+    Sprite.Hide (playAgainButton)
+    Sprite.Hide (exitButton)
 
 end playEndScreen
 
 procedure displayTime
 
-    var minutes := floor(gameTime/60)
+    var minutes := floor (gameTime / 60)
     var seconds := gameTime mod 60
-    timeString := intstr(minutes)+":"+intstr(seconds)
-    %Draw.FillBox(timeDrawX-10,timeDrawY-10,timeDrawX+200,timeDrawY+100,white)
-    %Font.Draw(timeString,timeDrawX,timeDrawY,font,black)
-    %timePic := Pic.New(timeDrawX-2,timeDrawY-2,timeDrawX+Font.Width(timeString,font)+2,timeDrawY+22)
-    %Pic.SetTransparentColor(timePic,0)
-    Font.Draw(timeString,round(maxx/2)-Font.Width(timeString,font), maxy - 40,font,black)
-    %Sprite.Show(timeSprite)
-    %Pic.Free(timePic)
+    timeString := intstr (minutes) + ":" + intstr (seconds)
+    Font.Draw (timeString, round (maxx / 2) - Font.Width (timeString, font), maxy - 40, font, black)
 end displayTime
+
+proc displayStatus
+
+    damageString1 := intstr (damage1)
+    damageString2 := intstr (damage2)
+
+    Font.Draw (damageString1, Pic.Width (kenPortrait1), 60, font1, black)
+    Font.Draw (damageString2, maxx - Pic.Width (kenPortrait2) - Font.Width (damageString2, font1) - Pic.Width (percentSymbol), 60, font1, black)
+    
+    Sprite.Animate (youIndicator, youText, Pic.Width (kenPortrait1), 0, false)
+    Sprite.Animate (challengerIndicator, challengerText, maxx - Pic.Width (kenPortrait2) - Pic.Width (challengerText), 0, false)
+    
+    Sprite.Animate (percentText1, percentSymbol, Pic.Width (kenPortrait1) + Font.Width (damageString1, font1), 60, false)
+    Sprite.Animate (percentText2, percentSymbol, maxx - Pic.Width (kenPortrait2) - Pic.Width (percentSymbol), 60, false)
+
+    Sprite.Animate (lifeIndicator1, livesPic1 (numLives1), Pic.Width (kenPortrait1), Pic.Height (kenPortrait1) - 50, false)
+    Sprite.Animate (lifeIndicator2, livesPic2 (numLives2), maxx - Pic.Width (kenPortrait2) - Pic.Width (livesPic2 (numLives2)), Pic.Height (kenPortrait1) - 50, false)
+    
+    Sprite.Animate (portrait1, kenPortrait1, 0, 0, false)
+    Sprite.Animate (portrait2, kenPortrait2, maxx - Pic.Width (kenPortrait2), 0, false)
+    
+    Sprite.Show (youIndicator)
+    Sprite.Show (challengerIndicator)
+    Sprite.Show (portrait1)
+    Sprite.Show (portrait2)
+    Sprite.Show (lifeIndicator1)
+    Sprite.Show (lifeIndicator2)
+    Sprite.Show (percentText1)
+    Sprite.Show (percentText2)
+
+end displayStatus
+
 
 %For keypress detection
 
@@ -498,8 +523,8 @@ end KeyHeldDown
 %                                                    GAME SCREEN                                                            %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
-var instructions, positions:string
-var toDoArray : array 1..15 of string
+var instructions, positions : string
+var toDoArray : array 1 .. 15 of string
 var netLimiter := 0  %
 var mostRecentKey : string := "0"
 
@@ -604,27 +629,36 @@ loop
 	    end if
 	    %positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives, time
 
-	    toDoArray := split(positions," ")
-	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
-	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
-	    gameTime := strint(toDoArray(15))
+	    toDoArray := split (positions, " ")
+	    Sprite.Animate (selfPlayer.sprite, pictures (strint (toDoArray (5)), strint (toDoArray (6)), strint (toDoArray (7))), strint (toDoArray (1)) - screenX, strint (toDoArray (2)) - screenY, 
+		false)
+	    Sprite.Animate (otherPlayer.sprite, pictures (strint (toDoArray (8)), strint (toDoArray (9)), strint (toDoArray (10))), strint (toDoArray (3)) - screenX, strint (toDoArray (4)) - screenY, 
+		false)
+	    gameTime := strint (toDoArray (15))
+
+	    damage1 := strint (toDoArray (11))
+	    damage2 := strint (toDoArray (13))
+	    numLives1 := strint (toDoArray (12))
+	    numLives2 := strint (toDoArray (14))
+
 	    netLimiter -= 1
 	end if
 
 	updateBackground
 	displayTime
+	displayStatus
 
-	Sprite.Show(otherPlayer.sprite)
-	Sprite.Show(selfPlayer.sprite)
-	delay(10)
+	Sprite.Show (otherPlayer.sprite)
+	Sprite.Show (selfPlayer.sprite)
+	delay (10)
 
     end loop
     playEndScreen
     if not playAgain then
-	put: netStream, "no"
+	put : netStream, "no"
 	exit
     else
-	put: netStream, "yes"
+	put : netStream, "yes"
     end if
 end loop
 
