@@ -23,56 +23,16 @@ var platX2 := 1418
 type Character :
     record
 
-        x : int
-        y : int
-        h : int
-        w : int
-        pic : int
-        sprite : int
+	x : int
+	y : int
+	h : int
+	w : int
+	pic : int
+	sprite : int
     end record
 
 %mouse buttons
 var x, y, button : int
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                     CLASSES                                                               %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-%Display thingy at bottom of screen with character lives and damage
-class PlayerStatusDisplay
-
-    import Pic, Sprite
-
-    export var numLives, var damage, display
-
-    %stats
-    var numLives : int
-    var damage : int := 0
-
-    %picture stuff
-    %bascically, in order for the display to be drawn over the background, it has to be a sprite
-    %to make the picture for the sprite, we draw everything that is needed outside of the display, and
-    %we take a picture of that and put it into the sprite
-    var picSprite : int
-    var spritePic : int
-    var offScreenX := 0
-    var offScreenY := -600
-    spritePic := Pic.New (offScreenX, offScreenY, offScreenX + 150, offScreenY + 250)
-    picSprite := Sprite.New (spritePic)
-
-    proc display ()
-
-    end display
-
-end PlayerStatusDisplay
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                   END CLASSES                                                             %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
 
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -89,11 +49,14 @@ var endGame := false %should we stop the program?
 var gameTime := 0 %time passed
 var timeString := ""  %display time
 var font : int
-font := Font.New("Arial:20")
+font := Font.New ("Arial:20")
+
+var font1 : int
+font1 := Font.New ("sans serif:100")
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
-var serverAddress : string := "192.168.5.60"
+var serverAddress : string := "23.91.148.81"
 var serverPort : int
 var playerNum : int
 
@@ -186,8 +149,50 @@ var animationCounter : int
 
 %--------------------PLAYER STATUS DISPLAYS------------------------%
 
+var numLives1 : int
+var numLives2 : int
+var damage1 : int
+var damage2 : int
+var damageString1 := "" %display players damage
+var damageString2 := "" %display opponents damage
 
-%--------------------END SCREEN STUFF-----------------------%
+var livesPic1, livesPic2 : array 1 .. 5 of int
+for i : 1 .. 5
+    livesPic1 (i) := Pic.FileNew ("Pictures/Lives" + intstr (i) + ".gif")
+    livesPic2 (i) := Pic.Mirror (livesPic1(i))
+end for
+
+var percentSymbol : int
+percentSymbol := Pic.FileNew ("Pictures/PercentSign.gif")
+
+var youText : int
+youText := Pic.FileNew ("Pictures/you.gif")
+
+var challengerText : int
+challengerText := Pic.FileNew ("Pictures/challenger.gif")
+
+var youIndicator : int
+youIndicator := Sprite.New (youText)
+var challengerIndicator : int
+challengerIndicator := Sprite.New (challengerText)
+
+var percentText1, percentText2 : int
+percentText1 := Sprite.New (percentSymbol)
+percentText2 := Sprite.New (percentSymbol)
+
+var kenPortrait1, kenPortrait2 : int
+kenPortrait1 := Pic.FileNew ("Ken/KenPortrait.gif")
+kenPortrait2 := Pic.Mirror (kenPortrait1)
+
+var lifeIndicator1, lifeIndicator2 : int
+lifeIndicator1 := Sprite.New (livesPic1 (5))
+lifeIndicator2 := Sprite.New (livesPic2 (5))
+
+var portrait1, portrait2 : int
+portrait1 := Sprite.New (kenPortrait1)
+portrait2 := Sprite.New (kenPortrait2)
+
+%--------------------END SCREEN DISPLAY------------------------%
 
 var winner : int %the winner
 var playAgain : boolean %are we playing again?
@@ -198,8 +203,8 @@ youLosePic := Pic.FileNew ("Pictures/YouLose.bmp")
 Pic.SetTransparentColor (youLosePic, 0)
 var youWinPic : int
 
-youWinPic := Pic.FileNew("Pictures/YouWin.bmp")
-Pic.SetTransparentColor(youWinPic,0)
+youWinPic := Pic.FileNew ("Pictures/YouWin.bmp")
+Pic.SetTransparentColor (youWinPic, 0)
 
 var playNowPic : int
 playNowPic := Pic.FileNew ("Pictures/playNow.bmp")
@@ -267,7 +272,7 @@ end if
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
-%                                               FUNCTIONS AND PROCESSES                                                     %
+%                                               FUNCTIONS AND PROCEDURES                                                    %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
@@ -284,107 +289,107 @@ procedure updateScreen
 
     %find leftMost and rightMost
     if selfPlayer.x < otherPlayer.x then
-        %if player 1 is to the left of player 2 and inside the world boundaries
-        if selfPlayer.x - selfPlayer.w / 2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round (selfPlayer.x - selfPlayer.w / 2)
-        else
-            leftMost := 0
-        end if
+	%if player 1 is to the left of player 2 and inside the world boundaries
+	if selfPlayer.x - selfPlayer.w / 2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round (selfPlayer.x - selfPlayer.w / 2)
+	else
+	    leftMost := 0
+	end if
 
-        %This means that player 2 is to the right of player 1
-        if otherPlayer.x + otherPlayer.w / 2 < worldLength then
-            %player 2's x is rightmost
-            rightMost := round (otherPlayer.x + otherPlayer.w / 2)
-        else
-            rightMost := worldLength
-        end if
+	%This means that player 2 is to the right of player 1
+	if otherPlayer.x + otherPlayer.w / 2 < worldLength then
+	    %player 2's x is rightmost
+	    rightMost := round (otherPlayer.x + otherPlayer.w / 2)
+	else
+	    rightMost := worldLength
+	end if
     else
-        %player 2 is to the left of player 1
-        if otherPlayer.x - otherPlayer.w / 2 > 0 then
-            %player 1's x is leftmost
-            leftMost := round (otherPlayer.x - otherPlayer.w / 2)
-        else
-            leftMost := 0
-        end if
+	%player 2 is to the left of player 1
+	if otherPlayer.x - otherPlayer.w / 2 > 0 then
+	    %player 1's x is leftmost
+	    leftMost := round (otherPlayer.x - otherPlayer.w / 2)
+	else
+	    leftMost := 0
+	end if
 
-        %This means that player 1 is to the right of player 2
-        if selfPlayer.x + selfPlayer.w / 2 < worldLength then
-            %player 1's x is leftmost
-            rightMost := round (selfPlayer.x + selfPlayer.w / 2)
-        else
-            rightMost := worldLength
-        end if
+	%This means that player 1 is to the right of player 2
+	if selfPlayer.x + selfPlayer.w / 2 < worldLength then
+	    %player 1's x is leftmost
+	    rightMost := round (selfPlayer.x + selfPlayer.w / 2)
+	else
+	    rightMost := worldLength
+	end if
     end if
 
     %find topmost and bottomMost
     if selfPlayer.y < otherPlayer.y then
-        %if player 1 is under player 2 and inside the world boundaries
-        if selfPlayer.y - selfPlayer.h / 2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round (selfPlayer.y - selfPlayer.h / 2)
-        else
-            bottomMost := 0
-        end if
+	%if player 1 is under player 2 and inside the world boundaries
+	if selfPlayer.y - selfPlayer.h / 2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round (selfPlayer.y - selfPlayer.h / 2)
+	else
+	    bottomMost := 0
+	end if
 
-        %This means that player 2 above player 1
-        if otherPlayer.y + otherPlayer.h / 2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round (otherPlayer.y + otherPlayer.h / 2)
-        else
-            topMost := worldHeight
-        end if
+	%This means that player 2 above player 1
+	if otherPlayer.y + otherPlayer.h / 2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round (otherPlayer.y + otherPlayer.h / 2)
+	else
+	    topMost := worldHeight
+	end if
     else
-        %if player 2 is under player 1 and inside the world boundaries
-        if otherPlayer.y - otherPlayer.h / 2 > 0 then
-            %player 1's y is bottommost
-            bottomMost := round (otherPlayer.y - otherPlayer.h / 2)
-        else
-            bottomMost := 0
-        end if
+	%if player 2 is under player 1 and inside the world boundaries
+	if otherPlayer.y - otherPlayer.h / 2 > 0 then
+	    %player 1's y is bottommost
+	    bottomMost := round (otherPlayer.y - otherPlayer.h / 2)
+	else
+	    bottomMost := 0
+	end if
 
-        %This means that player 1 above player 2
-        if selfPlayer.y + selfPlayer.h / 2 < worldHeight then
-            %player 1's x is topmost
-            topMost := round (selfPlayer.y + selfPlayer.h / 2)
-        else
-            topMost := worldHeight
-        end if
+	%This means that player 1 above player 2
+	if selfPlayer.y + selfPlayer.h / 2 < worldHeight then
+	    %player 1's x is topmost
+	    topMost := round (selfPlayer.y + selfPlayer.h / 2)
+	else
+	    topMost := worldHeight
+	end if
     end if
 
 
     %update screenX and screenY
     screenX := round ((rightMost + leftMost) / 2 - maxx / 2)
     if screenX < 0 then
-        screenX := 0
+	screenX := 0
     end if
     if screenX > worldLength - maxx then
-        screenX := worldLength - maxx
+	screenX := worldLength - maxx
     end if
 
     screenY := round ((bottomMost + topMost) / 2 - maxy / 2)
     if screenY < 0 then
-        screenY := 0
+	screenY := 0
     end if
     if screenY > worldHeight - maxy then
-        screenY := worldHeight - maxy
+	screenY := worldHeight - maxy
     end if
 
 end updateScreen
 
-function split(str:string, regex:string):array 1..15 of string
-    var a : array 1..15 of string
+function split (str : string, regex : string) : array 1 .. 15 of string
+    var a : array 1 .. 15 of string
     var pastSpace := 0
     var count := 0
 
     for i : 1 .. length (str) + 1
 
-        if i = length (str) + 1 or str (i) = regex then
+	if i = length (str) + 1 or str (i) = regex then
 
-            count += 1
-            a (count) := str (pastSpace + 1 .. i - 1)
-            pastSpace := i
-        end if
+	    count += 1
+	    a (count) := str (pastSpace + 1 .. i - 1)
+	    pastSpace := i
+	end if
     end for
     result a
 end split
@@ -397,9 +402,9 @@ procedure playEndScreen
     var exitButton : int
     %choose which winning picture to display
     if winner = playerNum then
-        chosenWinPic := youWinPic
+	chosenWinPic := youWinPic
     else
-        chosenWinPic := youLosePic
+	chosenWinPic := youLosePic
     end if
     %make sprites
     winDisplay := Sprite.New (chosenWinPic)
@@ -407,39 +412,74 @@ procedure playEndScreen
     exitButton := Sprite.New (exitPic)
     %show stuff
 
-    Sprite.Animate(winDisplay,chosenWinPic,round(maxx/2-Pic.Width(chosenWinPic)/2),round(maxy/2),false)
-    Sprite.Animate(playAgainButton,playAgainPic,round(maxx/4-Pic.Width(playAgainPic)/2),round(maxy/4-Pic.Height(playAgainPic)/2),false)
-    Sprite.Animate(exitButton,exitPic,round(3*maxx/4-Pic.Width(exitPic)/2),round(maxy/4-Pic.Height(exitPic)/2),false)
-    Sprite.Show(winDisplay)
-    Sprite.Show(playAgainButton)
-    Sprite.Show(exitButton)
+    Sprite.Animate (winDisplay, chosenWinPic, round (maxx / 2 - Pic.Width (chosenWinPic) / 2), round (maxy / 2), false)
+    Sprite.Animate (playAgainButton, playAgainPic, round (maxx / 4 - Pic.Width (playAgainPic) / 2), round (maxy / 4 - Pic.Height (playAgainPic) / 2), false)
+    Sprite.Animate (exitButton, exitPic, round (3 * maxx / 4 - Pic.Width (exitPic) / 2), round (maxy / 4 - Pic.Height (exitPic) / 2), false)
+    Sprite.Show (winDisplay)
+    Sprite.Show (playAgainButton)
+    Sprite.Show (exitButton)
     loop
-        %wait for player to choose option
-        Mouse.Where(x,y,button)
-        if button =1 then
-            %play again is clicked
-            if x > round(maxx/4-Pic.Width(playAgainPic)/2) and x < maxx/4+Pic.Width(playAgainPic)/2 and y > round(maxy/4-Pic.Height(playAgainPic)/2) and y < round(maxy/4-Pic.Height(playAgainPic)/2)+Pic.Height(playAgainPic) then
-                playAgain := true
-                exit
-            %exit is clicked
-            elsif x > round(3*maxx/4-Pic.Width(exitPic)/2) and x < round(3*maxx/4+Pic.Width(exitPic)/2) and y > round(maxy/4-Pic.Height(exitPic)/2) and y < round(maxy/4+Pic.Height(exitPic)/2) then
-                playAgain := false
-                exit
-            end if
-        end if
+	%wait for player to choose option
+	Mouse.Where (x, y, button)
+	if button = 1 then
+	    %play again is clicked
+	    if x > round (maxx / 4 - Pic.Width (playAgainPic) / 2) and x < maxx / 4 + Pic.Width (playAgainPic) / 2 and y > round (maxy / 4 - Pic.Height (playAgainPic) / 2) and y < round (maxy / 4 - 
+		Pic.Height (playAgainPic) / 2) + Pic.Height (playAgainPic) then
+		playAgain := true
+		exit
+		%exit is clicked
+	    elsif x > round (3 * maxx / 4 - Pic.Width (exitPic) / 2) and x < round (3 * maxx / 4 + Pic.Width (exitPic) / 2) and y > round (maxy / 4 - Pic.Height (exitPic) / 2) and y < round (maxy / 4 
+		+ Pic.Height (exitPic) / 2) then
+		playAgain := false
+		exit
+	    end if
+	end if
     end loop
-    Sprite.Hide(winDisplay)
-    Sprite.Hide(playAgainButton)
-    Sprite.Hide(exitButton)
+    Sprite.Hide (winDisplay)
+    Sprite.Hide (playAgainButton)
+    Sprite.Hide (exitButton)
 
 end playEndScreen
 
 procedure displayTime
-    var minutes := floor(gameTime/60)
+
+    var minutes := floor (gameTime / 60)
     var seconds := gameTime mod 60
-    timeString := intstr(minutes)+":"+intstr(seconds)
-    Font.Draw(timeString,round(maxx/2)-Font.Width(timeString,font), maxy - 40,font,black)
+    timeString := intstr (minutes) + ":" + intstr (seconds)
+    Font.Draw (timeString, round (maxx / 2) - Font.Width (timeString, font), maxy - 40, font, black)
 end displayTime
+
+proc displayStatus
+
+    damageString1 := intstr (damage1)
+    damageString2 := intstr (damage2)
+
+    Font.Draw (damageString1, Pic.Width (kenPortrait1), 60, font1, black)
+    Font.Draw (damageString2, maxx - Pic.Width (kenPortrait2) - Font.Width (damageString2, font1) - Pic.Width (percentSymbol), 60, font1, black)
+    
+    Sprite.Animate (youIndicator, youText, Pic.Width (kenPortrait1), 0, false)
+    Sprite.Animate (challengerIndicator, challengerText, maxx - Pic.Width (kenPortrait2) - Pic.Width (challengerText), 0, false)
+    
+    Sprite.Animate (percentText1, percentSymbol, Pic.Width (kenPortrait1) + Font.Width (damageString1, font1), 60, false)
+    Sprite.Animate (percentText2, percentSymbol, maxx - Pic.Width (kenPortrait2) - Pic.Width (percentSymbol), 60, false)
+
+    Sprite.Animate (lifeIndicator1, livesPic1 (numLives1), Pic.Width (kenPortrait1), Pic.Height (kenPortrait1) - 50, false)
+    Sprite.Animate (lifeIndicator2, livesPic2 (numLives2), maxx - Pic.Width (kenPortrait2) - Pic.Width (livesPic2 (numLives2)), Pic.Height (kenPortrait1) - 50, false)
+    
+    Sprite.Animate (portrait1, kenPortrait1, 0, 0, false)
+    Sprite.Animate (portrait2, kenPortrait2, maxx - Pic.Width (kenPortrait2), 0, false)
+    
+    Sprite.Show (youIndicator)
+    Sprite.Show (challengerIndicator)
+    Sprite.Show (portrait1)
+    Sprite.Show (portrait2)
+    Sprite.Show (lifeIndicator1)
+    Sprite.Show (lifeIndicator2)
+    Sprite.Show (percentText1)
+    Sprite.Show (percentText2)
+
+end displayStatus
+
 
 %For keypress detection
 
@@ -495,6 +535,7 @@ var choiceScreen : int %screen with choices (player1/2, sounds on/off, play butt
 var instructions, positions:string
 var key : string  %useful for knowing what to add to instructions
 var toDoArray : array 1..15 of string
+
 var netLimiter := 0  %
 var mostRecentKey : string := "0"
 
@@ -516,19 +557,19 @@ loop
     netLimiter := 0
     %wait for all players to be connected
     loop
-        if Net.LineAvailable (netStream) then
-            get : netStream, startStr
-            if startStr = "go" then
-                endGame := false
-                exit
-            else
-                endGame := true
-                exit
-            end if
-        end if
+	if Net.LineAvailable (netStream) then
+	    get : netStream, startStr
+	    if startStr = "go" then
+		endGame := false
+		exit
+	    else
+		endGame := true
+		exit
+	    end if
+	end if
     end loop
     if endGame then
-        exit
+	exit
     end if
     %This loop is one game
     loop
@@ -614,10 +655,10 @@ loop
     end loop
     playEndScreen
     if not playAgain then
-        put: netStream, "no"
-        exit
+	put : netStream, "no"
+	exit
     else
-        put: netStream, "yes"
+	put : netStream, "yes"
     end if
 end loop
 
@@ -627,6 +668,8 @@ end loop
 %                                                   END GAME SCREEN                                                         %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
+
+
 
 
 
