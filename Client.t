@@ -489,6 +489,7 @@ var choiceScreen : int %screen with choices (player1/2, sounds on/off, play butt
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 var instructions, positions:string
+var key : string  %useful for knowing what to add to instructions
 var toDoArray : array 1..15 of string
 var netLimiter := 0  %
 var mostRecentKey : string := "0"
@@ -534,12 +535,16 @@ loop
 
         %Movement instructions
         if (chars (KEY_LEFT_ARROW)) then
-            instructions += "1"
+            key := "1"
             %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
             %chooses the last pressed key for attack
             if KeyPushedDown (KEY_LEFT_ARROW) then
                 mostRecentKey := "1"
+            elsif KeyPushedDown (KEY_RIGHT_ARROW) then
+                mostRecentKey := "2"
+                key := "2"
             end if
+            instructions += key
         elsif (chars (KEY_RIGHT_ARROW)) then
             instructions += "2"
             if KeyPushedDown (KEY_RIGHT_ARROW) then

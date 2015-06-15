@@ -450,9 +450,10 @@ class Character
     %Character abilities stuff
     var ability : int := 1%current ability player is performing
     var frameNums : int := 0 %frame number in an ability
-        var abilXIncr : int %how much does the character move horizontally each frame during the ability?
-    var abilYIncr : int %same for vertically
+    %var abilXIncr : int %how much does the character move horizontally each frame during the ability?
+    %var abilYIncr : int %same for vertically
     var staticAction := false %is there an action being done that doesn't require movement?
+    var moveableAction := true %can the player move?
     
     %Character movement stuff
     var xDir := 0  %-1 indicates to the left, 0 indicates stopped, 1 indicates to the right
@@ -515,10 +516,14 @@ class Character
     function update (instructions : string, oP:pointer to Character) : string
         var moveSpeed := moveStuff(ability)
         
+        %update doingAction
+        %doingAction := not abilityLock and 
+        
         %PLAYER BASIC MOVEMENT
         %if we can perform an action, look at instructions sent by client
+        
             if (instructions (1) = "2") then  %going right
-                %which ability are we using?
+                %are we crouching?
                 if instructions(2) = "1" then
                     ability := 3
                 else
@@ -529,10 +534,11 @@ class Character
                     x+= moveStuff(ability).xIncrement
                 end if
                 doingAction := true
-                staticAction := false
+                staticAction := true
                 dir := 2
             end if
             if (instructions (1) = "1") then %go left
+                %are we crouching?
                 if instructions(2) = "1" then
                     ability := 3
                 else
@@ -543,12 +549,14 @@ class Character
                     x-= moveStuff(ability).xIncrement
                 end if
                 doingAction := true
-                staticAction := false
+                staticAction := true
                 dir := 1
             end if
+        
         if not abilityLock then
             if (instructions (2) = "1") then %crouch
                 ability := 3
+                %player falls faster if he isn't on the ground
                 if yDestination-5 < platY and x > platX1 and x < platX2 then
                     yDestination := platY
                 else
@@ -559,8 +567,7 @@ class Character
                 end if
                 doingAction := true
                 staticAction := true
-            end if
-            if (instructions (2) = "2") then %jump
+            elsif (instructions (2) = "2") then %jump
                 if canJump then
                     ability := 4
                     canJump := false  %can't jump after jumping once
@@ -572,15 +579,15 @@ class Character
             end if
         end if
         
-        %update destination position
+        %if player is doing nothing he is idle
         if doingAction = false then
             ability := 1
             staticAction := true
         end if    
         %UPDATE PLAYER ABILITIES
         if not abilityLock and canDoAction then
-            if instructions (4) = "q" then   %left q
-                if instructions (3) = "1" then
+            if instructions (4) = "q" then   
+                if instructions (3) = "1" then %left q
                     ability := 9
                     xDestination -= moveStuff(ability).xIncrement
                     yDestination += moveStuff(ability).yIncrement
@@ -644,27 +651,6 @@ class Character
                 end if
             end if
         end if
-
-        %update how player looks
-        frameNums += 1
-        if frameNums > moveStuff(ability).frames then
-            frameNums := moveStuff(ability).frames
-            if not doingAction then 
-                frameNums := 1
-            end if
-        end if
-        
-        %determine if current action ends
-        %if player has arrived at destination
-        if abs(xDestination-x) < 5 and abs(yDestination-y) < 5 then
-            if not staticAction then
-                %action ended
-                doingAction := false
-                abilityLock := false
-                ability := 1
-                frameNums := 1
-            end if
-        end if
         
         %update player position
         %move x and y towards xDestination and yDestination
@@ -706,6 +692,27 @@ class Character
             %Player isn't over platform, make him fall
             else
                 yDestination -= fallSpeed
+            end if
+        end if
+        
+        %determine if current action ends
+        %if player has arrived at destination
+        if abs(xDestination-x) < 5 and abs(yDestination-y) < 5 then
+            if not staticAction then
+                %action ended
+                doingAction := false
+                abilityLock := false
+                ability := 1
+                frameNums := 1
+            end if
+        end if
+        
+        %update how player looks
+        frameNums += 1
+        if frameNums > moveStuff(ability).frames then
+            frameNums := moveStuff(ability).frames
+            if not doingAction then 
+                frameNums := 1
             end if
         end if
         
