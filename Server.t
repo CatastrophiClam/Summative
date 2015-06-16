@@ -544,7 +544,6 @@ class Character
 		    x+= moveStuff(2).xIncrement
 		end if
 		doingAction := true
-		
 		dir := 2
 	    end if
 	    if (instructions (1) = "1") then %go left
@@ -1010,30 +1009,30 @@ loop
 	    
 	    %if gameOver then tell clients and exit
 	    if gameOver then
-		if ^(player1).lives < ^(player2).lives then
-		    winner := 2
-		else
-		    winner := 1
-		end if
-		%game is over, flush all input from clients so the next instructions can be read
-		loop
-		    if Net.LineAvailable (stream1) then
-			get:stream1,instructions1
-		    else
-			exit
-		    end if
-		end loop
-		loop
-		    if Net.LineAvailable (stream2) then
-			get:stream2,instructions2
-		    else
-			exit
-		    end if
-		end loop
-		%update clients
-		put: stream1, "G"+intstr(winner)
-		put: stream2, "G"+intstr(winner)
-		exit
+            if ^(player1).lives < ^(player2).lives then
+                winner := 2
+            else
+                winner := 1
+            end if
+            %game is over, flush all input from clients so the next instructions can be read
+            loop
+                if Net.LineAvailable (stream1) then
+                get:stream1,instructions1
+                else
+                exit
+                end if
+            end loop
+            loop
+                if Net.LineAvailable (stream2) then
+                get:stream2,instructions2
+                else
+                exit
+                end if
+            end loop
+            %update clients
+            put: stream1, "G"+intstr(winner)
+            put: stream2, "G"+intstr(winner)
+            exit
 	    end if
 	    
 	    %PLAYER INFO FORM:
