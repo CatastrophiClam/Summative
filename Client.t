@@ -635,7 +635,7 @@ connectingX := round(connectingX*connectingScale)
 connectingY := round(connectingY*connectingScale)
 
 %INSTRUCTIONS SCREEN VARIABLES
-var instructionsPic := Pic.FileNew("Pictures/Instructions.jpeg")
+var instructionsPic := Pic.FileNew("Pictures/Instructions.bmp")
 var backButton := Pic.FileNew("Pictures/BackButton.gif")
 
 %NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
@@ -645,14 +645,14 @@ var instructionsScaleX : real := maxx/Pic.Width(instructionsPic)
 var instructionsScaleY : real := maxy/Pic.Height(instructionsPic)
 
 %way 2
-how much do we resize the pictures to fit the screen?
+%how much do we resize the pictures to fit the screen?
 var instructionsScale : real := min(maxx/Pic.Width(instructionsPic),maxy/Pic.Height(instructionsPic))
 
 instructionsPic := Pic.Scale(instructionsPic,round(Pic.Width(instructionsPic)*instructionsScaleX),round(Pic.Height(instructionsPic)*instructionsScaleY))
 backButton := Pic.Scale(backButton,round(Pic.Width(backButton)*instructionsScaleX),round(Pic.Height(backButton)*instructionsScaleY))
 
 %CREDITS SCREEN
-var creditsPic := Pic.FileNew("Pictures/Instructions.jpeg")%Pic.FileNew("Pictures/Credits.jpeg")
+var creditsPic := Pic.FileNew("Pictures/Instructions.bmp")%Pic.FileNew("Pictures/Credits.jpeg")
 var creditsBackButton := Pic.FileNew("Pictures/BackButton.gif")
 
 %NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
@@ -662,7 +662,7 @@ var creditsScaleX : real := maxx/Pic.Width(creditsPic)
 var creditsScaleY : real := maxy/Pic.Height(creditsPic)
 
 %way 2
-how much do we resize the pictures to fit the screen?
+%how much do we resize the pictures to fit the screen?
 var creditsScale : real := min(maxx/Pic.Width(creditsPic),maxy/Pic.Height(creditsPic))
 
 creditsPic := Pic.Scale(creditsPic,round(Pic.Width(creditsPic)*creditsScaleX),round(Pic.Height(creditsPic)*creditsScaleY))
@@ -810,6 +810,11 @@ loop
             Sprite.Hide(creditsRedSprite)
             fork buttonClick
             %draw control screen
+            drawInstructions
+            Pic.Draw(menuScreenPic,0,0,picMerge)
+            Sprite.Show(playTextSprite)
+            Sprite.Show(controlsTextSprite)
+            Sprite.Show(creditsTextSprite)
         end if
     else
         Sprite.Hide(controlsRedSprite)
@@ -827,6 +832,11 @@ loop
             Sprite.Hide(creditsRedSprite)
             fork buttonClick
             %draw credits screen
+            drawCredits
+            Pic.Draw(menuScreenPic,0,0,picMerge)
+            Sprite.Show(playTextSprite)
+            Sprite.Show(controlsTextSprite)
+            Sprite.Show(creditsTextSprite)
         end if
     else
         Sprite.Hide(creditsRedSprite)
