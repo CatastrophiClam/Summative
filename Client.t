@@ -511,7 +511,7 @@ end playEndScreen
 %-------------------------VARIABLES---------------------------%
 
 %TITLE SCREEN VARIABLES
-var titlePic := Pic.FileNew("Pictures/TitleScreen.jpeg")
+var titlePic := Pic.FileNew("Pictures/TitleScreen.gif")
 var insertCoinPic := Pic.FileNew("Pictures/InsertCoin.gif")
 var insertX, insertY : int
 var picToDraw : int  %for insert coin blinking
@@ -588,7 +588,7 @@ var controlsY :int:= round(maxy/1.6)
 var creditsY :int:= round(maxy/1.97)
 
 %LOADING SCREEN VARIABLES
-var loadingBackground := Pic.FileNew("Pictures/ConnectionScreen.bmp")
+var loadingBackground := Pic.FileNew("Pictures/ConnectionScreen.gif")
 var connectingPic := Pic.FileNew("Pictures/Connecting.gif")
 
 %player boxes
@@ -638,7 +638,7 @@ connectingX := round(connectingX*connectingScale)
 connectingY := round(connectingY*connectingScale)
 
 %INSTRUCTIONS SCREEN VARIABLES
-var instructionsPic := Pic.FileNew("Pictures/Instructions.bmp")
+var instructionsPic := Pic.FileNew("Pictures/Instructions.gif")
 var backButton := Pic.FileNew("Pictures/BackButton.gif")
 
 %NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
@@ -655,7 +655,7 @@ instructionsPic := Pic.Scale(instructionsPic,round(Pic.Width(instructionsPic)*in
 backButton := Pic.Scale(backButton,round(Pic.Width(backButton)*instructionsScaleX),round(Pic.Height(backButton)*instructionsScaleY))
 
 %CREDITS SCREEN
-var creditsPic := Pic.FileNew("Pictures/Instructions.bmp")%Pic.FileNew("Pictures/Credits.jpeg")
+var creditsPic := Pic.FileNew("Pictures/Instructions.gif")%Pic.FileNew("Pictures/Credits.jpeg")
 var creditsBackButton := Pic.FileNew("Pictures/BackButton.gif")
 
 %NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
