@@ -73,13 +73,14 @@ var backgroundSprite : int
 backgroundSprite := Sprite.New (backgroundPic)
 
 %----------------SOUNDS STUFF-------------------%
-var soundOn := false  %is the sound on?
+var soundOn := true  %is the sound on?
 var buttonSound := "Sounds/Button.mp3"
 var gruntSound := "Sounds/Grunt.mp3"
 var fightMusic := "Sounds/FightMusic.mp3"
-var youWin := "Win_Sound_Effect.mp3"
-var youLose := "Lose_Sound_Effect.mp3"
-var titleSound := ""
+var youWin := "Sounds/Win_Sound_Effect.mp3"
+var youLose := "Sounds/Lose_Sound_Effect.mp3"
+var titleSound := "Sounds/MenuMusic.mp3"
+var titleMusicOn := true
 
 
 %---------------------------------PLAYER STUFF----------------------------------%
@@ -421,6 +422,16 @@ process buttonClick
     Music.PlayFile(buttonSound)
 end buttonClick
 
+process playMenuMusic
+    loop
+        Music.PlayFile(titleSound)
+        if not titleMusicOn then
+            Music.PlayFileStop()
+            exit
+        end if
+    end loop
+end playMenuMusic
+
 process playerSelect
     Music.PlayFile(gruntSound)
 end playerSelect
@@ -539,7 +550,7 @@ insertY := round(maxy/1.11 - Pic.Height(insertCoinPic)/2)
 %MENU SCREEN VARIABLES
 var menuScreenPic : int := Pic.FileNew("Pictures/MenuScreenBackground.gif")   %pictures
 var playTextPic : int:= Pic.FileNew("Pictures/MenuScreen.gif")
-var controlsTextPic : int:= Pic.FileNew("Pictures/Controls.gif")
+var controlsTextPic : int:= Pic.FileNew("Pictures/controls.gif")
 var creditsTextPic : int:= Pic.FileNew("Pictures/Credits.gif")
 
 var playRedPic : int := Pic.FileNew("Pictures/PlaySelect.gif")
@@ -678,6 +689,8 @@ creditsBackButton := Pic.Scale(creditsBackButton,round(Pic.Width(creditsBackButt
 Pic.Draw(titlePic,0,0,picMerge)
 Pic.Draw(insertCoinPic,0,0,picMerge)
 picToDraw := titlePic
+titleMusicOn := true
+fork playMenuMusic 
 loop
     Mouse.Where(x,y,button)
     switchCounter += 1
@@ -845,7 +858,7 @@ loop
         Sprite.Hide(creditsRedSprite)
     end if
 end loop
-
+titleMusicOn := false
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                                END PREGAME SCREEN                                                         %
