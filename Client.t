@@ -617,7 +617,7 @@ loadingBackground := Pic.Scale(loadingBackground, round(Pic.Width(loadingBackgro
 connectingPic := Pic.Scale(connectingPic, round(Pic.Width(connectingPic)*connectingScale), round(Pic.Height(connectingPic)*connectingScale))
 
 %coords of the opponent connecting message
-var connectingX := round(maxx/2-Pic.Width(connectinPic)/2))
+var connectingX := round(maxx/2-Pic.Width(connectingPic)/2)
 var connectingY := round(maxy/1.17)
 
 %compensation so that stuff get drawn right
@@ -859,8 +859,6 @@ end loop
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
-put "Enter player number: "
-get playerNum
 if playerNum = 1 then
     serverPort := 5600
     selfPlayer.x := 565
