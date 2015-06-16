@@ -358,7 +358,11 @@ procedure displayTime
 
     var minutes := floor (gameTime / 60)
     var seconds := gameTime mod 60
-    timeString := intstr (minutes) + ":" + intstr (seconds)
+    var secondString := intstr(seconds)
+    if length(secondString) < 2 then
+        secondString := "0"+secondString
+    end if
+    timeString := intstr (minutes) + ":" + secondString
     Font.Draw (timeString, round (maxx / 2) - Font.Width (timeString, font), maxy - 40, font, black)
 end displayTime
 
@@ -576,6 +580,24 @@ var drawX := 200 %where do we draw the buttons?
 var playY :int:= round(maxy/1.38)
 var controlsY :int:= round(maxy/1.6)
 var creditsY :int:= round(maxy/1.97)
+
+%LOADING SCREEN VARIABLES
+var loadingBackground := Pic.FileNew("Pictures/Connection.jpeg")
+var connectingPic := Pic.FileNew("Pictures/Connecting.jpeg")
+
+%NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
+
+%way 1
+var connectingScaleX : real := maxx/Pic.Width(loadingBackground)
+var connectingScaleY : real := maxy/Pic.Height(loadingBackground)
+
+%way 2
+%how much do we resize the pictures to fit the screen?
+var connectingScale : real := min(maxx/Pic.Width(loadingBackground),maxy/Pic.Height(loadingBackground))
+
+%scale pictures
+loadingBackground := Pic.Scale(loadingBackground, Pic.Width(loadingBackground)*connectionScaleX, Pic.Height(loadingBackground)*connectionScaleY)
+connectingPic := Pic.Scale(connectingPic, Pic.Width(connectingPic)*connectionScaleX, Pic.Height(connectingPic)*connectionScaleY)
 
 %----------------------------------------------------------------%
 %                      DRAW TITLE SCREEN                         %
