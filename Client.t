@@ -75,6 +75,7 @@ var backgroundSprite : int
 backgroundSprite := Sprite.New (backgroundPic)
 
 %----------------SOUNDS STUFF-------------------%
+var soundOn := false  %is the sound on?
 var buttonSound := "Sounds/Button.mp3"
 var gruntSound := "Sounds/Grunt.mp3"
 var fightMusic := "Sounds/FightMusic.mp3"
@@ -227,53 +228,6 @@ Pic.SetTransparentColor (exitPic, 0)
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                                  END VARIABLES                                                            %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                  NETWORK STUFF                                                            %
-%                                                                                                                           %
-%---------------------------------------------------------------------------------------------------------------------------%
-
-put "Enter player number: "
-get playerNum
-if playerNum = 1 then
-    serverPort := 5600
-    selfPlayer.x := 565
-    selfPlayer.y := 365
-    selfPlayer.h := 2
-    selfPlayer.w := 2
-    selfPlayer.sprite := Sprite.New (pictures (1, 1, 2))
-    otherPlayer.x := 1318
-    otherPlayer.y := 365
-    otherPlayer.h := 2
-    otherPlayer.w := 2
-    otherPlayer.sprite := Sprite.New (pictures (1, 1, 1))
-else
-    serverPort := 5605
-    otherPlayer.x := 565
-    otherPlayer.y := 365
-    otherPlayer.h := 2
-    otherPlayer.w := 2
-    otherPlayer.sprite := Sprite.New (pictures (1, 1, 2))
-    selfPlayer.x := 1318
-    selfPlayer.y := 365
-    selfPlayer.h := 2
-    selfPlayer.w := 2
-    selfPlayer.sprite := Sprite.New (pictures (1, 1, 1))
-end if
-netStream := Net.OpenConnection (serverAddress, serverPort)
-if not netStream <= 0 then
-    put "connected"
-else
-    put "not connected"
-end if
-
-%---------------------------------------------------------------------------------------------------------------------------%
-%                                                                                                                           %
-%                                                END NETWORK STUFF                                                          %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
@@ -487,10 +441,14 @@ procedure playEndScreen
     %choose which winning picture to display
     if winner = playerNum then
         chosenWinPic := youWinPic
-        fork winSound
+        if soundOn then
+            fork winSound
+        end if
     else
         chosenWinPic := youLosePic
-        fork loseSound
+        if soundOn then
+            fork loseSound
+        end if
     end if
     %make sprites
     winDisplay := Sprite.New (chosenWinPic)
@@ -543,11 +501,14 @@ end playEndScreen
 %KEN V.S. KEN
 
 %-------------------------VARIABLES---------------------------%
-var soundOn := false  %is the sound on?
-var titleScreenPic : int := Pic.FileNew()   %pictures
-var titlePlayButtonPic : int:= Pic.FileNew()
-var titleControlsButtonPic : int:= Pic.FileNew()
-var titleCreditsButtonPic : int:= Pic.FileNew()
+var titleScreenPic : int := Pic.FileNew("Pictures/MenuScreenBackground.gif")   %pictures
+var playTextPic : int:= Pic.FileNew("Pictures/MenuScreen.gif")
+var controlsTextPic : int:= Pic.FileNew("Pictures/controls.gif")
+var creditsTextPic : int:= Pic.FileNew("Pictures/Credits.gif")
+
+var playRedPic : int := Pic.FileNew("Pictures/PlaySelect.gif")
+var controlsRedPic : int := Pic.FileNew("Pictures/controlSelect.gif")
+var creditsRedPic : int := Pic.FileNew("Pictures/CreditsSelect.gif")
 
 %NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
 
@@ -560,75 +521,105 @@ var resizeScaleY : real := maxy/Pic.Height(titleScreenPic)
 var resizeScale : real := min(maxx/Pic.Width(titleScreenPic),maxy/Pic.Height(titleScreenPic))
 
 %resize pictures
-titleScreenPic := Pic.Scale(titleScreenPic,Pic.Width(titleScreenPic)*resizeScaleX,Pic.Height(titleScreenPic)*resizeScaleY)
-titlePlayButtonPic := Pic.Scale(titlePlayButtonPic,Pic.Width(titlePlayButtonPic)*resizeScaleX,Pic.Height(titlePlayButtonPic)*resizeScaleY)
-titleControlsButtonPic := Pic.Scale(titleControlsButtonPic,Pic.Width(titleControlsButtonPic)*resizeScaleX,Pic.Height(titleControlsButtonPic)*resizeScaleY)
-titleCreditsButtonPic := Pic.Scale(titleCreditsButtonPic,Pic.Width(titleCreditsButtonPic)*resizeScaleX,Pic.Height(titleCreditsButtonPic)*resizeScaleY)
+titleScreenPic := Pic.Scale(titleScreenPic,round(Pic.Width(titleScreenPic)*resizeScaleX),round(Pic.Height(titleScreenPic)*resizeScaleY))
+playTextPic := Pic.Scale(playTextPic,round(Pic.Width(playTextPic)*resizeScaleX),round(Pic.Height(playTextPic)*resizeScaleY))
+controlsTextPic := Pic.Scale(controlsTextPic,round(Pic.Width(controlsTextPic)*resizeScaleX),round(Pic.Height(controlsTextPic)*resizeScaleY))
+creditsTextPic := Pic.Scale(creditsTextPic,round(Pic.Width(creditsTextPic)*resizeScaleX),round(Pic.Height(creditsTextPic)*resizeScaleY))
 
-var playButtonSprite : int:= Sprite.New(titlePlayButtonPic)    %button sprites
-var controlsButtonSprite : int:= Sprite.New(titleControlsButtonPic)
-var creditsButtonSprite : int:= Sprite.New(titleCreditsButtonPic)
+playRedPic := Pic.Scale(playRedPic,round(Pic.Width(playRedPic)*resizeScaleX),round(Pic.Height(playRedPic)*resizeScaleY))
+controlsRedPic := Pic.Scale(controlsRedPic,round(Pic.Width(controlsRedPic)*resizeScaleX),round(Pic.Height(controlsRedPic)*resizeScaleY))
+creditsRedPic := Pic.Scale(creditsRedPic,round(Pic.Width(creditsRedPic)*resizeScaleX),round(Pic.Height(creditsRedPic)*resizeScaleY))
+
+var playTextSprite : int:= Sprite.New(playTextPic)    %button sprites
+var controlsTextSprite : int:= Sprite.New(controlsTextPic)
+var creditsTextSprite : int:= Sprite.New(creditsTextPic)
+Sprite.SetHeight(playTextSprite,10)
+Sprite.SetHeight(controlsTextSprite,10)
+Sprite.SetHeight(creditsTextSprite,10)
+
+var playRedSprite : int:= Sprite.New(playRedPic)    %red stroke sprites
+var controlsRedSprite : int:= Sprite.New(controlsRedPic)
+var creditsRedSprite : int:= Sprite.New(creditsRedPic)
+Sprite.SetHeight(playRedSprite,3)
+Sprite.SetHeight(controlsRedSprite,3)
+Sprite.SetHeight(creditsRedSprite,3)
 
 %where we draw stuff
 %Coords are CENTER of everything
 var drawX := 200 %where do we draw the buttons?
-var selectedX := 250 %where do we draw the buttons when they're selected?
 var playY :int:= round(maxy/1.38)
 var controlsY :int:= round(maxy/1.6)
 var creditsY :int:= round(maxy/1.97)
 
 %--------------------DRAW TITLE SCREEN---------------------%
 Pic.Draw(titleScreenPic,0,0,picMerge)
-Sprite.Animate(playButtonSprite,titlePlayButtonPic,drawX,playY,true)
-Sprite.Animate(controlsButtonSprite,titleControlsButtonPic,drawX,controlsY,true)
-Sprite.Animate(creditsButtonSprite,titleCreditsButtonPic,drawX,creditsY,true)
-Sprite.Show(playButtonSprite)
-Sprite.Show(controlsButtonSprite)
-Sprite.Show(creditsButtonSprite)
+%Set text positions
+Sprite.Animate(playTextSprite,playTextPic,drawX,playY,true)
+Sprite.Animate(controlsTextSprite,controlsTextPic,drawX,controlsY,true)
+Sprite.Animate(creditsTextSprite,creditsTextPic,drawX,creditsY,true)
+
+%set red stroke positions
+Sprite.Animate(playRedSprite,playRedPic,drawX,playY,true)
+Sprite.Animate(controlsRedSprite,controlsRedPic,drawX,controlsY,true)
+Sprite.Animate(creditsRedSprite,creditsRedPic,drawX,creditsY,true)
+
+%show text - only show red strokes when text is hovered over
+Sprite.Show(playTextSprite)
+Sprite.Show(controlsTextSprite)
+Sprite.Show(creditsTextSprite)
 
 %click detection
 loop
     Mouse.Where(x,y,button)
     
     %is the play button clicked?
-    if x > drawX - Pic.Width(titlePlayButtonPic)/2 and x < drawX + Pic.Width(titlePlayButtonPic)/2 and y > playY - Pic.Height(titlePlayButtonPic)/2 and y < playY + Pic.Height(titlePlayButtonPic)/2 then
-        Sprite.Animate(playButtonSprite,titlePlayButtonPic,selectedX,playY,true)
+    if x > drawX - Pic.Width(playTextPic)/2 and x < drawX + Pic.Width(playTextPic)/2 and y > playY - Pic.Height(playTextPic)/2 and y < playY + Pic.Height(playTextPic)/2 then
+        Sprite.Show(playRedSprite)
         if button = 1 then
-            Sprite.Hide(playButtonSprite)
-            Sprite.Hide(controlsButtonSprite)
-            Sprite.Hide(creditsButtonSprite)
+            Sprite.Hide(playTextSprite)
+            Sprite.Hide(controlsTextSprite)
+            Sprite.Hide(creditsTextSprite)
+            Sprite.Hide(playRedSprite)
+            Sprite.Hide(controlsRedSprite)
+            Sprite.Hide(creditsRedSprite)
             exit
         end if
     else
-        Sprite.Animate(playButtonSprite,titlePlayButtonPic,drawX,playY,true)
+        Sprite.Hide(playRedSprite)
     end if
     
     %is the controls button clicked?
-    if x > drawX - Pic.Width(titleControlsButtonPic)/2 and x < drawX + Pic.Width(titleControlsButtonPic)/2 and y > controlsY - Pic.Height(titleControlsButtonPic)/2 and y < controlsY + Pic.Height(titleControlsButtonPic)/2 then
-        Sprite.Animate(controlsButtonSprite,titleControlsButtonPic,selectedX,controlsY,true)
+    if x > drawX - Pic.Width(controlsTextPic)/2 and x < drawX + Pic.Width(controlsTextPic)/2 and y > controlsY - Pic.Height(controlsTextPic)/2 and y < controlsY + Pic.Height(controlsTextPic)/2 then
+        Sprite.Show(controlsRedSprite)
         if button = 1 then
-            Sprite.Hide(playButtonSprite)
-            Sprite.Hide(controlsButtonSprite)
-            Sprite.Hide(creditsButtonSprite)
+            Sprite.Hide(playTextSprite)
+            Sprite.Hide(controlsTextSprite)
+            Sprite.Hide(creditsTextSprite)
+            Sprite.Hide(playRedSprite)
+            Sprite.Hide(controlsRedSprite)
+            Sprite.Hide(creditsRedSprite)
             %draw control screen
             exit
         end if
     else
-        Sprite.Animate(controlsButtonSprite,titleControlsButtonPic,drawX,controlsY,true)
+        Sprite.Hide(controlsRedSprite)
     end if
     
     %is the credits button clicked?
-    if x > drawX - Pic.Width(creditsButtonSprite)/2 and x < drawX + Pic.Width(creditsButtonSprite)/2 and y > creditsY - Pic.Height(creditsButtonSprite)/2 and y < creditsY + Pic.Height(creditsButtonSprite)/2 then
-        Sprite.Animate(creditsButtonSprite,titleCreditsButtonPic,selectedX,creditsY,true)
+    if x > drawX - Pic.Width(creditsTextPic)/2 and x < drawX + Pic.Width(creditsTextPic)/2 and y > creditsY - Pic.Height(creditsTextPic)/2 and y < creditsY + Pic.Height(creditsTextPic)/2 then
+        Sprite.Show(creditsRedSprite)
         if button = 1 then
-            Sprite.Hide(playButtonSprite)
-            Sprite.Hide(controlsButtonSprite)
-            Sprite.Hide(creditsButtonSprite)
+            Sprite.Hide(playTextSprite)
+            Sprite.Hide(controlsTextSprite)
+            Sprite.Hide(creditsTextSprite)
+            Sprite.Hide(playRedSprite)
+            Sprite.Hide(controlsRedSprite)
+            Sprite.Hide(creditsRedSprite)
             %draw credits screen
             exit
         end if
     else
-        Sprite.Animate(creditsButtonSprite,titleCreditsButtonPic,drawX,creditsY,true)
+        Sprite.Hide(creditsRedSprite)
     end if
 end loop
 
@@ -637,6 +628,54 @@ end loop
 %                                                 END TITLE SCREEN                                                          %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
+
+
+%---------------------------------------------------------------------------------------------------------------------------%
+%                                                                                                                           %
+%                                                  NETWORK STUFF                                                            %
+%                                                                                                                           %
+%---------------------------------------------------------------------------------------------------------------------------%
+
+put "Enter player number: "
+get playerNum
+if playerNum = 1 then
+    serverPort := 5600
+    selfPlayer.x := 565
+    selfPlayer.y := 365
+    selfPlayer.h := 2
+    selfPlayer.w := 2
+    selfPlayer.sprite := Sprite.New (pictures (1, 1, 2))
+    otherPlayer.x := 1318
+    otherPlayer.y := 365
+    otherPlayer.h := 2
+    otherPlayer.w := 2
+    otherPlayer.sprite := Sprite.New (pictures (1, 1, 1))
+else
+    serverPort := 5605
+    otherPlayer.x := 565
+    otherPlayer.y := 365
+    otherPlayer.h := 2
+    otherPlayer.w := 2
+    otherPlayer.sprite := Sprite.New (pictures (1, 1, 2))
+    selfPlayer.x := 1318
+    selfPlayer.y := 365
+    selfPlayer.h := 2
+    selfPlayer.w := 2
+    selfPlayer.sprite := Sprite.New (pictures (1, 1, 1))
+end if
+netStream := Net.OpenConnection (serverAddress, serverPort)
+if not netStream <= 0 then
+    put "connected"
+else
+    put "not connected"
+end if
+
+%---------------------------------------------------------------------------------------------------------------------------%
+%                                                                                                                           %
+%                                                END NETWORK STUFF                                                          %
+%                                                                                                                           %
+%---------------------------------------------------------------------------------------------------------------------------%
+
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
@@ -679,7 +718,9 @@ loop
             end if
         end if
     end loop
-    fork fightSound
+    if soundOn then
+        fork fightSound
+    end if
     if endGame then
         exit
     end if
