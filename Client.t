@@ -79,6 +79,7 @@ var gruntSound := "Sounds/Grunt.mp3"
 var fightMusic := "Sounds/FightMusic.mp3"
 var youWin := "Win_Sound_Effect.mp3"
 var youLose := "Lose_Sound_Effect.mp3"
+var titleSound := ""
 
 
 %---------------------------------PLAYER STUFF----------------------------------%
@@ -412,6 +413,7 @@ function KeyHeldDown (c : char) : boolean
     result charsLast (c) and chars (c)
 end KeyHeldDown
 
+%sounds
 process buttonClick
     Music.PlayFile(buttonSound)
 end buttonClick
@@ -434,6 +436,7 @@ process winSound
     Music.PlayFile(youWin)
 end winSound
 
+%draw game over screen
 procedure playEndScreen
     %init sprites
     var winDisplay : int
@@ -611,25 +614,59 @@ var connectionScaleY : real := maxy/Pic.Height(loadingBackground)
 var connectingScale : real := min(maxx/Pic.Width(loadingBackground),maxy/Pic.Height(loadingBackground))
 
 %scale pictures
-loadingBackground := Pic.Scale(loadingBackground, round(Pic.Width(loadingBackground)*connectionScaleX), round(Pic.Height(loadingBackground)*connectionScaleY))
-connectingPic := Pic.Scale(connectingPic, round(Pic.Width(connectingPic)*connectionScaleX), round(Pic.Height(connectingPic)*connectionScaleY))
+loadingBackground := Pic.Scale(loadingBackground, round(Pic.Width(loadingBackground)*connectingScale), round(Pic.Height(loadingBackground)*connectingScale))
+connectingPic := Pic.Scale(connectingPic, round(Pic.Width(connectingPic)*connectingScale), round(Pic.Height(connectingPic)*connectingScale))
 
 %compensation so that stuff get drawn right
 var connectionXComp :int:= round((maxx-Pic.Width(loadingBackground))/2)
 var connectionYComp :int:= round((maxy-Pic.Height(loadingBackground))/2)
 
 %scale and compensate coords
-p1X1 := round(p1X1*connectionScaleX + connectionXComp)
-p1X2 := round(p1X2*connectionScaleX + connectionXComp)
-p1Y1 := round(p1Y1*connectionScaleY + connectionYComp)
-p1Y2 := round(p1Y2*connectionScaleY + connectionYComp)
-p2X1 := round(p2X1*connectionScaleX + connectionXComp)
-p2X2 := round(p2X2*connectionScaleX + connectionXComp)
-p2Y1 := round(p2Y1*connectionScaleY + connectionYComp)
-p2Y2 := round(p2Y2*connectionScaleY + connectionYComp)
+p1X1 := round(p1X1*connectingScale + connectionXComp)
+p1X2 := round(p1X2*connectingScale + connectionXComp)
+p1Y1 := round(p1Y1*connectingScale + connectionYComp)
+p1Y2 := round(p1Y2*connectingScale + connectionYComp)
+p2X1 := round(p2X1*connectingScale + connectionXComp)
+p2X2 := round(p2X2*connectingScale + connectionXComp)
+p2Y1 := round(p2Y1*connectingScale + connectionYComp)
+p2Y2 := round(p2Y2*connectingScale + connectionYComp)
 
-connectingX := round(connectingX*connectionScaleX)
-connectingY := round(connectingY*connectionScaleY)
+connectingX := round(connectingX*connectingScale)
+connectingY := round(connectingY*connectingScale)
+
+%INSTRUCTIONS SCREEN VARIABLES
+var instructionsPic := Pic.FileNew("Pictures/Instructions.jpeg")
+var backButton := Pic.FileNew("Pictures/BackButton.gif")
+
+%NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
+
+%way 1
+var instructionsScaleX : real := maxx/Pic.Width(instructionsPic)
+var instructionsScaleY : real := maxy/Pic.Height(instructionsPic)
+
+%way 2
+how much do we resize the pictures to fit the screen?
+var instructionsScale : real := min(maxx/Pic.Width(instructionsPic),maxy/Pic.Height(instructionsPic))
+
+instructionsPic := Pic.Scale(instructionsPic,round(Pic.Width(instructionsPic)*instructionsScaleX),round(Pic.Height(instructionsPic)*instructionsScaleY))
+backButton := Pic.Scale(backButton,round(Pic.Width(backButton)*instructionsScaleX),round(Pic.Height(backButton)*instructionsScaleY))
+
+%CREDITS SCREEN
+var creditsPic := Pic.FileNew("Pictures/Instructions.jpeg")%Pic.FileNew("Pictures/Credits.jpeg")
+var creditsBackButton := Pic.FileNew("Pictures/BackButton.gif")
+
+%NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
+
+%way 1
+var creditsScaleX : real := maxx/Pic.Width(creditsPic)
+var creditsScaleY : real := maxy/Pic.Height(creditsPic)
+
+%way 2
+how much do we resize the pictures to fit the screen?
+var creditsScale : real := min(maxx/Pic.Width(creditsPic),maxy/Pic.Height(creditsPic))
+
+creditsPic := Pic.Scale(creditsPic,round(Pic.Width(creditsPic)*creditsScaleX),round(Pic.Height(creditsPic)*creditsScaleY))
+creditsBackButton := Pic.Scale(creditsBackButton,round(Pic.Width(creditsBackButton)*creditsScaleX),round(Pic.Height(creditsBackButton)*creditsScaleY))
 
 %----------------------------------------------------------------%
 %                      DRAW TITLE SCREEN                         %
@@ -670,16 +707,54 @@ procedure drawConnectionScreen
         if button = 1 then
             if x > p1X1 and x < p1X2 and y > p1Y1 and y < p1Y2 then
                 playerNum := 1
+                fork playerSelect
                 exit
             elsif x > p2X1 and x < p2X2 and y > p2Y1 and y < p2Y2 then
-                playerNum := 2
+                playerNum := 2 
+                fork playerSelect
                 exit
             end if
         end if
     end loop
     Pic.Draw(connectingPic,connectingX,connectingY,picMerge)
 end drawConnectionScreen
-        
+
+%----------------------------------------------------------------%
+%               PROCEDURE FOR INSTRUCTIONS SCREEN                %
+%----------------------------------------------------------------%
+
+procedure drawInstructions
+    Pic.Draw(instructionsPic,0,0,picMerge)
+    Pic.Draw(backButton,10,10,picMerge)
+    loop
+        Mouse.Where(x,y,button)
+        if button = 1 then
+            if x > 10 and x < 10+Pic.Width(backButton) and y > 10 and y < 10+Pic.Height(backButton) then
+                fork buttonClick
+                exit
+            end if
+        end if
+    end loop
+end drawInstructions
+
+%----------------------------------------------------------------%
+%                 PROCEDURE FOR CREDITS SCREEN                   %
+%----------------------------------------------------------------%
+
+procedure drawCredits
+    Pic.Draw(creditsPic,0,0,picMerge)
+    Pic.Draw(creditsBackButton,10,10,picMerge)
+    loop
+        Mouse.Where(x,y,button)
+        if button = 1 then
+            if x > 10 and x < 10+Pic.Width(creditsBackButton) and y > 10 and y < 10+Pic.Height(creditsBackButton) then
+                fork buttonClick
+                exit
+            end if
+        end if
+    end loop
+end drawCredits
+
 %----------------------------------------------------------------%
 %                       DRAW MENU SCREEN                         %
 %----------------------------------------------------------------%
@@ -714,6 +789,7 @@ loop
             Sprite.Hide(playRedSprite)
             Sprite.Hide(controlsRedSprite)
             Sprite.Hide(creditsRedSprite)
+            fork buttonClick
             %go to connection screen
             drawConnectionScreen
             exit
@@ -732,6 +808,7 @@ loop
             Sprite.Hide(playRedSprite)
             Sprite.Hide(controlsRedSprite)
             Sprite.Hide(creditsRedSprite)
+            fork buttonClick
             %draw control screen
         end if
     else
@@ -748,6 +825,7 @@ loop
             Sprite.Hide(playRedSprite)
             Sprite.Hide(controlsRedSprite)
             Sprite.Hide(creditsRedSprite)
+            fork buttonClick
             %draw credits screen
         end if
     else
