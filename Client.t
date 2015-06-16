@@ -56,7 +56,7 @@ font1 := Font.New ("sans serif:100")
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
-var serverAddress : string := "10.174.28.204"%"192.168.5.60"
+var serverAddress : string := "23.91.148.81"%"192.168.5.60"
 var serverPort : int
 var playerNum : int
 
@@ -501,23 +501,23 @@ function KeyHeldDown (c : char) : boolean
     result charsLast (c) and chars (c)
 end KeyHeldDown
 
-proc buttonClick
+process buttonClick
     Music.PlayFile(buttonSound)
 end buttonClick
 
-proc playerSelect
+process playerSelect
     Music.PlayFile(gruntSound)
 end playerSelect
 
-proc fightSound
+process fightSound
     Music.PlayFile(fightMusic)
 end fightSound
 
-proc loseSound
+process loseSound
     Music.PlayFile(youLose)
 end loseSound
 
-proc winSound  
+process winSound  
     Music.PlayFile(youWin)
 end winSound
 
@@ -593,6 +593,8 @@ loop
     if endGame then
 	exit
     end if
+    
+    fork fightSound
     %This loop is one game
     loop
 	instructions := ""
