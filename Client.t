@@ -23,12 +23,12 @@ var platX2 := 1418
 type Character :
     record
 
-	x : int
-	y : int
-	h : int
-	w : int
-	pic : int
-	sprite : int
+        x : int
+        y : int
+        h : int
+        w : int
+        pic : int
+        sprite : int
     end record
 
 %mouse buttons
@@ -73,13 +73,14 @@ var backgroundSprite : int
 backgroundSprite := Sprite.New (backgroundPic)
 
 %----------------SOUNDS STUFF-------------------%
-var soundOn := false  %is the sound on?
+var soundOn := true  %is the sound on?
 var buttonSound := "Sounds/Button.mp3"
 var gruntSound := "Sounds/Grunt.mp3"
 var fightMusic := "Sounds/FightMusic.mp3"
-var youWin := "Win_Sound_Effect.mp3"
-var youLose := "Lose_Sound_Effect.mp3"
-var titleSound := ""
+var youWin := "Sounds/Win_Sound_Effect.mp3"
+var youLose := "Sounds/Lose_Sound_Effect.mp3"
+var titleSound := "Sounds/MenuMusic.mp3"
+var titleMusicOn := true
 
 
 %---------------------------------PLAYER STUFF----------------------------------%
@@ -250,90 +251,90 @@ procedure updateScreen
 
     %find leftMost and rightMost
     if selfPlayer.x < otherPlayer.x then
-	%if player 1 is to the left of player 2 and inside the world boundaries
-	if selfPlayer.x - selfPlayer.w / 2 > 0 then
-	    %player 1's x is leftmost
-	    leftMost := round (selfPlayer.x - selfPlayer.w / 2)
-	else
-	    leftMost := 0
-	end if
+        %if player 1 is to the left of player 2 and inside the world boundaries
+        if selfPlayer.x - selfPlayer.w / 2 > 0 then
+            %player 1's x is leftmost
+            leftMost := round (selfPlayer.x - selfPlayer.w / 2)
+        else
+            leftMost := 0
+        end if
 
-	%This means that player 2 is to the right of player 1
-	if otherPlayer.x + otherPlayer.w / 2 < worldLength then
-	    %player 2's x is rightmost
-	    rightMost := round (otherPlayer.x + otherPlayer.w / 2)
-	else
-	    rightMost := worldLength
-	end if
+        %This means that player 2 is to the right of player 1
+        if otherPlayer.x + otherPlayer.w / 2 < worldLength then
+            %player 2's x is rightmost
+            rightMost := round (otherPlayer.x + otherPlayer.w / 2)
+        else
+            rightMost := worldLength
+        end if
     else
-	%player 2 is to the left of player 1
-	if otherPlayer.x - otherPlayer.w / 2 > 0 then
-	    %player 1's x is leftmost
-	    leftMost := round (otherPlayer.x - otherPlayer.w / 2)
-	else
-	    leftMost := 0
-	end if
+        %player 2 is to the left of player 1
+        if otherPlayer.x - otherPlayer.w / 2 > 0 then
+            %player 1's x is leftmost
+            leftMost := round (otherPlayer.x - otherPlayer.w / 2)
+        else
+            leftMost := 0
+        end if
 
-	%This means that player 1 is to the right of player 2
-	if selfPlayer.x + selfPlayer.w / 2 < worldLength then
-	    %player 1's x is leftmost
-	    rightMost := round (selfPlayer.x + selfPlayer.w / 2)
-	else
-	    rightMost := worldLength
-	end if
+        %This means that player 1 is to the right of player 2
+        if selfPlayer.x + selfPlayer.w / 2 < worldLength then
+            %player 1's x is leftmost
+            rightMost := round (selfPlayer.x + selfPlayer.w / 2)
+        else
+            rightMost := worldLength
+        end if
     end if
 
     %find topmost and bottomMost
     if selfPlayer.y < otherPlayer.y then
-	%if player 1 is under player 2 and inside the world boundaries
-	if selfPlayer.y - selfPlayer.h / 2 > 0 then
-	    %player 1's y is bottommost
-	    bottomMost := round (selfPlayer.y - selfPlayer.h / 2)
-	else
-	    bottomMost := 0
-	end if
+        %if player 1 is under player 2 and inside the world boundaries
+        if selfPlayer.y - selfPlayer.h / 2 > 0 then
+            %player 1's y is bottommost
+            bottomMost := round (selfPlayer.y - selfPlayer.h / 2)
+        else
+            bottomMost := 0
+        end if
 
-	%This means that player 2 above player 1
-	if otherPlayer.y + otherPlayer.h / 2 < worldHeight then
-	    %player 1's x is topmost
-	    topMost := round (otherPlayer.y + otherPlayer.h / 2)
-	else
-	    topMost := worldHeight
-	end if
+        %This means that player 2 above player 1
+        if otherPlayer.y + otherPlayer.h / 2 < worldHeight then
+            %player 1's x is topmost
+            topMost := round (otherPlayer.y + otherPlayer.h / 2)
+        else
+            topMost := worldHeight
+        end if
     else
-	%if player 2 is under player 1 and inside the world boundaries
-	if otherPlayer.y - otherPlayer.h / 2 > 0 then
-	    %player 1's y is bottommost
-	    bottomMost := round (otherPlayer.y - otherPlayer.h / 2)
-	else
-	    bottomMost := 0
-	end if
+        %if player 2 is under player 1 and inside the world boundaries
+        if otherPlayer.y - otherPlayer.h / 2 > 0 then
+            %player 1's y is bottommost
+            bottomMost := round (otherPlayer.y - otherPlayer.h / 2)
+        else
+            bottomMost := 0
+        end if
 
-	%This means that player 1 above player 2
-	if selfPlayer.y + selfPlayer.h / 2 < worldHeight then
-	    %player 1's x is topmost
-	    topMost := round (selfPlayer.y + selfPlayer.h / 2)
-	else
-	    topMost := worldHeight
-	end if
+        %This means that player 1 above player 2
+        if selfPlayer.y + selfPlayer.h / 2 < worldHeight then
+            %player 1's x is topmost
+            topMost := round (selfPlayer.y + selfPlayer.h / 2)
+        else
+            topMost := worldHeight
+        end if
     end if
 
 
     %update screenX and screenY
     screenX := round ((rightMost + leftMost) / 2 - maxx / 2)
     if screenX < 0 then
-	screenX := 0
+        screenX := 0
     end if
     if screenX > worldLength - maxx then
-	screenX := worldLength - maxx
+        screenX := worldLength - maxx
     end if
 
     screenY := round ((bottomMost + topMost) / 2 - maxy / 2)
     if screenY < 0 then
-	screenY := 0
+        screenY := 0
     end if
     if screenY > worldHeight - maxy then
-	screenY := worldHeight - maxy
+        screenY := worldHeight - maxy
     end if
 
 end updateScreen
@@ -346,12 +347,12 @@ function split (str : string, regex : string) : array 1 .. 15 of string
 
     for i : 1 .. length (str) + 1
 
-	if i = length (str) + 1 or str (i) = regex then
+        if i = length (str) + 1 or str (i) = regex then
 
-	    count += 1
-	    a (count) := str (pastSpace + 1 .. i - 1)
-	    pastSpace := i
-	end if
+            count += 1
+            a (count) := str (pastSpace + 1 .. i - 1)
+            pastSpace := i
+        end if
     end for
     result a
 end split
@@ -363,7 +364,7 @@ procedure displayTime
     var seconds := gameTime mod 60
     var secondString := intstr(seconds)
     if length(secondString) < 2 then
-	secondString := "0"+secondString
+        secondString := "0"+secondString
     end if
     timeString := intstr (minutes) + ":" + secondString
     Font.Draw (timeString, round (maxx / 2) - Font.Width (timeString, font), maxy - 40, font, black)
@@ -421,6 +422,16 @@ process buttonClick
     Music.PlayFile(buttonSound)
 end buttonClick
 
+process playMenuMusic
+    loop
+        Music.PlayFile(titleSound)
+        if not titleMusicOn then
+            Music.PlayFileStop()
+            exit
+        end if
+    end loop
+end playMenuMusic
+
 process playerSelect
     Music.PlayFile(gruntSound)
 end playerSelect
@@ -448,15 +459,15 @@ procedure playEndScreen
     var exitButton : int
     %choose which winning picture to display
     if winner = playerNum then
-	chosenWinPic := youWinPic
-	if soundOn then
-	    fork winSound
-	end if
+        chosenWinPic := youWinPic
+        if soundOn then
+            fork winSound
+        end if
     else
-	chosenWinPic := youLosePic
-	if soundOn then
-	    fork loseSound
-	end if
+        chosenWinPic := youLosePic
+        if soundOn then
+            fork loseSound
+        end if
     end if
     %make sprites
     winDisplay := Sprite.New (chosenWinPic)
@@ -471,21 +482,21 @@ procedure playEndScreen
     Sprite.Show (playAgainButton)
     Sprite.Show (exitButton)
     loop
-	%wait for player to choose option
-	Mouse.Where (x, y, button)
-	if button = 1 then
-	    %play again is clicked
-	    if x > round (maxx / 4 - Pic.Width (playAgainPic) / 2) and x < maxx / 4 + Pic.Width (playAgainPic) / 2 and y > round (maxy / 4 - Pic.Height (playAgainPic) / 2) and y < round (maxy / 4 - 
-		Pic.Height (playAgainPic) / 2) + Pic.Height (playAgainPic) then
-		playAgain := true
-		exit
-		%exit is clicked
-	    elsif x > round (3 * maxx / 4 - Pic.Width (exitPic) / 2) and x < round (3 * maxx / 4 + Pic.Width (exitPic) / 2) and y > round (maxy / 4 - Pic.Height (exitPic) / 2) and y < round (maxy / 4 
-		+ Pic.Height (exitPic) / 2) then
-		playAgain := false
-		exit
-	    end if
-	end if
+        %wait for player to choose option
+        Mouse.Where (x, y, button)
+        if button = 1 then
+            %play again is clicked
+            if x > round (maxx / 4 - Pic.Width (playAgainPic) / 2) and x < maxx / 4 + Pic.Width (playAgainPic) / 2 and y > round (maxy / 4 - Pic.Height (playAgainPic) / 2) and y < round (maxy / 4 - 
+                Pic.Height (playAgainPic) / 2) + Pic.Height (playAgainPic) then
+                playAgain := true
+                exit
+                %exit is clicked
+            elsif x > round (3 * maxx / 4 - Pic.Width (exitPic) / 2) and x < round (3 * maxx / 4 + Pic.Width (exitPic) / 2) and y > round (maxy / 4 - Pic.Height (exitPic) / 2) and y < round (maxy / 4 
+                + Pic.Height (exitPic) / 2) then
+                playAgain := false
+                exit
+            end if
+        end if
     end loop
     Sprite.Hide (winDisplay)
     Sprite.Hide (playAgainButton)
@@ -539,7 +550,7 @@ insertY := round(maxy/1.11 - Pic.Height(insertCoinPic)/2)
 %MENU SCREEN VARIABLES
 var menuScreenPic : int := Pic.FileNew("Pictures/MenuScreenBackground.gif")   %pictures
 var playTextPic : int:= Pic.FileNew("Pictures/MenuScreen.gif")
-var controlsTextPic : int:= Pic.FileNew("Pictures/Controls.gif")
+var controlsTextPic : int:= Pic.FileNew("Pictures/controls.gif")
 var creditsTextPic : int:= Pic.FileNew("Pictures/Credits.gif")
 
 var playRedPic : int := Pic.FileNew("Pictures/PlaySelect.gif")
@@ -678,22 +689,24 @@ creditsBackButton := Pic.Scale(creditsBackButton,round(Pic.Width(creditsBackButt
 Pic.Draw(titlePic,0,0,picMerge)
 Pic.Draw(insertCoinPic,0,0,picMerge)
 picToDraw := titlePic
+titleMusicOn := true
+fork playMenuMusic 
 loop
     Mouse.Where(x,y,button)
     switchCounter += 1
     %make insert coin blink
     if switchCounter = 1000 then
-	Pic.Draw(picToDraw,toDrawX,toDrawY,picMerge)
-	if picToDraw = titlePic then
-	    picToDraw := insertCoinPic
-	    toDrawX := insertX
-	    toDrawY := insertY
-	else
-	    picToDraw := titlePic
-	    toDrawX := 0
-	    toDrawY := 0
-	end if
-	switchCounter := 1
+        Pic.Draw(picToDraw,toDrawX,toDrawY,picMerge)
+        if picToDraw = titlePic then
+            picToDraw := insertCoinPic
+            toDrawX := insertX
+            toDrawY := insertY
+        else
+            picToDraw := titlePic
+            toDrawX := 0
+            toDrawY := 0
+        end if
+        switchCounter := 1
     end if
     exit when button = 1
 end loop
@@ -706,18 +719,18 @@ procedure drawConnectionScreen
     Draw.FillBox(0,0,maxx,maxy,black)
     Pic.Draw(loadingBackground,round(0+connectionXComp), round(0+connectionYComp),picMerge)
     loop
-	Mouse.Where(x,y,button)
-	if button = 1 then
-	    if x > p1X1 and x < p1X2 and y > p1Y1 and y < p1Y2 then
-		playerNum := 1
-		fork playerSelect
-		exit
-	    elsif x > p2X1 and x < p2X2 and y > p2Y1 and y < p2Y2 then
-		playerNum := 2 
-		fork playerSelect
-		exit
-	    end if
-	end if
+        Mouse.Where(x,y,button)
+        if button = 1 then
+            if x > p1X1 and x < p1X2 and y > p1Y1 and y < p1Y2 then
+                playerNum := 1
+                fork playerSelect
+                exit
+            elsif x > p2X1 and x < p2X2 and y > p2Y1 and y < p2Y2 then
+                playerNum := 2 
+                fork playerSelect
+                exit
+            end if
+        end if
     end loop
     Pic.Draw(connectingPic,connectingX,connectingY,picMerge)
 end drawConnectionScreen
@@ -730,13 +743,13 @@ procedure drawInstructions
     Pic.Draw(instructionsPic,0,0,picMerge)
     Pic.Draw(backButton,10,10,picMerge)
     loop
-	Mouse.Where(x,y,button)
-	if button = 1 then
-	    if x > 10 and x < 10+Pic.Width(backButton) and y > 10 and y < 10+Pic.Height(backButton) then
-		fork buttonClick
-		exit
-	    end if
-	end if
+        Mouse.Where(x,y,button)
+        if button = 1 then
+            if x > 10 and x < 10+Pic.Width(backButton) and y > 10 and y < 10+Pic.Height(backButton) then
+                fork buttonClick
+                exit
+            end if
+        end if
     end loop
 end drawInstructions
 
@@ -748,13 +761,13 @@ procedure drawCredits
     Pic.Draw(creditsPic,0,0,picMerge)
     Pic.Draw(creditsBackButton,10,10,picMerge)
     loop
-	Mouse.Where(x,y,button)
-	if button = 1 then
-	    if x > 10 and x < 10+Pic.Width(creditsBackButton) and y > 10 and y < 10+Pic.Height(creditsBackButton) then
-		fork buttonClick
-		exit
-	    end if
-	end if
+        Mouse.Where(x,y,button)
+        if button = 1 then
+            if x > 10 and x < 10+Pic.Width(creditsBackButton) and y > 10 and y < 10+Pic.Height(creditsBackButton) then
+                fork buttonClick
+                exit
+            end if
+        end if
     end loop
 end drawCredits
 
@@ -784,68 +797,68 @@ loop
     
     %is the play button clicked?
     if x > drawX - Pic.Width(playTextPic)/2 and x < drawX + Pic.Width(playTextPic)/2 and y > playY - Pic.Height(playTextPic)/2 and y < playY + Pic.Height(playTextPic)/2 then
-	Sprite.Show(playRedSprite)
-	if button = 1 then
-	    Sprite.Hide(playTextSprite)
-	    Sprite.Hide(controlsTextSprite)
-	    Sprite.Hide(creditsTextSprite)
-	    Sprite.Hide(playRedSprite)
-	    Sprite.Hide(controlsRedSprite)
-	    Sprite.Hide(creditsRedSprite)
-	    fork buttonClick
-	    %go to connection screen
-	    drawConnectionScreen
-	    exit
-	end if
+        Sprite.Show(playRedSprite)
+        if button = 1 then
+            Sprite.Hide(playTextSprite)
+            Sprite.Hide(controlsTextSprite)
+            Sprite.Hide(creditsTextSprite)
+            Sprite.Hide(playRedSprite)
+            Sprite.Hide(controlsRedSprite)
+            Sprite.Hide(creditsRedSprite)
+            fork buttonClick
+            %go to connection screen
+            drawConnectionScreen
+            exit
+        end if
     else
-	Sprite.Hide(playRedSprite)
+        Sprite.Hide(playRedSprite)
     end if
     
     %is the instructions button clicked?
     if x > drawX - Pic.Width(controlsTextPic)/2 and x < drawX + Pic.Width(controlsTextPic)/2 and y > controlsY - Pic.Height(controlsTextPic)/2 and y < controlsY + Pic.Height(controlsTextPic)/2 then
-	Sprite.Show(controlsRedSprite)
-	if button = 1 then
-	    Sprite.Hide(playTextSprite)
-	    Sprite.Hide(controlsTextSprite)
-	    Sprite.Hide(creditsTextSprite)
-	    Sprite.Hide(playRedSprite)
-	    Sprite.Hide(controlsRedSprite)
-	    Sprite.Hide(creditsRedSprite)
-	    fork buttonClick
-	    %draw control screen
-	    drawInstructions
-	    Pic.Draw(menuScreenPic,0,0,picMerge)
-	    Sprite.Show(playTextSprite)
-	    Sprite.Show(controlsTextSprite)
-	    Sprite.Show(creditsTextSprite)
-	end if
+        Sprite.Show(controlsRedSprite)
+        if button = 1 then
+            Sprite.Hide(playTextSprite)
+            Sprite.Hide(controlsTextSprite)
+            Sprite.Hide(creditsTextSprite)
+            Sprite.Hide(playRedSprite)
+            Sprite.Hide(controlsRedSprite)
+            Sprite.Hide(creditsRedSprite)
+            fork buttonClick
+            %draw control screen
+            drawInstructions
+            Pic.Draw(menuScreenPic,0,0,picMerge)
+            Sprite.Show(playTextSprite)
+            Sprite.Show(controlsTextSprite)
+            Sprite.Show(creditsTextSprite)
+        end if
     else
-	Sprite.Hide(controlsRedSprite)
+        Sprite.Hide(controlsRedSprite)
     end if
     
     %is the credits button clicked?
     if x > drawX - Pic.Width(creditsTextPic)/2 and x < drawX + Pic.Width(creditsTextPic)/2 and y > creditsY - Pic.Height(creditsTextPic)/2 and y < creditsY + Pic.Height(creditsTextPic)/2 then
-	Sprite.Show(creditsRedSprite)
-	if button = 1 then
-	    Sprite.Hide(playTextSprite)
-	    Sprite.Hide(controlsTextSprite)
-	    Sprite.Hide(creditsTextSprite)
-	    Sprite.Hide(playRedSprite)
-	    Sprite.Hide(controlsRedSprite)
-	    Sprite.Hide(creditsRedSprite)
-	    fork buttonClick
-	    %draw credits screen
-	    drawCredits
-	    Pic.Draw(menuScreenPic,0,0,picMerge)
-	    Sprite.Show(playTextSprite)
-	    Sprite.Show(controlsTextSprite)
-	    Sprite.Show(creditsTextSprite)
-	end if
+        Sprite.Show(creditsRedSprite)
+        if button = 1 then
+            Sprite.Hide(playTextSprite)
+            Sprite.Hide(controlsTextSprite)
+            Sprite.Hide(creditsTextSprite)
+            Sprite.Hide(playRedSprite)
+            Sprite.Hide(controlsRedSprite)
+            Sprite.Hide(creditsRedSprite)
+            fork buttonClick
+            %draw credits screen
+            drawCredits
+            Pic.Draw(menuScreenPic,0,0,picMerge)
+            Sprite.Show(playTextSprite)
+            Sprite.Show(controlsTextSprite)
+            Sprite.Show(creditsTextSprite)
+        end if
     else
-	Sprite.Hide(creditsRedSprite)
+        Sprite.Hide(creditsRedSprite)
     end if
 end loop
-
+titleMusicOn := false
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
 %                                                END PREGAME SCREEN                                                         %
@@ -928,116 +941,116 @@ loop
     netLimiter := 0
     %wait for all players to be connected
     loop
-	if Net.LineAvailable (netStream) then
-	    get : netStream, startStr
-	    if startStr = "go" then
-		endGame := false
-		exit
-	    else
-		endGame := true
-		exit
-	    end if
-	end if
+        if Net.LineAvailable (netStream) then
+            get : netStream, startStr
+            if startStr = "go" then
+                endGame := false
+                exit
+            else
+                endGame := true
+                exit
+            end if
+        end if
     end loop
     if soundOn then
-	fork fightSound
+        fork fightSound
     end if
     if endGame then
-	exit
+        exit
     end if
     %This loop is one game
     loop
-	instructions := ""
-	charsLast := chars
-	Input.KeyDown (chars)
-	updateScreen
+        instructions := ""
+        charsLast := chars
+        Input.KeyDown (chars)
+        updateScreen
 
-	%Movement instructions
-	if (chars (KEY_LEFT_ARROW)) then
-	    %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
-	    %chooses the last pressed key for attack
-	    if KeyPushedDown (KEY_LEFT_ARROW) then
-		mostRecentKey := "1"
-	    elsif KeyPushedDown (KEY_RIGHT_ARROW) then
-		mostRecentKey := "2"
-	    end if
-	elsif (chars (KEY_RIGHT_ARROW)) then
-	    if KeyPushedDown (KEY_RIGHT_ARROW) then
-		mostRecentKey := "2"
-	    end if
-	else
-	    mostRecentKey := "0"
-	end if
-	instructions += mostRecentKey
+        %Movement instructions
+        if (chars (KEY_LEFT_ARROW)) then
+            %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
+            %chooses the last pressed key for attack
+            if KeyPushedDown (KEY_LEFT_ARROW) then
+                mostRecentKey := "1"
+            elsif KeyPushedDown (KEY_RIGHT_ARROW) then
+                mostRecentKey := "2"
+            end if
+        elsif (chars (KEY_RIGHT_ARROW)) then
+            if KeyPushedDown (KEY_RIGHT_ARROW) then
+                mostRecentKey := "2"
+            end if
+        else
+            mostRecentKey := "0"
+        end if
+        instructions += mostRecentKey
 
-	if (chars (KEY_UP_ARROW)) then
-	    instructions += "2"
-	    if KeyPushedDown (KEY_UP_ARROW) then
-		mostRecentKey := "4"
-	    end if
-	elsif (chars (KEY_DOWN_ARROW)) then
-	    instructions += "1"
-	    if KeyPushedDown (KEY_DOWN_ARROW) then
-		mostRecentKey := "3"
-	    end if
-	else
-	    instructions += "0"
-	end if
+        if (chars (KEY_UP_ARROW)) then
+            instructions += "2"
+            if KeyPushedDown (KEY_UP_ARROW) then
+                mostRecentKey := "4"
+            end if
+        elsif (chars (KEY_DOWN_ARROW)) then
+            instructions += "1"
+            if KeyPushedDown (KEY_DOWN_ARROW) then
+                mostRecentKey := "3"
+            end if
+        else
+            instructions += "0"
+        end if
 
-	instructions += mostRecentKey
+        instructions += mostRecentKey
 
-	%attack instructions
-	if not chars (KEY_DOWN_ARROW) then
-	    if chars ('q') then
-		instructions += "q"
-	    elsif chars ('w') then
-		instructions += "w"
-	    else
-		instructions += "n"
-	    end if
-	else
-	    instructions += "n"
-	end if
+        %attack instructions
+        if not chars (KEY_DOWN_ARROW) then
+            if chars ('q') then
+                instructions += "q"
+            elsif chars ('w') then
+                instructions += "w"
+            else
+                instructions += "n"
+            end if
+        else
+            instructions += "n"
+        end if
 
-	if netLimiter < 10 then
-	    put : netStream, instructions
-	    netLimiter += 1
-	end if
+        if netLimiter < 10 then
+            put : netStream, instructions
+            netLimiter += 1
+        end if
 
-	if Net.LineAvailable (netStream) then
-	    get : netStream, positions : *
-	    %First, check if it's game over
-	    if positions (1) = "G" then
-		winner := strint (positions (2))
-		exit
-	    end if
-	    %positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives, time
+        if Net.LineAvailable (netStream) then
+            get : netStream, positions : *
+            %First, check if it's game over
+            if positions (1) = "G" then
+                winner := strint (positions (2))
+                exit
+            end if
+            %positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives, time
 
-	    toDoArray := split(positions," ")
-	    Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
-	    Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
-	    gameTime := strint(toDoArray(15))
-	    damage1 := strint(toDoArray(11))
-	    damage2 := strint(toDoArray(13))
-	    numLives1 :=strint(toDoArray(12))
-	    numLives2 :=strint(toDoArray(14))
-	    netLimiter -= 1
-	end if
+            toDoArray := split(positions," ")
+            Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
+            Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
+            gameTime := strint(toDoArray(15))
+            damage1 := strint(toDoArray(11))
+            damage2 := strint(toDoArray(13))
+            numLives1 :=strint(toDoArray(12))
+            numLives2 :=strint(toDoArray(14))
+            netLimiter -= 1
+        end if
 
-	updateBackground
-	displayTime
-	displayStatus
+        updateBackground
+        displayTime
+        displayStatus
 
-	Sprite.Show(otherPlayer.sprite)
-	Sprite.Show(selfPlayer.sprite)
-	delay(10)
+        Sprite.Show(otherPlayer.sprite)
+        Sprite.Show(selfPlayer.sprite)
+        delay(10)
     end loop
     playEndScreen
     if not playAgain then
-	put : netStream, "no"
-	exit
+        put : netStream, "no"
+        exit
     else
-	put : netStream, "yes"
+        put : netStream, "yes"
     end if
 end loop
 
