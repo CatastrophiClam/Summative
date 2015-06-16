@@ -492,41 +492,69 @@ end playEndScreen
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
-%                                                   TITLE SCREEN                                                            %
+%                                                  PREGAME SCREENS                                                          %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
 %KEN V.S. KEN
 
 %-------------------------VARIABLES---------------------------%
-var titleScreenPic : int := Pic.FileNew("Pictures/MenuScreenBackground.gif")   %pictures
+
+%TITLE SCREEN VARIABLES
+var titlePic := Pic.FileNew("Pictures/TitleScreen.jpeg")
+var insertCoinPic := Pic.FileNew("Pictures/InsertCoin.gif")
+var insertX, insertY : int
+var picToDraw : int  %for insert coin blinking
+var toDrawX, toDrawY :int
+toDrawX := 0
+toDrawY := 0
+var switchCounter := 0
+
+%NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
+
+%way 1
+var titleScaleX : real := maxx/Pic.Width(titlePic)
+var titleScaleY : real := maxy/Pic.Height(titlePic)
+
+%way 2
+%how much do we resize the pictures to fit the screen?
+var titleScale : real := min(maxx/Pic.Width(titlePic),maxy/Pic.Height(titlePic))
+
+titlePic := Pic.Scale(titlePic,round(Pic.Width(titlePic)*titleScaleX),round(Pic.Height(titlePic)*titleScaleY))
+insertCoinPic := Pic.Scale(insertCoinPic,round(Pic.Width(insertCoinPic)*titleScaleX),round(Pic.Height(insertCoinPic)*titleScaleY))
+
+insertX := round(maxx/2-Pic.Width(insertCoinPic)/2)
+insertY := round(maxy/1.11 - Pic.Height(insertCoinPic)/2)
+
+%MENU SCREEN VARIABLES
+var menuScreenPic : int := Pic.FileNew("Pictures/MenuScreenBackground.gif")   %pictures
 var playTextPic : int:= Pic.FileNew("Pictures/MenuScreen.gif")
 var controlsTextPic : int:= Pic.FileNew("Pictures/controls.gif")
 var creditsTextPic : int:= Pic.FileNew("Pictures/Credits.gif")
 
 var playRedPic : int := Pic.FileNew("Pictures/PlaySelect.gif")
-var controlsRedPic : int := Pic.FileNew("Pictures/controlSelect.gif")
+var controlsRedPic : int := Pic.FileNew("Pictures/ControlsSelect.gif")
 var creditsRedPic : int := Pic.FileNew("Pictures/CreditsSelect.gif")
 
 %NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
 
 %way 1
-var resizeScaleX : real := maxx/Pic.Width(titleScreenPic)
-var resizeScaleY : real := maxy/Pic.Height(titleScreenPic)
+var menuScaleX : real := maxx/Pic.Width(menuScreenPic)
+var menuScaleY : real := maxy/Pic.Height(menuScreenPic)
 
 %way 2
 %how much do we resize the pictures to fit the screen?
-var resizeScale : real := min(maxx/Pic.Width(titleScreenPic),maxy/Pic.Height(titleScreenPic))
+var menuScale : real := min(maxx/Pic.Width(menuScreenPic),maxy/Pic.Height(menuScreenPic))
 
 %resize pictures
-titleScreenPic := Pic.Scale(titleScreenPic,round(Pic.Width(titleScreenPic)*resizeScaleX),round(Pic.Height(titleScreenPic)*resizeScaleY))
-playTextPic := Pic.Scale(playTextPic,round(Pic.Width(playTextPic)*resizeScaleX),round(Pic.Height(playTextPic)*resizeScaleY))
-controlsTextPic := Pic.Scale(controlsTextPic,round(Pic.Width(controlsTextPic)*resizeScaleX),round(Pic.Height(controlsTextPic)*resizeScaleY))
-creditsTextPic := Pic.Scale(creditsTextPic,round(Pic.Width(creditsTextPic)*resizeScaleX),round(Pic.Height(creditsTextPic)*resizeScaleY))
+menuScreenPic := Pic.Scale(menuScreenPic,round(Pic.Width(menuScreenPic)*menuScaleX),round(Pic.Height(menuScreenPic)*menuScaleY))
+playTextPic := Pic.Scale(playTextPic,round(Pic.Width(playTextPic)*menuScaleX),round(Pic.Height(playTextPic)*menuScaleY))
+controlsTextPic := Pic.Scale(controlsTextPic,round(Pic.Width(controlsTextPic)*menuScaleX),round(Pic.Height(controlsTextPic)*menuScaleY))
+creditsTextPic := Pic.Scale(creditsTextPic,round(Pic.Width(creditsTextPic)*menuScaleX),round(Pic.Height(creditsTextPic)*menuScaleY))
 
-playRedPic := Pic.Scale(playRedPic,round(Pic.Width(playRedPic)*resizeScaleX),round(Pic.Height(playRedPic)*resizeScaleY))
-controlsRedPic := Pic.Scale(controlsRedPic,round(Pic.Width(controlsRedPic)*resizeScaleX),round(Pic.Height(controlsRedPic)*resizeScaleY))
-creditsRedPic := Pic.Scale(creditsRedPic,round(Pic.Width(creditsRedPic)*resizeScaleX),round(Pic.Height(creditsRedPic)*resizeScaleY))
+playRedPic := Pic.Scale(playRedPic,round(Pic.Width(playRedPic)*menuScaleX),round(Pic.Height(playRedPic)*menuScaleY))
+controlsRedPic := Pic.Scale(controlsRedPic,round(Pic.Width(controlsRedPic)*menuScaleX),round(Pic.Height(controlsRedPic)*menuScaleY))
+creditsRedPic := Pic.Scale(creditsRedPic,round(Pic.Width(creditsRedPic)*menuScaleX),round(Pic.Height(creditsRedPic)*menuScaleY))
 
 var playTextSprite : int:= Sprite.New(playTextPic)    %button sprites
 var controlsTextSprite : int:= Sprite.New(controlsTextPic)
@@ -549,8 +577,38 @@ var playY :int:= round(maxy/1.38)
 var controlsY :int:= round(maxy/1.6)
 var creditsY :int:= round(maxy/1.97)
 
-%--------------------DRAW TITLE SCREEN---------------------%
-Pic.Draw(titleScreenPic,0,0,picMerge)
+%----------------------------------------------------------------%
+%                      DRAW TITLE SCREEN                         %
+%----------------------------------------------------------------%
+
+Pic.Draw(titlePic,0,0,picMerge)
+Pic.Draw(insertCoinPic,0,0,picMerge)
+picToDraw := titlePic
+loop
+    Mouse.Where(x,y,button)
+    switchCounter += 1
+    %make insert coin blink
+    if switchCounter = 1000 then
+        Pic.Draw(picToDraw,toDrawX,toDrawY,picMerge)
+        if picToDraw = titlePic then
+            picToDraw := insertCoinPic
+            toDrawX := insertX
+            toDrawY := insertY
+        else
+            picToDraw := titlePic
+            toDrawX := 0
+            toDrawY := 0
+        end if
+        switchCounter := 1
+    end if
+    exit when button = 1
+end loop
+        
+%----------------------------------------------------------------%
+%                       DRAW MENU SCREEN                         %
+%----------------------------------------------------------------%
+
+Pic.Draw(menuScreenPic,0,0,picMerge)
 %Set text positions
 Sprite.Animate(playTextSprite,playTextPic,drawX,playY,true)
 Sprite.Animate(controlsTextSprite,controlsTextPic,drawX,controlsY,true)
@@ -623,7 +681,7 @@ end loop
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
-%                                                 END TITLE SCREEN                                                          %
+%                                                END PREGAME SCREEN                                                         %
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
