@@ -898,11 +898,6 @@ else
     selfPlayer.sprite := Sprite.New (pictures (1, 1, 1))
 end if
 netStream := Net.OpenConnection (serverAddress, serverPort)
-if not netStream <= 0 then
-    put "connected"
-else
-    put "not connected"
-end if
 
 %---------------------------------------------------------------------------------------------------------------------------%
 %                                                                                                                           %
