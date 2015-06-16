@@ -21,15 +21,15 @@ var platX2 := 1418
 
 %character type
 type Character :
-record
-    
-    x : int
-    y : int
-    h : int
-    w : int
-    pic : int
-    sprite : int
-end record
+    record
+
+        x : int
+        y : int
+        h : int
+        w : int
+        pic : int
+        sprite : int
+    end record
 
 %mouse buttons
 var x, y, button : int
@@ -56,9 +56,7 @@ font1 := Font.New ("sans serif:100")
 
 %--------------------------------NETWORK STUFF----------------------------------%
 var netStream : int
-
-var serverAddress : string := "23.91.148.81"%"192.168.5.60"
-
+var serverAddress : string := "192.168.5.60"%"10.174.28.204"%
 var serverPort : int
 var playerNum : int
 
@@ -99,13 +97,13 @@ for i : 1 .. 4
     pictures (1, i, 2) := Pic.FileNew ("Ken/Idle" + intstr (i) + ".gif")
     pictures (1, i, 1) := Pic.Mirror (pictures (1, i, 2))
 end for
-    
+
 % Move
 for i : 1 .. 5
     pictures (2, i, 2) := Pic.FileNew ("Ken/Walk" + intstr (i) + ".gif")
     pictures (2, i, 1) := Pic.Mirror (pictures (2, i, 2))
 end for
-    
+
 % Kneel
 pictures (3, 1, 2) := Pic.FileNew ("Ken/Crouch1.gif")
 pictures (3, 1, 1) := Pic.Mirror (pictures (3, 1, 2))
@@ -115,43 +113,43 @@ for i : 1 .. 7
     pictures (4, i, 2) := Pic.FileNew ("Ken/Jump" + intstr (i) + ".gif")
     pictures (4, i, 1) := Pic.Mirror (pictures (4, i, 2))
 end for
-    
+
 % Roundhouse - side kick
 for i : 1 .. 5
     pictures (5, i, 2) := Pic.FileNew ("Ken/HardKick" + intstr (i) + ".gif")
     pictures (5, i, 1) := Pic.Mirror (pictures (5, i, 2))
 end for
-    
+
 %Punch - punch
 for i : 1 .. 3
     pictures (6, i, 2) := Pic.FileNew ("Ken/LightPunch" + intstr (i) + ".gif")
     pictures (6, i, 1) := Pic.Mirror (pictures (6, i, 2))
 end for
-    
+
 % Kick - kick
 for i : 1 .. 5
     pictures (7, i, 2) := Pic.FileNew ("Ken/LightMediumKick" + intstr (i) + ".gif")
     pictures (7, i, 1) := Pic.Mirror (pictures (7, i, 2))
 end for
-    
+
 % Tatsumaki  - up kick
 for i : 1 .. 13
     pictures (8, i, 2) := Pic.FileNew ("Ken/Tatsumaki" + intstr (i) + ".gif")
     pictures (8, i, 1) := Pic.Mirror (pictures (8, i, 2))
 end for
-    
+
 % Hadoken - side punch
 for i : 1 .. 4
     pictures (9, i, 2) := Pic.FileNew ("Ken/Hadoken" + intstr (i) + ".gif")
     pictures (9, i, 1) := Pic.Mirror (pictures (9, i, 2))
 end for
-    
+
 % Shoryuken - up punch
 for i : 1 .. 7
     pictures (10, i, 2) := Pic.FileNew ("Ken/FieryShoryuken" + intstr (i) + ".gif")
     pictures (10, i, 1) := Pic.Mirror (pictures (10, i, 2))
 end for
-    
+
 var selfPlayer, otherPlayer : Character
 
 var animationCounter : int
@@ -170,7 +168,7 @@ for i : 1 .. 5
     livesPic1 (i) := Pic.FileNew ("Pictures/Lives" + intstr (i) + ".gif")
     livesPic2 (i) := Pic.Mirror (livesPic1(i))
 end for
-    
+
 var percentSymbol : int
 percentSymbol := Pic.FileNew ("Pictures/PercentSign.gif")
 
@@ -240,7 +238,7 @@ Pic.SetTransparentColor (exitPic, 0)
 
 %updates size of background and draws it
 procedure updateBackground
-    
+
     Sprite.Animate (backgroundSprite, backgroundPic, round (0 - screenX), round (0 - screenY), false)
     Sprite.Show (backgroundSprite)
 end updateBackground
@@ -248,7 +246,7 @@ end updateBackground
 %updates size and position of screen
 procedure updateScreen
     var leftMost, rightMost, topMost, bottomMost : int %screen should encompass these points with a 60 px margin
-    
+
     %find leftMost and rightMost
     if selfPlayer.x < otherPlayer.x then
         %if player 1 is to the left of player 2 and inside the world boundaries
@@ -258,7 +256,7 @@ procedure updateScreen
         else
             leftMost := 0
         end if
-        
+
         %This means that player 2 is to the right of player 1
         if otherPlayer.x + otherPlayer.w / 2 < worldLength then
             %player 2's x is rightmost
@@ -274,7 +272,7 @@ procedure updateScreen
         else
             leftMost := 0
         end if
-        
+
         %This means that player 1 is to the right of player 2
         if selfPlayer.x + selfPlayer.w / 2 < worldLength then
             %player 1's x is leftmost
@@ -283,7 +281,7 @@ procedure updateScreen
             rightMost := worldLength
         end if
     end if
-    
+
     %find topmost and bottomMost
     if selfPlayer.y < otherPlayer.y then
         %if player 1 is under player 2 and inside the world boundaries
@@ -293,7 +291,7 @@ procedure updateScreen
         else
             bottomMost := 0
         end if
-        
+
         %This means that player 2 above player 1
         if otherPlayer.y + otherPlayer.h / 2 < worldHeight then
             %player 1's x is topmost
@@ -309,7 +307,7 @@ procedure updateScreen
         else
             bottomMost := 0
         end if
-        
+
         %This means that player 1 above player 2
         if selfPlayer.y + selfPlayer.h / 2 < worldHeight then
             %player 1's x is topmost
@@ -318,8 +316,8 @@ procedure updateScreen
             topMost := worldHeight
         end if
     end if
-    
-    
+
+
     %update screenX and screenY
     screenX := round ((rightMost + leftMost) / 2 - maxx / 2)
     if screenX < 0 then
@@ -328,7 +326,7 @@ procedure updateScreen
     if screenX > worldLength - maxx then
         screenX := worldLength - maxx
     end if
-    
+
     screenY := round ((bottomMost + topMost) / 2 - maxy / 2)
     if screenY < 0 then
         screenY := 0
@@ -336,28 +334,28 @@ procedure updateScreen
     if screenY > worldHeight - maxy then
         screenY := worldHeight - maxy
     end if
-    
+
 end updateScreen
 
 function split (str : string, regex : string) : array 1 .. 15 of string
     var a : array 1 .. 15 of string
     var pastSpace := 0
     var count := 0
-    
+
     for i : 1 .. length (str) + 1
-        
+
         if i = length (str) + 1 or str (i) = regex then
-            
+
             count += 1
             a (count) := str (pastSpace + 1 .. i - 1)
             pastSpace := i
         end if
     end for
-        result a
+    result a
 end split
 
 procedure displayTime
-    
+
     var minutes := floor (gameTime / 60)
     var seconds := gameTime mod 60
     var secondString := intstr(seconds)
@@ -369,10 +367,10 @@ procedure displayTime
 end displayTime
 
 proc displayStatus
-    
+
     damageString1 := intstr (damage1)
     damageString2 := intstr (damage2)
-    
+
     Font.Draw (damageString1, Pic.Width (kenPortrait1), 60, font1, black)
     Font.Draw (damageString2, maxx - Pic.Width (kenPortrait2) - Font.Width (damageString2, font1) - Pic.Width (percentSymbol), 60, font1, black)
     
@@ -381,7 +379,7 @@ proc displayStatus
     
     Sprite.Animate (percentText1, percentSymbol, Pic.Width (kenPortrait1) + Font.Width (damageString1, font1), 60, false)
     Sprite.Animate (percentText2, percentSymbol, maxx - Pic.Width (kenPortrait2) - Pic.Width (percentSymbol), 60, false)
-    
+
     Sprite.Animate (lifeIndicator1, livesPic1 (numLives1), Pic.Width (kenPortrait1), Pic.Height (kenPortrait1) - 50, false)
     Sprite.Animate (lifeIndicator2, livesPic2 (numLives2), maxx - Pic.Width (kenPortrait2) - Pic.Width (livesPic2 (numLives2)), Pic.Height (kenPortrait1) - 50, false)
     
@@ -396,7 +394,7 @@ proc displayStatus
     Sprite.Show (lifeIndicator2)
     Sprite.Show (percentText1)
     Sprite.Show (percentText2)
-    
+
 end displayStatus
 
 
@@ -424,7 +422,7 @@ end playerSelect
 
 process fightSound
     loop
-        Music.PlayFile(fightMusic)
+    Music.PlayFile(fightMusic)
     end loop
 end fightSound
 
@@ -459,7 +457,7 @@ procedure playEndScreen
     playAgainButton := Sprite.New (playAgainPic)
     exitButton := Sprite.New (exitPic)
     %show stuff
-    
+
     Sprite.Animate (winDisplay, chosenWinPic, round (maxx / 2 - Pic.Width (chosenWinPic) / 2), round (maxy / 2), false)
     Sprite.Animate (playAgainButton, playAgainPic, round (maxx / 4 - Pic.Width (playAgainPic) / 2), round (maxy / 4 - Pic.Height (playAgainPic) / 2), false)
     Sprite.Animate (exitButton, exitPic, round (3 * maxx / 4 - Pic.Width (exitPic) / 2), round (maxy / 4 - Pic.Height (exitPic) / 2), false)
@@ -486,7 +484,7 @@ procedure playEndScreen
     Sprite.Hide (winDisplay)
     Sprite.Hide (playAgainButton)
     Sprite.Hide (exitButton)
-    
+
 end playEndScreen
 
 %---------------------------------------------------------------------------------------------------------------------------%
@@ -584,22 +582,54 @@ var controlsY :int:= round(maxy/1.6)
 var creditsY :int:= round(maxy/1.97)
 
 %LOADING SCREEN VARIABLES
-var loadingBackground := Pic.FileNew("Pictures/Connection.jpeg")
-var connectingPic := Pic.FileNew("Pictures/Connecting.jpeg")
+var loadingBackground := Pic.FileNew("Pictures/ConnectionScreen.bmp")
+var connectingPic := Pic.FileNew("Pictures/Connecting.gif")
+
+%coords of the opponent connecting message
+var connectingX := 760
+var connectingY := 22
+
+%player boxes
+var p1X1,p1X2,p1Y1,p1Y2,p2X1,p2X2,p2Y1,p2Y2 : int
+p1X1 := 138
+p1X2 := 319
+p1Y1 := 290
+p1Y2 := 516
+p2X1 := 699
+p2X2 := 880
+p2Y1 := 290
+p2Y2 := 516
 
 %NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
 
 %way 1
-var connectingScaleX : real := maxx/Pic.Width(loadingBackground)
-var connectingScaleY : real := maxy/Pic.Height(loadingBackground)
+var connectionScaleX : real := maxx/Pic.Width(loadingBackground)
+var connectionScaleY : real := maxy/Pic.Height(loadingBackground)
 
 %way 2
 %how much do we resize the pictures to fit the screen?
 var connectingScale : real := min(maxx/Pic.Width(loadingBackground),maxy/Pic.Height(loadingBackground))
 
 %scale pictures
-loadingBackground := Pic.Scale(loadingBackground, Pic.Width(loadingBackground)*connectionScaleX, Pic.Height(loadingBackground)*connectionScaleY)
-connectingPic := Pic.Scale(connectingPic, Pic.Width(connectingPic)*connectionScaleX, Pic.Height(connectingPic)*connectionScaleY)
+loadingBackground := Pic.Scale(loadingBackground, round(Pic.Width(loadingBackground)*connectionScaleX), round(Pic.Height(loadingBackground)*connectionScaleY))
+connectingPic := Pic.Scale(connectingPic, round(Pic.Width(connectingPic)*connectionScaleX), round(Pic.Height(connectingPic)*connectionScaleY))
+
+%compensation so that stuff get drawn right
+var connectionXComp :int:= round((maxx-Pic.Width(loadingBackground))/2)
+var connectionYComp :int:= round((maxy-Pic.Height(loadingBackground))/2)
+
+%scale and compensate coords
+p1X1 := round(p1X1*connectionScaleX + connectionXComp)
+p1X2 := round(p1X2*connectionScaleX + connectionXComp)
+p1Y1 := round(p1Y1*connectionScaleY + connectionYComp)
+p1Y2 := round(p1Y2*connectionScaleY + connectionYComp)
+p2X1 := round(p2X1*connectionScaleX + connectionXComp)
+p2X2 := round(p2X2*connectionScaleX + connectionXComp)
+p2Y1 := round(p2Y1*connectionScaleY + connectionYComp)
+p2Y2 := round(p2Y2*connectionScaleY + connectionYComp)
+
+connectingX := round(connectingX*connectionScaleX)
+connectingY := round(connectingY*connectionScaleY)
 
 %----------------------------------------------------------------%
 %                      DRAW TITLE SCREEN                         %
@@ -627,6 +657,28 @@ loop
     end if
     exit when button = 1
 end loop
+
+%----------------------------------------------------------------%
+%                PROCEDURE FOR CONNECTION SCREEN                 %
+%----------------------------------------------------------------%
+
+procedure drawConnectionScreen
+    Draw.FillBox(0,0,maxx,maxy,black)
+    Pic.Draw(loadingBackground,round(0+connectionXComp), round(0+connectionYComp),picMerge)
+    loop
+        Mouse.Where(x,y,button)
+        if button = 1 then
+            if x > p1X1 and x < p1X2 and y > p1Y1 and y < p1Y2 then
+                playerNum := 1
+                exit
+            elsif x > p2X1 and x < p2X2 and y > p2Y1 and y < p2Y2 then
+                playerNum := 2
+                exit
+            end if
+        end if
+    end loop
+    Pic.Draw(connectingPic,connectingX,connectingY,picMerge)
+end drawConnectionScreen
         
 %----------------------------------------------------------------%
 %                       DRAW MENU SCREEN                         %
@@ -662,13 +714,15 @@ loop
             Sprite.Hide(playRedSprite)
             Sprite.Hide(controlsRedSprite)
             Sprite.Hide(creditsRedSprite)
+            %go to connection screen
+            drawConnectionScreen
             exit
         end if
     else
         Sprite.Hide(playRedSprite)
     end if
     
-    %is the controls button clicked?
+    %is the instructions button clicked?
     if x > drawX - Pic.Width(controlsTextPic)/2 and x < drawX + Pic.Width(controlsTextPic)/2 and y > controlsY - Pic.Height(controlsTextPic)/2 and y < controlsY + Pic.Height(controlsTextPic)/2 then
         Sprite.Show(controlsRedSprite)
         if button = 1 then
@@ -679,7 +733,6 @@ loop
             Sprite.Hide(controlsRedSprite)
             Sprite.Hide(creditsRedSprite)
             %draw control screen
-            exit
         end if
     else
         Sprite.Hide(controlsRedSprite)
@@ -696,7 +749,6 @@ loop
             Sprite.Hide(controlsRedSprite)
             Sprite.Hide(creditsRedSprite)
             %draw credits screen
-            exit
         end if
     else
         Sprite.Hide(creditsRedSprite)
@@ -804,15 +856,13 @@ loop
     if endGame then
         exit
     end if
-    
-    fork fightSound
     %This loop is one game
     loop
         instructions := ""
         charsLast := chars
         Input.KeyDown (chars)
         updateScreen
-        
+
         %Movement instructions
         if (chars (KEY_LEFT_ARROW)) then
             %this is for if there is movement vertically and horizontally - attack wouldn't know which move to do
@@ -830,7 +880,7 @@ loop
             mostRecentKey := "0"
         end if
         instructions += mostRecentKey
-        
+
         if (chars (KEY_UP_ARROW)) then
             instructions += "2"
             if KeyPushedDown (KEY_UP_ARROW) then
@@ -844,9 +894,9 @@ loop
         else
             instructions += "0"
         end if
-        
+
         instructions += mostRecentKey
-        
+
         %attack instructions
         if not chars (KEY_DOWN_ARROW) then
             if chars ('q') then
@@ -859,12 +909,12 @@ loop
         else
             instructions += "n"
         end if
-        
+
         if netLimiter < 10 then
             put : netStream, instructions
             netLimiter += 1
         end if
-        
+
         if Net.LineAvailable (netStream) then
             get : netStream, positions : *
             %First, check if it's game over
@@ -873,7 +923,7 @@ loop
                 exit
             end if
             %positions in in format: selfPlayerX selfPlayerY otherPlayerX otherPlayerY selfAbility selfFrame selfDirection otherAbility otherFrame otherDirection selfHealth selfLives otherHealth otherLives, time
-            
+
             toDoArray := split(positions," ")
             Sprite.Animate(selfPlayer.sprite,pictures(strint(toDoArray(5)),strint(toDoArray(6)),strint(toDoArray(7))),strint(toDoArray(1))-screenX,strint(toDoArray(2))-screenY,false)
             Sprite.Animate(otherPlayer.sprite,pictures(strint(toDoArray(8)),strint(toDoArray(9)),strint(toDoArray(10))),strint(toDoArray(3))-screenX,strint(toDoArray(4))-screenY,false)
@@ -884,11 +934,11 @@ loop
             numLives2 :=strint(toDoArray(14))
             netLimiter -= 1
         end if
-        
+
         updateBackground
         displayTime
         displayStatus
-        
+
         Sprite.Show(otherPlayer.sprite)
         Sprite.Show(selfPlayer.sprite)
         delay(10)
