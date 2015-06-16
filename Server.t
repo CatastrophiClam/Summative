@@ -47,18 +47,6 @@ open:boxFile,"HitBoxes.txt",get
 %1 - idle  2 - move  3 - kneel  4 - jump  5 - roundhouse  6 - punch  7 - kick  8 - tatsumaki  9 - hadoken  10 - shoryuken
 %THE SECOND INDEX OF PICTURES IS THE FRAME WITHIN THE MOVE
 %THE THIRD INDEX OF PICTURES IS THE SIDE PLAYER IS FACING: 1 - left  2 - right
-%NOTE WE'RE PROBABLY GONNA HAVE TO READ THE FILLER_VARIABLES FROM A FILE
-
-%FILE STUFF
-%NOTE HITCOORDS FILE GOES:
-%hitX
-%hitY
-%...
-%HITBOXES FILE GOES:
-%X1
-%Y1
-%X2
-%Y2
 
 var pictures : array 1 .. 10, 1 .. 13, 1 .. 2 of position
 
@@ -308,41 +296,6 @@ put : stream2, "go"
 %                                                                                                                           %
 %---------------------------------------------------------------------------------------------------------------------------%
 
-%Display thingy at bottom of screen with character lives and damage
-class PlayerStatusDisplay
-    
-    import Pic, Sprite
-    
-    export var numLives, var damage, display, _init
-    
-    %stats
-    var numLives : int
-    var damage : int := 0
-    
-    %picture stuff
-    %bascically, in order for the display to be drawn over the background, it has to be a sprite
-    %to make the picture for the sprite, we draw everything that is needed outside of the display, and
-	%we take a picture of that and put it into the sprite
-    var picSprite : int
-    var spritePic : int
-    var offScreenX := 0
-    var offScreenY := -600
-    spritePic := Pic.New (offScreenX, offScreenY, offScreenX + 150, offScreenY + 250)
-    picSprite := Sprite.New (spritePic)
-    
-    proc _init (lives : int)
-	numLives := lives
-    end _init
-    
-    proc updatePic ()
-	
-    end updatePic
-    
-    proc display ()
-	
-    end display
-    
-end PlayerStatusDisplay
 
 %NOTE HERE'S HOW CHARACTER MOVEMENT WORKS: character has a destination: this is the point his center is moving towards. moving the character with
 %the keyboard changes the destination, and he moves towards it with his movement speed

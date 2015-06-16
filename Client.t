@@ -338,6 +338,7 @@ procedure updateScreen
 
 end updateScreen
 
+%splits a string into an array according to regex
 function split (str : string, regex : string) : array 1 .. 15 of string
     var a : array 1 .. 15 of string
     var pastSpace := 0
@@ -355,6 +356,7 @@ function split (str : string, regex : string) : array 1 .. 15 of string
     result a
 end split
 
+%display the time
 procedure displayTime
 
     var minutes := floor (gameTime / 60)
@@ -367,6 +369,7 @@ procedure displayTime
     Font.Draw (timeString, round (maxx / 2) - Font.Width (timeString, font), maxy - 40, font, black)
 end displayTime
 
+%display player status displays
 proc displayStatus
 
     damageString1 := intstr (damage1)
@@ -588,10 +591,6 @@ var creditsY :int:= round(maxy/1.97)
 var loadingBackground := Pic.FileNew("Pictures/ConnectionScreen.bmp")
 var connectingPic := Pic.FileNew("Pictures/Connecting.gif")
 
-%coords of the opponent connecting message
-var connectingX := 760
-var connectingY := 22
-
 %player boxes
 var p1X1,p1X2,p1Y1,p1Y2,p2X1,p2X2,p2Y1,p2Y2 : int
 p1X1 := 138
@@ -616,6 +615,10 @@ var connectingScale : real := min(maxx/Pic.Width(loadingBackground),maxy/Pic.Hei
 %scale pictures
 loadingBackground := Pic.Scale(loadingBackground, round(Pic.Width(loadingBackground)*connectingScale), round(Pic.Height(loadingBackground)*connectingScale))
 connectingPic := Pic.Scale(connectingPic, round(Pic.Width(connectingPic)*connectingScale), round(Pic.Height(connectingPic)*connectingScale))
+
+%coords of the opponent connecting message
+var connectingX := round(maxx/2-Pic.Width(connectinPic)/2))
+var connectingY := round(maxy/1.17)
 
 %compensation so that stuff get drawn right
 var connectionXComp :int:= round((maxx-Pic.Width(loadingBackground))/2)
