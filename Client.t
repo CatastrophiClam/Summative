@@ -539,7 +539,7 @@ insertY := round(maxy/1.11 - Pic.Height(insertCoinPic)/2)
 %MENU SCREEN VARIABLES
 var menuScreenPic : int := Pic.FileNew("Pictures/MenuScreenBackground.gif")   %pictures
 var playTextPic : int:= Pic.FileNew("Pictures/MenuScreen.gif")
-var controlsTextPic : int:= Pic.FileNew("Pictures/controls.gif")
+var controlsTextPic : int:= Pic.FileNew("Pictures/Controls.gif")
 var creditsTextPic : int:= Pic.FileNew("Pictures/Credits.gif")
 
 var playRedPic : int := Pic.FileNew("Pictures/PlaySelect.gif")
@@ -655,7 +655,7 @@ instructionsPic := Pic.Scale(instructionsPic,round(Pic.Width(instructionsPic)*in
 backButton := Pic.Scale(backButton,round(Pic.Width(backButton)*instructionsScaleX),round(Pic.Height(backButton)*instructionsScaleY))
 
 %CREDITS SCREEN
-var creditsPic := Pic.FileNew("Pictures/Instructions.gif")%Pic.FileNew("Pictures/Credits.jpeg")
+var creditsPic := Pic.FileNew("Pictures/CreditScreen.gif")%Pic.FileNew("Pictures/Credits.jpeg")
 var creditsBackButton := Pic.FileNew("Pictures/BackButton.gif")
 
 %NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
