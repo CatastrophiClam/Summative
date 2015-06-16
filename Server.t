@@ -302,7 +302,7 @@ put : stream2, "go"
 %represents a character in the game
 class Character
     
-    import PlayerStatusDisplay, platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures, gameOver, worldLength, worldHeight
+    import platX1, platX2, platY, FILLER_VARIABLE, Ability, pictures, gameOver, worldLength, worldHeight
     
     export var x, var y, var xDestination, var yDestination, var h, var w, var dir, var lives, var damage, var charType, update, getHit %exported variables
     
@@ -773,11 +773,6 @@ new Character, player2
 ^ (player2).h := 2
 ^ (player2).w := 2
 ^ (player2).dir := 1
-
-%--------------------PLAYER STATUS DISPLAYS------------------------%
-var pSD1, pSD2 : pointer to PlayerStatusDisplay
-new PlayerStatusDisplay, pSD1
-new PlayerStatusDisplay, pSD2
 
 %---------------Time Stuff----------------%
 var startTime : int  %time game started
