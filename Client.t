@@ -207,20 +207,20 @@ var playAgain : boolean %are we playing again?
 
 %--------------------------MORE PICTURES---------------------------%
 var youLosePic : int
-youLosePic := Pic.FileNew ("Pictures/YouLose.bmp")
+youLosePic := Pic.FileNew ("Pictures/YouLose.gif")
 Pic.SetTransparentColor (youLosePic, 0)
 var youWinPic : int
 
-youWinPic := Pic.FileNew ("Pictures/YouWin.bmp")
+youWinPic := Pic.FileNew ("Pictures/YouWin.gif")
 Pic.SetTransparentColor (youWinPic, 0)
 
 var playNowPic : int
-playNowPic := Pic.FileNew ("Pictures/playNow.bmp")
+playNowPic := Pic.FileNew ("Pictures/Continue.gif")
 var playAgainPic : int
-playAgainPic := Pic.FileNew ("Pictures/playAgain.bmp")
+playAgainPic := Pic.FileNew ("Pictures/Continue.gif")
 Pic.SetTransparentColor (playAgainPic, 0)
 var exitPic : int
-exitPic := Pic.FileNew ("Pictures/Exit.bmp")
+exitPic := Pic.FileNew ("Pictures/Exit.gif")
 Pic.SetTransparentColor (exitPic, 0)
 
 
