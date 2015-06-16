@@ -507,7 +507,7 @@ var controlsTextPic : int:= Pic.FileNew("Pictures/controls.gif")
 var creditsTextPic : int:= Pic.FileNew("Pictures/Credits.gif")
 
 var playRedPic : int := Pic.FileNew("Pictures/PlaySelect.gif")
-var controlsRedPic : int := Pic.FileNew("Pictures/controlSelect.gif")
+var controlsRedPic : int := Pic.FileNew("Pictures/ControlsSelect.gif")
 var creditsRedPic : int := Pic.FileNew("Pictures/CreditsSelect.gif")
 
 %NOTE there are 2 ways of resizing the picture - one way fits picture to screen, one way scales pic down so one side is flush with screeen
