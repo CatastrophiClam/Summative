@@ -290,7 +290,7 @@ var address1, address2 : string
 
 stream1 := Net.WaitForConnection (port1, address1)
 put "Player 1 Connected"
-stream2 := Net.WaitForConnection (port2, address2)
+stream2 := Net.WaitForConnection (port1, address2)
 put "Player 2 Connected"
 put : stream1, "go"
 put : stream2, "go"
