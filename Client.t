@@ -73,6 +73,7 @@ var backgroundSprite : int
 backgroundSprite := Sprite.New (backgroundPic)
 
 %----------------SOUNDS STUFF-------------------%
+var soundOn := false  %is the sound on?
 var buttonSound := "Sounds/Button.mp3"
 var gruntSound := "Sounds/Grunt.mp3"
 var fightMusic := "Sounds/FightMusic.mp3"
@@ -498,7 +499,6 @@ end playEndScreen
 %KEN V.S. KEN
 
 %-------------------------VARIABLES---------------------------%
-var soundOn := false  %is the sound on?
 var titleScreenPic : int := Pic.FileNew("Pictures/MenuScreenBackground.gif")   %pictures
 var playTextPic : int:= Pic.FileNew("Pictures/MenuScreen.gif")
 var controlsTextPic : int:= Pic.FileNew("Pictures/controls.gif")
